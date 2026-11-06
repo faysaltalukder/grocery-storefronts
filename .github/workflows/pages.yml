@@ -1,4 +1,4 @@
-name: Deploy grocery storefront links to GitHub Pages
+name: Publish independent WordPress Studio links
 
 on:
   pull_request:
@@ -24,51 +24,45 @@ jobs:
       - name: Configure GitHub Pages
         if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v5
-      - name: Validate independent storefront source
+      - name: Validate independent WordPress source
         run: |
           set -e
-          for site in general-supermarket fresh-produce express-grocery wholesale-bulk; do
-            test -s "$site/index.html"
+          for file in wordpress-app/index.html wordpress-app/admin/index.html wordpress-app/admin/neon-client.js wordpress-app/admin/neon-auth.js wordpress-app/admin/neon-builder-api.js wordpress-app/storefront.html wordpress-app/storefront.js wordpress-app/storefront.css; do
+            test -s "$file"
           done
-          test -s shared/storefront.js
-          test -s shared/storefront.css
-          test -s shared/neon-builder-api.js
-          node --check shared/storefront.js
-          node --check shared/neon-builder-api.js
-          ! grep -qi "supabase" shared/neon-builder-api.js
-          ! grep -qi "supabase" shared/storefront.js
-          ! grep -qi "HALAL_STORE_CONFIG" shared/storefront.js
-          for site in general-supermarket fresh-produce express-grocery wholesale-bulk; do
-            grep -q "@neon/neon-js" "$site/index.html"
-            ! grep -qi "supabase" "$site/index.html"
+          for file in wordpress-app/admin/*.js wordpress-app/scripts/*.mjs wordpress-app/storefront.js; do
+            node --check "$file"
           done
-          echo "All four standalone storefront source entry points passed validation."
-      - name: Build origin-isolated redirect-only Pages artifact
+          ! grep -RqiE "supabase\\.co|supabase-js|HFAdminReady|HFNeon|HALAL_STORE_CONFIG" wordpress-app/admin wordpress-app/storefront.html wordpress-app/storefront.js
+          echo "Standalone WordPress source passed syntax and isolation checks."
+      - name: Build isolated launch and template routes
         run: |
           set -e
           rm -rf dist
           mkdir -p dist
           touch dist/.nojekyll
           cat > dist/index.html <<'EOF'
-          <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>WordPress Studio</title></head><body><main><h1>WordPress Studio</h1><p>The independent WordPress workspace and storefront previews are hosted on their own origin.</p><ul><li><a href="https://wordpress-studio.shipstatic.com/admin/">Open WordPress Admin</a></li><li><a href="https://wordpress-studio.shipstatic.com/general-supermarket/">General Supermarket</a></li><li><a href="https://wordpress-studio.shipstatic.com/fresh-produce/">Fresh Produce</a></li><li><a href="https://wordpress-studio.shipstatic.com/express-grocery/">Express Grocery</a></li><li><a href="https://wordpress-studio.shipstatic.com/wholesale-bulk/">Wholesale &amp; Bulk</a></li></ul></main></body></html>
+          <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>WordPress Studio</title></head><body><main><h1>WordPress Studio</h1><p>The independent builder and Neon-backed admin run on their own origin.</p><p><a href="https://wordpress-studio.shipstatic.com/admin/">Open WordPress Admin</a></p><p><a href="https://wordpress-studio.shipstatic.com/admin/wordpress-templates.html">Open grocery templates</a></p></main></body></html>
           EOF
-          for site in general-supermarket fresh-produce express-grocery wholesale-bulk; do
+          templates="general-supermarket fresh-produce express-grocery wholesale-bulk"
+          index=1
+          for site in $templates; do
             mkdir -p "dist/$site"
             cat > "dist/$site/index.html" <<EOF
-          <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta http-equiv="refresh" content="0;url=https://wordpress-studio.shipstatic.com/$site/"><title>Opening storefront</title></head><body><p>Opening the independent storefront… <a href="https://wordpress-studio.shipstatic.com/$site/">Continue</a></p><script>window.location.replace("https://wordpress-studio.shipstatic.com/$site/");</script></body></html>
+          <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta http-equiv="refresh" content="0;url=https://wordpress-studio.shipstatic.com/admin/wordpress-templates.html?category=ecommerce-grocery&template=$index"><title>Open template preview</title></head><body><p>Opening the independent template library… <a href="https://wordpress-studio.shipstatic.com/admin/wordpress-templates.html?category=ecommerce-grocery&amp;template=$index">Continue</a></p><script>window.location.replace("https://wordpress-studio.shipstatic.com/admin/wordpress-templates.html?category=ecommerce-grocery&template=$index");</script></body></html>
           EOF
+            index=$((index+1))
           done
           mkdir -p dist/wordpress-app/admin
-          for path in wordpress-app/index.html wordpress-app/admin/index.html; do
-            target="dist/$path"
-            mkdir -p "$(dirname "$target")"
-            cat > "$target" <<'EOF'
-          <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><meta http-equiv="refresh" content="0;url=https://wordpress-studio.shipstatic.com/admin/"><title>Opening WordPress Studio</title></head><body><p><a href="https://wordpress-studio.shipstatic.com/admin/">Open the independent WordPress Studio</a></p><script>window.location.replace("https://wordpress-studio.shipstatic.com/admin/");</script></body></html>
+          cat > dist/wordpress-app/index.html <<'EOF'
+          <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><meta http-equiv="refresh" content="0;url=https://wordpress-studio.shipstatic.com/admin/"><title>Opening WordPress Studio</title></head><body><p><a href="https://wordpress-studio.shipstatic.com/admin/">Open WordPress Studio</a></p><script>window.location.replace("https://wordpress-studio.shipstatic.com/admin/");</script></body></html>
           EOF
-          done
+          cp dist/wordpress-app/index.html dist/wordpress-app/admin/index.html
+          cat > dist/storefront.html <<'EOF'
+          <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Opening storefront</title></head><body><p><a id="continue" href="https://wordpress-studio.shipstatic.com/storefront.html">Open the independent storefront</a></p><script>var target="https://wordpress-studio.shipstatic.com/storefront.html"+location.search+location.hash;document.getElementById("continue").href=target;location.replace(target);</script></body></html>
+          EOF
           test ! -e dist/wordpress-app/admin/neon-client.js
-          test ! -e dist/shared/storefront.js
-          echo "GitHub Pages contains only redirects and static links; no WordPress runtime, auth or storefront JavaScript is published on the Halal Food GitHub Pages origin."
+          echo "GitHub Pages contains only navigation redirects. WordPress runtime and assets remain on the separate ShipStatic origin."
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
