@@ -6,6 +6,9 @@
 (() => {
   "use strict";
   const API_BASE="https://ep-wild-lab-a1jqqu0p.apirest.ap-southeast-1.aws.neon.tech/halal_food_db/rest/v1";
+  // Supabase legacy anon JWT (public key, role=anon). Neon Data API requires a JWT
+  // even for RLS-protected public reads; never put a service-role key in this file.
+  const PUBLIC_JWT="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFmd3ZyY2ZrcnN5ZHljYmZqc3hmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExMDAyOTcsImV4cCI6MjEwNjY3NjI5N30.9sLJkRi063jPGoTGhhu6zZPg0QiC7KSpjUoBnvDqwa8";
   const ALLOWED_TEMPLATES=new Set(["general-supermarket","fresh-produce","express-grocery","wholesale-bulk"]);
   const $=v=>encodeURIComponent(String(v??""));
   async function authContext(){
@@ -17,7 +20,8 @@
   }
   async function request(table,query="",options={}){
     let token=options.token||null;
-    if(!options.public&&!token)token=(await authContext()).token;
+    if(options.public)token=PUBLIC_JWT;
+    else if(!token)token=(await authContext()).token;
     const method=options.method||"GET";
     const headers={"Accept-Profile":"builder","Content-Type":"application/json"};
     if(token)headers.Authorization="Bearer "+token;
@@ -75,9 +79,9 @@
     if(rows.length!==4||rows.some(row=>!row.design))throw new Error("Neon catalog is missing one or more active grocery template design records.");
     return rows;
   }
-  async function loadTemplatePages(templateKey){
+  async function loadTemplatePages(templateKey,options={public:true}){
     if(!ALLOWED_TEMPLATES.has(templateKey))throw new Error("Unsupported grocery template.");
-    const rows=await request("template_pages","?select=template_key,page_key,page_type,title,slug,sort_order,page_spec,is_required,is_active&template_key=eq."+$(templateKey)+"&is_active=eq.true&order=sort_order.asc",{public:true});
+    const rows=await request("template_pages","?select=template_key,page_key,page_type,title,slug,sort_order,page_spec,is_required,is_active&template_key=eq."+$(templateKey)+"&is_active=eq.true&order=sort_order.asc",options);
     if((rows||[]).length<25)throw new Error("Neon page catalog is incomplete for "+templateKey+" (expected 25 designed pages).");
     return rows;
   }
@@ -130,7 +134,7 @@
     if(!website)throw new Error("Storefront not found or not published.");
     if(website.status!=="published"&&!preview)throw new Error("This storefront is not published yet.");
     const [pages,documents,categories,products]=await Promise.all([
-      loadTemplatePages(website.template_key),
+      loadTemplatePages(website.template_key,opts),
       request("website_documents","?select=page_key,schema_version,document,updated_at&website_id=eq."+$(website.id),opts),
       request("categories","?select=id,name,slug,parent_id,sort_order,is_active&website_id=eq."+$(website.id)+"&is_active=eq.true&order=sort_order.asc",opts),
       request("products","?select=id,category_id,name,description,sku,price,compare_at_price,unit,stock,image_url,gallery,attributes,sort_order&website_id=eq."+$(website.id)+"&is_active=eq.true&order=sort_order.asc",opts)
