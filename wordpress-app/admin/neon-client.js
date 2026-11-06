@@ -22,6 +22,6 @@
   window.WPAuthReady = init.then(async client => {
     const { data, error } = await client.auth.getSession();
     if (error) throw error;
-    return data?.session || null;
+    return data || null;
   });
 })();
