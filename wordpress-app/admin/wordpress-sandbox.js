@@ -140,7 +140,7 @@
     const publishTest = () => {
       review = readJson(REVIEW_KEY);
       if (!review || !validDoc(review.document) || review.status !== "approved") return;
-      if (!window.confirm("Publish this as a Test Version inside this admin dashboard only? The real Halal Food website will not change.")) return;
+      if (!window.confirm("Publish this as a Test Version inside this admin dashboard only? The real WordPress website will not change.")) return;
       published = readJson(PUBLISHED_KEY);
       const history = readJson(HISTORY_KEY, []);
       const version = (Number(published?.version) || 0) + 1;
@@ -178,7 +178,7 @@
     }
   };
   const waitForAdmin = () => {
-    const ready = window.HFAdminReady;
+    const ready = window.WPAuthReady;
     if (!ready || typeof ready.then !== "function") return;
     ready.then((authorized) => { if (authorized) init(); }).catch(() => {});
   };
