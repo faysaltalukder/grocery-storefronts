@@ -31,7 +31,9 @@ jobs:
           test -s shared/storefront.js
           test -s shared/storefront.css
           test -s shared/neon-builder-api.js
-          echo "All four storefront entry points and shared runtime files are present."
+          node --check shared/storefront.js
+          node --check shared/neon-builder-api.js
+          echo "All four storefront entry points and shared runtime files passed validation."
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
