@@ -19,7 +19,7 @@
   };
   const renderGate = gate => {
     gate.hidden = false;
-    gate.innerHTML = '<section class="wp-auth-card"><span class="wp-auth-kicker">PRIVATE WORDPRESS WORKSPACE</span><h1>Sign in to WordPress Studio</h1><p>This account is managed by the dedicated Neon Auth service. Halal Food Supabase sessions and credentials are not used here.</p><form id="wpAuthForm"><label>Email<input name="email" type="email" autocomplete="username" required></label><label>Password<input name="password" type="password" autocomplete="current-password" required></label><button type="submit">Sign in securely</button></form><button type="button" id="wpAuthReset" class="wp-auth-reset">Forgot password?</button><p id="wpAuthStatus" role="status" aria-live="polite"></p></section>';
+    gate.innerHTML = '<section class="wp-auth-card"><span class="wp-auth-kicker">PRIVATE WORDPRESS WORKSPACE</span><h1>Sign in to WordPress Studio</h1><p>This account is managed by the dedicated Neon Auth service. Halal Food Supabase sessions and credentials are not used here.</p><form id="wpAuthForm"><label>Email<input name="email" type="email" autocomplete="username" required></label><label>Password<input name="password" type="password" autocomplete="current-password" required></label><button type="submit">Sign in securely</button></form><div class="wp-auth-divider"><span>OR</span></div><button type="button" id="wpGoogleSignIn" class="wp-google-signin"><span aria-hidden="true" class="wp-google-g">G</span>Continue with Google</button><button type="button" id="wpAuthReset" class="wp-auth-reset">Forgot password?</button><p id="wpAuthStatus" role="status" aria-live="polite"></p></section>';
   };
   async function boot() {
     const gate = document.getElementById("authGate");
@@ -41,6 +41,21 @@
       renderGate(gate);
       const form = gate.querySelector("#wpAuthForm");
       const status = gate.querySelector("#wpAuthStatus");
+      gate.querySelector("#wpGoogleSignIn").addEventListener("click", async () => {
+        const button = gate.querySelector("#wpGoogleSignIn");
+        button.disabled = true;
+        status.textContent = "Redirecting to Google securely…";
+        try {
+          const result = await client.auth.signIn.social({
+            provider: "google",
+            callbackURL: window.location.href
+          });
+          if (result?.error) throw result.error;
+        } catch (error) {
+          status.textContent = error?.message || "Google sign-in could not be started. Please try again.";
+          button.disabled = false;
+        }
+      });
       form.addEventListener("submit", async event => {
         event.preventDefault();
         const button = form.querySelector('button[type="submit"]');
