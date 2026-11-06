@@ -4,9 +4,9 @@
  */
 (() => {
   "use strict";
-  const REVIEW_KEY = "hf-wp-review-package-v1";
-  const PUBLISHED_KEY = "hf-wp-sandbox-published-v1";
-  const HISTORY_KEY = "hf-wp-sandbox-history-v1";
+  const REVIEW_KEY = "wp-builder-review-package-v1";
+  const PUBLISHED_KEY = "wp-builder-sandbox-published-v1";
+  const HISTORY_KEY = "wp-builder-sandbox-history-v1";
   const $ = (id) => document.getElementById(id);
   const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const validNode = (n, depth = 0) => Boolean(n && typeof n === "object" && !Array.isArray(n) && typeof n.id === "string" && ["section","container","heading","paragraph","image","button"].includes(n.type) && n.props && typeof n.props === "object" && Array.isArray(n.children) && depth <= 12 && n.children.length <= 200 && n.children.every((child) => validNode(child, depth + 1)));
