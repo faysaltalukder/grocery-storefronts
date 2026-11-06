@@ -1,4 +1,4 @@
-/* Independent WordPress admin gate and navigation. */
+/* Independent WordPress admin gate and first-owner bootstrap. */
 (() => {
   "use strict";
   const AUTHORIZED_EMAIL = "halalfoodbd.official@gmail.com";
@@ -17,10 +17,10 @@
       catch (error) { button.disabled = false; alert(error?.message || "Could not sign out."); }
     });
   };
-  const renderGate = (gate, mode = "create") => {
+  const renderGate = (gate, mode = "signin") => {
     gate.hidden = false;
     const creating = mode === "create";
-    gate.innerHTML = '<section class="wp-auth-card"><span class="wp-auth-kicker">PRIVATE WORDPRESS WORKSPACE</span><h1>' + (creating ? "Create your account" : "Sign in to WordPress Studio") + '</h1><p>' + (creating ? "Create your owner account securely with Google. Your Google name and email will be used; no separate password is needed." : "Continue with the Google account already registered for this private workspace, or use your existing password.") + '</p><div class="wp-auth-mode" role="group" aria-label="Account access"><button type="button" data-mode="create" aria-pressed="' + creating + '">Create Account</button><button type="button" data-mode="signin" aria-pressed="' + (!creating) + '">Sign In</button></div><button type="button" id="wpGoogleSignIn" class="wp-google-signin"><span aria-hidden="true" class="wp-google-g">G</span>' + (creating ? "Create account with Google" : "Continue with Google") + '</button><p class="wp-auth-note">Only the authorized owner account can open the admin workspace.</p>' + (creating ? '' : '<div class="wp-auth-divider"><span>OR</span></div><form id="wpAuthForm"><label>Email<input name="email" type="email" autocomplete="username" required></label><label>Password<input name="password" type="password" autocomplete="current-password" required></label><button type="submit">Sign in securely</button></form>') + '<p id="wpAuthStatus" role="status" aria-live="polite"></p></section>';
+    gate.innerHTML = '<section class="wp-auth-card"><span class="wp-auth-kicker">PRIVATE WORDPRESS WORKSPACE</span><h1>' + (creating ? "Create your owner account" : "Sign in to WordPress Studio") + '</h1><p>' + (creating ? "This one-time setup is reserved for the workspace owner. Use the owner email and create a strong password." : "Sign in with the owner account registered for this private workspace.") + '</p><div class="wp-auth-mode" role="group" aria-label="Account access"><button type="button" data-mode="signin" aria-pressed="' + (!creating) + '">Sign In</button><button type="button" data-mode="create" aria-pressed="' + creating + '">Create Account</button></div>' + (creating ? '<form id="wpCreateForm"><label>Your name<input name="name" type="text" autocomplete="name" maxlength="100" required></label><label>Owner email<input name="email" type="email" autocomplete="email" value="' + AUTHORIZED_EMAIL + '" readonly required></label><label>Create password<input name="password" type="password" autocomplete="new-password" minlength="12" required><small>Use at least 12 characters. Do not reuse another website password.</small></label><label>Confirm password<input name="confirmPassword" type="password" autocomplete="new-password" minlength="12" required></label><button type="submit">Create Owner Account</button></form>' : '<form id="wpAuthForm"><label>Email<input name="email" type="email" autocomplete="username" required></label><label>Password<input name="password" type="password" autocomplete="current-password" required></label><button type="submit">Sign in securely</button></form>') + '<p class="wp-auth-note">Only ' + AUTHORIZED_EMAIL + ' is authorized to open this workspace.</p><p id="wpAuthStatus" role="status" aria-live="polite"></p></section>';
   };
   async function boot() {
     const gate = document.getElementById("authGate");
@@ -38,7 +38,7 @@
       }
       if (session?.user?.id) await client.auth.signOut();
 
-      let mode = "create";
+      let mode = "signin";
       const paint = () => {
         renderGate(gate, mode);
         const status = gate.querySelector("#wpAuthStatus");
@@ -46,18 +46,37 @@
           mode = tab.dataset.mode;
           paint();
         }));
-        gate.querySelector("#wpGoogleSignIn").addEventListener("click", async () => {
-          const button = gate.querySelector("#wpGoogleSignIn");
+        const createForm = gate.querySelector("#wpCreateForm");
+        if (createForm) createForm.addEventListener("submit", async event => {
+          event.preventDefault();
+          const button = createForm.querySelector('button[type="submit"]');
+          const data = new FormData(createForm);
+          const name = String(data.get("name") || "").trim();
+          const email = normalizeEmail(data.get("email"));
+          const password = String(data.get("password") || "");
+          const confirmPassword = String(data.get("confirmPassword") || "");
+          if (email !== AUTHORIZED_EMAIL) {
+            status.textContent = "This one-time owner registration is restricted to the authorized email.";
+            return;
+          }
+          if (password.length < 12 || password !== confirmPassword) {
+            status.textContent = password !== confirmPassword ? "The two passwords do not match." : "Choose a password with at least 12 characters.";
+            return;
+          }
           button.disabled = true;
-          status.textContent = mode === "create" ? "Opening Google to create your owner account…" : "Redirecting to Google securely…";
+          status.textContent = "Creating your private WordPress owner account…";
           try {
-            const result = await client.auth.signIn.social({
-              provider: "google",
-              callbackURL: window.location.href
-            });
+            const result = await client.auth.signUp.email({ name, email, password });
             if (result?.error) throw result.error;
+            const createdEmail = normalizeEmail(result?.data?.user?.email || result?.user?.email || email);
+            if (createdEmail !== AUTHORIZED_EMAIL) {
+              await client.auth.signOut();
+              throw new Error("The returned account did not match the authorized owner email. Access was denied.");
+            }
+            status.textContent = "Owner account created. Opening your WordPress dashboard…";
+            window.setTimeout(() => location.reload(), 900);
           } catch (error) {
-            status.textContent = error?.message || "Google authentication could not be started. Please try again.";
+            status.textContent = error?.message || "Account creation failed. Confirm that one-time registration is enabled, then try again.";
             button.disabled = false;
           }
         });
@@ -76,7 +95,7 @@
           status.textContent = "Verifying your authorized WordPress account…";
           try {
             const result = await client.auth.signIn.email({ email, password: String(data.get("password") || "") });
-            if (result.error) throw result.error;
+            if (result?.error) throw result.error;
             location.reload();
           } catch (error) {
             status.textContent = error?.message || "Sign-in failed. Check your credentials and try again.";
