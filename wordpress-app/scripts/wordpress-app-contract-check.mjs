@@ -21,7 +21,7 @@ const storefrontHtml = read("storefront.html");
 const storefrontJs = read("storefront.js");
 assert.ok(client.includes("@neon/neon-js") && client.includes("WPNeonClientReady"), "standalone Neon client must initialize");
 assert.ok(auth.includes("client.auth.signIn.email") && auth.includes("client.auth.signOut"), "WordPress must manage its own sign-in and sign-out");
-assert.ok(api.includes("WPNeonClientReady") && api.includes("WPAuthReady") && api.includes("client.rpc("), "WordPress API must use its own Neon session and RPC");
+assert.ok(api.includes("WPNeonClientReady") && api.includes("client.auth.getSession") && api.includes("client.rpc("), "WordPress API must use its own Neon session and RPC");
 assert.ok(storefrontHtml.includes("admin/neon-client.js") && storefrontHtml.includes("admin/neon-builder-api.js"), "storefront must load its own Neon client and API");
 assert.ok(storefrontJs.includes("WPNeonClientReady") && storefrontJs.includes("placeOrder") && storefrontJs.includes("trackOrder"), "storefront must support independent preview, COD order and tracking");
 
