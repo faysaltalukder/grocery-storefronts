@@ -6,9 +6,11 @@
 (() => {
   "use strict";
   const API_BASE="https://ep-wild-lab-a1jqqu0p.apirest.ap-southeast-1.aws.neon.tech/halal_food_db/rest/v1";
-  // Supabase legacy anon JWT (public key, role=anon). Neon Data API requires a JWT
-  // even for RLS-protected public reads; never put a service-role key in this file.
-  const PUBLIC_JWT="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFmd3ZyY2ZrcnN5ZHljYmZqc3hmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExMDAyOTcsImV4cCI6MjEwNjY3NjI5N30.9sLJkRi063jPGoTGhhu6zZPg0QiC7KSpjUoBnvDqwa8";
+  // Public storefronts obtain a short-lived Supabase anonymous-user JWT. The
+  // publishable key is public; no service-role or database credential is exposed.
+  const SUPABASE_URL="https://qfwvrcfkrsydycbfjsxf.supabase.co";
+  const SUPABASE_PUBLIC_KEY="sb_publishable_X32Rb8W-axGIfgFupppdfZQ_jbc38pcL";
+  const PUBLIC_SESSION_KEY="hf-grocery-storefront-auth-v1";
   const ALLOWED_TEMPLATES=new Set(["general-supermarket","fresh-produce","express-grocery","wholesale-bulk"]);
   const $=v=>encodeURIComponent(String(v??""));
   async function authContext(){
@@ -18,9 +20,35 @@
     if(error||!session?.access_token||!session?.user?.id)throw new Error("Please sign in again before connecting to Neon.");
     return {admin,session,user:session.user,token:session.access_token};
   }
+  async function getPublicToken(){
+    let saved=null;
+    try{saved=JSON.parse(localStorage.getItem(PUBLIC_SESSION_KEY)||"null");}catch(_){}
+    const now=Math.floor(Date.now()/1000);
+    if(saved?.access_token&&Number(saved.expires_at||0)>now+60)return saved.access_token;
+    if(saved?.refresh_token){
+      try{
+        const refreshed=await fetch(SUPABASE_URL+"/auth/v1/token?grant_type=refresh_token",{method:"POST",headers:{"apikey":SUPABASE_PUBLIC_KEY,"Content-Type":"application/json"},body:JSON.stringify({refresh_token:saved.refresh_token}),credentials:"omit",cache:"no-store"});
+        const data=await refreshed.json();
+        if(refreshed.ok&&data?.access_token){
+          const session={access_token:data.access_token,refresh_token:data.refresh_token||saved.refresh_token,expires_at:Number(data.expires_at||now+Number(data.expires_in||3600))};
+          try{localStorage.setItem(PUBLIC_SESSION_KEY,JSON.stringify(session));}catch(_){}
+          return session.access_token;
+        }
+      }catch(_){}
+    }
+    const response=await fetch(SUPABASE_URL+"/auth/v1/signup",{method:"POST",headers:{"apikey":SUPABASE_PUBLIC_KEY,"Content-Type":"application/json"},body:JSON.stringify({data:{source:"grocery-storefront"}}),credentials:"omit",cache:"no-store"});
+    const data=await response.json().catch(()=>({}));
+    if(!response.ok||!data?.access_token){
+      const detail=data?.msg||data?.message||data?.error_description||data?.error||"Anonymous sign-in is unavailable.";
+      throw new Error("Storefront public authentication failed: "+String(detail).slice(0,180)+". Enable Anonymous Sign-Ins in Supabase Auth settings.");
+    }
+    const session={access_token:data.access_token,refresh_token:data.refresh_token||"",expires_at:Number(data.expires_at||now+Number(data.expires_in||3600))};
+    try{localStorage.setItem(PUBLIC_SESSION_KEY,JSON.stringify(session));}catch(_){}
+    return session.access_token;
+  }
   async function request(table,query="",options={}){
     let token=options.token||null;
-    if(options.public)token=PUBLIC_JWT;
+    if(options.public)token=await getPublicToken();
     else if(!token)token=(await authContext()).token;
     const method=options.method||"GET";
     const headers={"Accept-Profile":"builder","Content-Type":"application/json"};
