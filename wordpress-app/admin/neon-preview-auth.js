@@ -6,7 +6,8 @@
     try {
       const client = await window.WPNeonClientReady;
       const session = await window.WPAuthReady;
-      if (session?.user?.id) return;
+      if (session?.user?.id && String(session.user.email || "").trim().toLowerCase() === "halalfoodbd.official@gmail.com") return;
+      if (session?.user?.id) await client.auth.signOut();
       const gate = document.createElement("div");
       gate.className = "wp-preview-auth";
       gate.innerHTML = '<form class="wp-preview-auth-card" id="wpPreviewAuthForm"><h2>Private preview sign-in</h2><p>Sign in with your separate WordPress workspace account to preview this draft.</p><label>Email<input name="email" type="email" autocomplete="username" required></label><label>Password<input name="password" type="password" autocomplete="current-password" required></label><button type="submit">Sign in</button><p id="wpPreviewAuthStatus" role="status"></p></form>';
