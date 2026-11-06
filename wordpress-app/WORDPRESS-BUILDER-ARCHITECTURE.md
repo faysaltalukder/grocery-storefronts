@@ -23,7 +23,7 @@
 - Private previews require the separate WordPress Neon account.
 - The app must run on a different origin from Halal Food so browser cookies, localStorage, sessionStorage, service workers and same-origin privileges are not shared.
 - The Halal Food launcher must not perform SSO, token exchange, session forwarding, proxying or API calls on WordPress's behalf.
-- Browser code may contain only the public Neon Data API endpoint. Never put database passwords, connection strings, admin tokens, service keys or secret credentials in the repository or browser bundle.
+- Browser code may contain only the public Neon Data API endpoint. Never expose Neon connection strings, database passwords, admin tokens, service keys or secret credentials in the repository or browser bundle.
 
 ## Data ownership and security
 
