@@ -39,8 +39,16 @@
       button.disabled = true;
       status.textContent = "Saving your new password securely…";
       try {
-        const result = await window.WPNeonClient.auth.resetPassword({ newPassword: password, token });
-        if (result?.error) throw result.error;
+        const response = await fetch("https://ep-wild-lab-a1jqqu0p.neonauth.ap-southeast-1.aws.neon.tech/halal_food_db/auth/reset-password", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ newPassword: password, token })
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || result?.error) {
+          throw new Error(result?.message || result?.error?.message || "Neon Auth rejected the password reset request (HTTP " + response.status + ").");
+        }
         status.textContent = "Password saved. Redirecting you to sign in…";
         window.history.replaceState({}, "", window.location.pathname);
         window.setTimeout(() => location.reload(), 1200);
@@ -57,7 +65,14 @@
     app.hidden = true;
     try {
       const client = await window.WPNeonClientReady;
-      const resetToken = new URLSearchParams(window.location.search).get("token");
+      const params = new URLSearchParams(window.location.search);
+      const resetToken = params.get("token");
+      const resetError = params.get("error");
+      if (resetError) {
+        renderLogin(gate);
+        gate.querySelector("#wpAuthStatus").textContent = "The password reset link is invalid or expired. Request a new reset email.";
+        return;
+      }
       if (resetToken) {
         renderReset(gate, resetToken);
         return;
