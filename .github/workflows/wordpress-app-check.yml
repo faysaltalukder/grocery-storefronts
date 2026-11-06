@@ -34,7 +34,7 @@ jobs:
       - name: Template, Neon and RLS contract
         run: node scripts/grocery-template-suite-check.mjs
       - name: Storefront checkout contract
-        run: node scripts/storefront-checkout-check.mjs
+        run: node scripts/wordpress-app-contract-check.mjs
       - name: Block Halal Food Supabase coupling
         run: |
           set -e
