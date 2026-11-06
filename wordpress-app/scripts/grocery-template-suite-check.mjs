@@ -48,7 +48,7 @@ assert.ok(apiClient.includes("loadTemplateCatalog") && apiClient.includes("saveD
 assert.ok(apiMigration.includes("ENABLE ROW LEVEL SECURITY") && apiMigration.includes("auth.uid()"), "Neon tenant tables must be protected by RLS");
 assert.ok(apiMigration.includes("builder.website_documents"), "persistent builder documents must be stored in Neon");
 assert.ok(architecture.includes("Neon Data API") && architecture.includes("builder.website_documents"));
-assert.ok(storefrontHtml.includes("neon-builder-api.js") && storefrontHtml.includes("neon-client.js") && neonClient.includes("@neon/neon-js"), "storefront must load the independent Neon SDK and API client");
+assert.ok(storefrontHtml.includes("neon-builder-api.js") && storefrontHtml.includes("neon-client.js") && neonClient.includes("@neondatabase/neon-js"), "storefront must load the independent Neon SDK and API client");
 assert.ok(!storefrontHtml.toLowerCase().includes("supabase"), "public WordPress storefront must not load Halal Food Supabase");
 assert.ok(!storefront.toLowerCase().includes("supabase") && !storefront.includes("HALAL_STORE_CONFIG"), "storefront preview must not depend on Halal Food auth or config");
 assert.ok(storefront.includes("placeOrder") && storefront.includes("trackOrder"), "storefront must connect COD ordering and order tracking");
