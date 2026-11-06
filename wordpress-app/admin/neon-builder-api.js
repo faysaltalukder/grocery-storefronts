@@ -9,8 +9,8 @@
   const ALLOWED_TEMPLATES=new Set(["general-supermarket","fresh-produce","express-grocery","wholesale-bulk"]);
   const $=v=>encodeURIComponent(String(v??""));
   async function getClient(){
-    if(!window.HFNeonClientReady)throw new Error("The independent Neon authentication client did not load.");
-    return await window.HFNeonClientReady;
+    if(!window.WPNeonClientReady)throw new Error("The independent Neon authentication client did not load.");
+    return await window.WPNeonClientReady;
   }
   async function authContext(){
     const client=await getClient();
@@ -232,5 +232,5 @@
     if(!result?.[0])throw new Error("Neon did not confirm the publish status.");
     return result[0];
   }
-  window.HFNeonBuilderApi=Object.freeze({apiBase:API_BASE,loadTemplateCatalog,loadTemplatePages,ensureWebsite,loadWebsiteDocuments,seedWebsitePages,loadPageDocument,savePageDocument,loadDocument:loadPageDocument,saveDocument:(website,document,pageKey="home")=>savePageDocument(website,pageKey,document),loadStorefrontData,placeOrder,trackOrder,getWebsiteStats,loadWebsiteOrders,updateOrderStatus,createCustomPage,publishWebsite,defaultPageDocument});
+  window.WPNeonBuilderApi=Object.freeze({apiBase:API_BASE,loadTemplateCatalog,loadTemplatePages,ensureWebsite,loadWebsiteDocuments,seedWebsitePages,loadPageDocument,savePageDocument,loadDocument:loadPageDocument,saveDocument:(website,document,pageKey="home")=>savePageDocument(website,pageKey,document),loadStorefrontData,placeOrder,trackOrder,getWebsiteStats,loadWebsiteOrders,updateOrderStatus,createCustomPage,publishWebsite,defaultPageDocument});
 })();
