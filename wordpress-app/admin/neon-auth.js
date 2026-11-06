@@ -1,6 +1,8 @@
 /* Independent WordPress admin gate and navigation. */
 (() => {
   "use strict";
+  const AUTHORIZED_EMAIL = "halalfoodbd.official@gmail.com";
+  const normalizeEmail = value => String(value ?? "").trim().toLowerCase();
   const esc = value => String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
   const mountShell = async (app, client) => {
     if (!app || app.querySelector(".wp-admin-shell")) return;
@@ -27,11 +29,14 @@
     try {
       const client = await window.WPNeonClientReady;
       const session = await window.WPAuthReady;
-      if (session?.user?.id) {
+      if (session?.user?.id && normalizeEmail(session.user.email) === AUTHORIZED_EMAIL) {
         gate.hidden = true;
         app.hidden = false;
         await mountShell(app, client);
         return;
+      }
+      if (session?.user?.id) {
+        await client.auth.signOut();
       }
       renderGate(gate);
       const form = gate.querySelector("#wpAuthForm");
@@ -41,9 +46,15 @@
         const button = form.querySelector('button[type="submit"]');
         const data = new FormData(form);
         button.disabled = true;
-        status.textContent = "Verifying your WordPress account…";
+        const email = normalizeEmail(data.get("email"));
+        if (email !== AUTHORIZED_EMAIL) {
+          status.textContent = "Access restricted: use the authorized Halal Food admin email.";
+          button.disabled = false;
+          return;
+        }
+        status.textContent = "Verifying your authorized WordPress account…";
         try {
-          const result = await client.auth.signIn.email({ email: String(data.get("email") || "").trim(), password: String(data.get("password") || "") });
+          const result = await client.auth.signIn.email({ email, password: String(data.get("password") || "") });
           if (result.error) throw result.error;
           location.reload();
         } catch (error) {
