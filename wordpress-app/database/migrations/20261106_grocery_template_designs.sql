@@ -33,5 +33,5 @@ ON CONFLICT (template_key, design_version) DO UPDATE SET
   is_active=EXCLUDED.is_active,
   updated_at=now();
 UPDATE builder.template_catalog
-SET feature_flags = feature_flags || '{"design_ready":true,"design_version":1,"design_source":"github:faysaltalukder/halalfood","data_source":"neon:builder.template_designs"}'::jsonb
+SET feature_flags = feature_flags || '{"design_ready":true,"design_version":1,"design_source":"github:faysaltalukder/grocery-storefronts/wordpress-app","data_source":"neon:builder.template_designs"}'::jsonb
 WHERE template_key IN ('general-supermarket','fresh-produce','express-grocery','wholesale-bulk');
