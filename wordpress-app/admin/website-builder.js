@@ -106,7 +106,7 @@
         setStatus("Saved in this browser · Neon unavailable","warning");
         return;
       }
-      state.saveChain=state.saveChain.catch(()=>{}).then(()=>window.HFNeonBuilderApi.saveDocument(state.website,payload,PAGE_KEY));
+      state.saveChain=state.saveChain.catch(()=>{}).then(()=>window.WPNeonBuilderApi.saveDocument(state.website,payload,PAGE_KEY));
       try{
         await state.saveChain;
         if(JSON.stringify(payload)===JSON.stringify(state.doc))setStatus("Saved to Neon · draft only","saved");
@@ -285,11 +285,11 @@
     try{
       const payload=snapshot();
       if(state.neonReady&&state.website){
-        state.saveChain=state.saveChain.catch(()=>{}).then(()=>window.HFNeonBuilderApi.saveDocument(state.website,payload,PAGE_KEY));
+        state.saveChain=state.saveChain.catch(()=>{}).then(()=>window.WPNeonBuilderApi.saveDocument(state.website,payload,PAGE_KEY));
         await state.saveChain;
       }
       const packageData={schemaVersion:1,reviewId:"review-"+Date.now(),status:"in_review",sentAt:new Date().toISOString(),document:payload};
-      localStorage.setItem("hf-wp-review-package-v1",JSON.stringify(packageData));
+      localStorage.setItem("wp-builder-review-package-v1",JSON.stringify(packageData));
       localStorage.setItem(STORAGE_KEY,JSON.stringify(payload));
       window.location.href="../storefront.html?site="+encodeURIComponent(state.website?.slug||("hf-"+TEMPLATE_KEY))+"&page="+encodeURIComponent(PAGE_KEY)+"&preview=1";
     }catch(error){console.error(error);setStatus("Could not save the review draft to Neon · local copy kept","error");}
@@ -302,16 +302,16 @@
   const init = async () => {
     let saved=null,remoteDocument=null;
     try{const raw=localStorage.getItem(STORAGE_KEY);if(raw){const parsed=JSON.parse(raw);if(parsed?.schemaVersion===1&&Array.isArray(parsed.tree))saved=parsed;}}catch(_error){}
-    if(TEMPLATE_KEY&&window.HFNeonBuilderApi){
+    if(TEMPLATE_KEY&&window.WPNeonBuilderApi){
       try{
         const profile=templateDocument();
-        const remote=await window.HFNeonBuilderApi.loadDocument(TEMPLATE_KEY,profile.site.name,PAGE_KEY);
+        const remote=await window.WPNeonBuilderApi.loadDocument(TEMPLATE_KEY,profile.site.name,PAGE_KEY);
         state.website=remote.website;state.neonReady=true;remoteDocument=remote.document;
       }catch(error){console.error("Neon editor initialization failed",error);setStatus("Neon unavailable · local fallback active","warning");}
     }
     state.doc=validDocument(remoteDocument)?remoteDocument:(validDocument(saved)?saved:templateDocument());
     if(state.neonReady&&!validDocument(remoteDocument)){
-      try{await window.HFNeonBuilderApi.saveDocument(state.website,state.doc,PAGE_KEY);}
+      try{await window.WPNeonBuilderApi.saveDocument(state.website,state.doc,PAGE_KEY);}
       catch(error){state.neonReady=false;console.error("Initial Neon draft save failed",error);}
     }
     document.querySelectorAll("[data-add-component]").forEach(button=>button.addEventListener("click",()=>addComponent(button.dataset.addComponent)));
@@ -333,7 +333,7 @@
     setStatus(state.neonReady?(validDocument(remoteDocument)?"Restored "+PAGE_KEY+" from Neon · draft only":"Page draft prepared in Neon · not published"):(saved?"Restored local backup · Neon unavailable":"Sample page ready · Neon unavailable"),state.neonReady?"saved":"warning");
   };
   const waitForAdmin = () => {
-    const ready=window.HFAdminReady;
+    const ready=window.WPAuthReady;
     if(!ready||typeof ready.then!=="function"){setStatus("Secure admin initialization unavailable","error");return;}
     ready.then(async admin=>{if(!admin){setStatus("Admin access required","error");return;}await init();}).catch(error=>{console.error(error);setStatus("Could not initialize the secure admin shell","error");});
   };
