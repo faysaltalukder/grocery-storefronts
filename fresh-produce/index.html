@@ -15,7 +15,16 @@
 <body>
 <div id="storefrontRoot"><div class="sf-loading"><span class="sf-loading-mark">GS</span><strong>Preparing your storefront…</strong><small>Connecting your pages and product catalogue</small></div></div>
 <div id="sfToast" class="sf-toast" role="status" aria-live="polite"></div>
-<script defer src="../shared/neon-builder-api.js?v=20261107-public-auth-v5"></script>
+<script type="module">
+import { createClient } from "https://esm.sh/@neon/neon-js";
+const neonClient = createClient("https://ep-wild-lab-a1jqqu0p.ap-southeast-1.aws.neon.tech/halal_food_db", {
+  auth: { allowAnonymous: true, fetchOptions: { credentials: "include" } }
+});
+window.HFNeonClient = neonClient;
+window.HFNeonClientReady = Promise.resolve(neonClient);
+window.dispatchEvent(new Event("hf-neon-client-ready"));
+</script>
+<script defer src="../shared/neon-builder-api.js?v=20261107-neon-auth-v1"></script>
 <script defer src="../shared/storefront.js?v=20261107-multipage-commerce-v2"></script>
 </body>
 </html>
