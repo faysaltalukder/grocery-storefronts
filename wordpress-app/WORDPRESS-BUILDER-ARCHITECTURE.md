@@ -3,7 +3,7 @@
 **Authoritative source:** `faysaltalukder/grocery-storefronts/wordpress-app/`
 **Application:** WordPress Studio / Grocery Builder
 **Backend:** Dedicated Neon project, branch `grocery-template-builder-v1` (`br-muddy-lake-a1tcb0n1`), database `halal_food_db`, schema `builder`.
-**Authentication:** Neon Managed Better Auth (`auth_provider=neon_auth`).
+**Authentication:** Neon Managed Better Auth (`auth_provider=neon_auth`). The dedicated Neon project/branch owns WordPress authentication and durable template definitions.
 **Hosting:** Independent static deployment on its own origin; never served from the Halal Food GitHub Pages origin.
 
 ## Non-negotiable isolation
