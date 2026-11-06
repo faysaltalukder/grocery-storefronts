@@ -341,7 +341,7 @@ html[data-admin-theme="dark"] body[data-page] .admin-main :is(a,button,input,sel
 
 /* ============================================================
    CENTRAL MULTI-THEME ENGINE
-   All theme palettes are assigned by admin/shared.js through
+   All theme palettes are assigned by the WordPress workspace shell through
    --hf-theme-* tokens. Both sidebar and workspace read the same
    selected registry entry; page modules do not own theme colors.
    ============================================================ */
