@@ -145,18 +145,30 @@
     return rows[0];
   }
   async function loadStorefrontData(siteSlug,{token=null,preview=false}={}){
-    const opts=token?{token}:preview?{}:{public:true};
+    const opts={public:!preview};
     const websites=await request("websites","?select=id,name,slug,template_key,status,brand,settings&slug=eq."+$(siteSlug)+"&limit=1",opts);
     const website=websites?.[0];
-    if(!website)throw new Error("Storefront not found or not published.");
-    if(website.status!=="published"&&!preview)throw new Error("This storefront is not published yet.");
+    if(!website||(!preview&&website.status!=="published")){
+      const templateKey=String(siteSlug||"").replace(/^hf-/,"");
+      if(!ALLOWED_TEMPLATES.has(templateKey))throw new Error("This storefront address is not linked to a supported template.");
+      const pages=await loadTemplatePages(templateKey,{public:true});
+      return {
+        website:{id:null,owner_id:null,name:"Template preview",slug:siteSlug,template_key:templateKey,status:"preview",brand:{},settings:{template_preview:true}},
+        pages,documents:[],categories:[],products:[],previewOnly:true
+      };
+    }
+    if(preview){
+      const client=await getClient();
+      const {data,error}=await client.auth.getSession();
+      if(error||!data?.session?.user?.id)throw new Error("Sign in to the independent WordPress workspace to preview this draft.");
+    }
     const [pages,documents,categories,products]=await Promise.all([
       loadTemplatePages(website.template_key,opts),
       request("website_documents","?select=page_key,schema_version,document,updated_at&website_id=eq."+$(website.id),opts),
       request("categories","?select=id,name,slug,parent_id,sort_order,is_active&website_id=eq."+$(website.id)+"&is_active=eq.true&order=sort_order.asc",opts),
       request("products","?select=id,category_id,name,description,sku,price,compare_at_price,unit,stock,image_url,gallery,attributes,sort_order&website_id=eq."+$(website.id)+"&is_active=eq.true&order=sort_order.asc",opts)
     ]);
-    return {website,pages,documents:documents||[],categories:categories||[],products:products||[]};
+    return {website,pages,documents:documents||[],categories:categories||[],products:products||[],previewOnly:false};
   }
   async function placeOrder(siteSlug,items,customer,shippingAddress,notes=""){
     return await request("rpc/place_storefront_order","",{method:"POST",public:true,body:{p_website_slug:siteSlug,p_items:items,p_customer:customer,p_shipping_address:shippingAddress,p_notes:notes}});
