@@ -1,6 +1,6 @@
 -- Halal Food Neon Data API and persistent Website Builder documents
 -- Scope: grocery-template-builder-v1 (br-muddy-lake-a1tcb0n1), halal_food_db.
--- Supabase Auth JWTs are verified by Neon Data API using the project's public JWKS.
+-- Neon Managed Auth JWTs are verified by the Neon Data API using the branch's public JWKS.
 -- Template definitions are public read-only. All merchant data is owner-scoped.
 
 GRANT USAGE ON SCHEMA builder TO anonymous, authenticated;
