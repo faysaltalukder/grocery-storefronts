@@ -1,6 +1,7 @@
 name: Deploy grocery storefronts to GitHub Pages
 
 on:
+  pull_request:
   push:
     branches: [main]
   workflow_dispatch:
@@ -21,6 +22,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Configure GitHub Pages
+        if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v5
       - name: Validate independent storefront entry points
         run: |
@@ -33,12 +35,21 @@ jobs:
           test -s shared/neon-builder-api.js
           node --check shared/storefront.js
           node --check shared/neon-builder-api.js
+          ! grep -qi "supabase" shared/neon-builder-api.js
+          ! grep -qi "supabase" shared/storefront.js
+          ! grep -qi "HALAL_STORE_CONFIG" shared/storefront.js
+          for site in general-supermarket fresh-produce express-grocery wholesale-bulk; do
+            grep -q "@neon/neon-js" "$site/index.html"
+            ! grep -qi "supabase" "$site/index.html"
+          done
           echo "All four storefront entry points and shared runtime files passed validation."
       - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
           path: .
   deploy:
+    if: github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
