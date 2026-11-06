@@ -24,6 +24,9 @@ jobs:
       - name: Configure GitHub Pages
         if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
       - name: Validate independent WordPress source
         run: |
           set -e
