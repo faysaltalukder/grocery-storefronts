@@ -16,8 +16,9 @@
     const client=await getClient();
     const {data,error}=await client.auth.getSession();
     const session=data?.session;
-    if(error||!session?.user?.id)throw new Error("WordPress access requires its own Neon sign-in. Please sign in to the WordPress workspace.");
-    return {client,session,user:session.user,token:null};
+    const user=data?.user;
+    if(error||!user?.id)throw new Error("WordPress access requires its own Neon sign-in. Please sign in to the WordPress workspace.");
+    return {client,session,user,token:null};
   }
   function applyFilters(builder,params){
     for(const [key,raw] of params.entries()){
