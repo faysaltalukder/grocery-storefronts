@@ -27,7 +27,7 @@
 
 ## Data ownership and security
 
-- Neon `builder` schema owns WordPress templates, page definitions, tenant websites, page documents, categories, products, assets, plugins, orders, order items and audit history.
+- The Neon Data API exposes the `builder` schema only. WordPress `builder` schema owns `builder.template_catalog`, `builder.template_designs`, `builder.template_pages`, `builder.websites`, `builder.website_documents`, `builder.categories`, `builder.products`, `builder.assets`, `builder.website_plugins`, `builder.orders`, `builder.order_items` and `builder.audit_log`.
 - Every merchant write/read must be protected by RLS and owner-scoped checks; public access is limited to the minimum records and RPCs needed for published storefronts.
 - COD order placement, tracking and status transitions use the dedicated Neon RPCs. Order state changes must validate the website owner and allowed transition.
 - Keep credentials out of URLs, browser storage, logs and GitHub Actions output.
