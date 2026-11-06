@@ -17,7 +17,7 @@
     const {data,error}=await client.auth.getSession();
     const session=data?.session;
     const user=data?.user;
-    if(error||!user?.id)throw new Error("WordPress access requires its own Neon sign-in. Please sign in to the WordPress workspace.");
+    if(error||!user?.id||String(user.email||"").trim().toLowerCase()!=="halalfoodbd.official@gmail.com")throw new Error("WordPress access requires the authorized owner account. Please sign in to the WordPress workspace.");
     return {client,session,user,token:null};
   }
   function applyFilters(builder,params){
