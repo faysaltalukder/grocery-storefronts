@@ -18,7 +18,9 @@
         const values = new FormData(form), button = form.querySelector("button");
         button.disabled = true; status.textContent = "Signing in…";
         try {
-          const result = await client.auth.signIn.email({ email: String(values.get("email") || "").trim(), password: String(values.get("password") || "") });
+          const email = String(values.get("email") || "").trim().toLowerCase();
+          if (email !== "halalfoodbd.official@gmail.com") throw new Error("Access restricted: use the authorized owner email.");
+          const result = await client.auth.signIn.email({ email, password: String(values.get("password") || "") });
           if (result.error) throw result.error;
           location.reload();
         } catch (error) { status.textContent = error?.message || "Sign-in failed."; button.disabled = false; }
