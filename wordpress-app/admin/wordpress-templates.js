@@ -40,9 +40,9 @@
   const status=$("wpTemplateConnection");
   if(status)status.textContent="CONNECTING TO NEON";
   try{
-   await window.HFAdminReady;
-   if(!window.HFNeonBuilderApi)throw new Error("Neon Data API client did not load.");
-   const rows=await window.HFNeonBuilderApi.loadTemplateCatalog();
+   await window.WPAuthReady;
+   if(!window.WPNeonBuilderApi)throw new Error("Neon Data API client did not load.");
+   const rows=await window.WPNeonBuilderApi.loadTemplateCatalog();
    const byKey=new Map(rows.map(row=>[row.template_key,row]));
    const selectedKey=templates[active]?.key;
    templates=templates.filter(t=>byKey.has(t.key)).map(t=>{
