@@ -1,14 +1,4 @@
-/* Halal Food WordPress Grocery Template Studio
- * Architecture contract: GitHub (faysaltalukder/halalfood) is the versioned source of truth
- * for template UI, renderer, editor and SQL migrations. Neon project super-glade-83751859,
- * branch grocery-template-builder-v1 (br-muddy-lake-a1tcb0n1), database halal_food_db,
- * schema builder is the data source for template_catalog, template_designs, websites,
- * categories, products, assets, website_plugins and orders. Never use browser-local storage
- * or Supabase as the durable commerce database. Never point this sandbox at the public store.
- * Neon Data API is active on the grocery branch. Supabase Auth is used only for the
- * signed-in admin JWT; Neon stores the catalog and tenant data with RLS. The legacy
- * groceryapi Function is not used by this page. Product photos/prices remain sample-only.
- */
+/* Independent WordPress Grocery Template Studio. Durable data and authentication are owned by the dedicated Neon project. */
 (() => {
  "use strict";
  let templates=[
