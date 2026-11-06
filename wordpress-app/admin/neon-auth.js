@@ -65,6 +65,7 @@
       gate.querySelector("#wpAuthReset").addEventListener("click", async () => {
         const email = String(new FormData(form).get("email") || "").trim();
         if (!email) { status.textContent = "Enter your account email first."; return; }
+        if (normalizeEmail(email) !== AUTHORIZED_EMAIL) { status.textContent = "Password reset is restricted to the authorized Halal Food admin email."; return; }
         status.textContent = "Requesting a password reset…";
         try {
           const result = await client.auth.requestPasswordReset({ email, redirectTo: location.href.split("?")[0] });
