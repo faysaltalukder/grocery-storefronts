@@ -39,7 +39,7 @@ for (const token of ["hf-shop-product-grid", "hf-fresh-grid", "hf-express-grid",
 assert.ok(migration.includes("CREATE TABLE IF NOT EXISTS builder.template_designs"));
 assert.ok(architecture.includes("dedicated Neon project/branch owns WordPress authentication") || architecture.includes("Neon stores durable template definitions"));
 assert.ok(architecture.includes("Never expose Neon connection strings"));
-assert.ok(js.includes("Product photos/prices remain sample-only"));
+assert.ok(js.includes("Showing sample products") && js.includes("Sample pricing is illustrative"), "template previews must disclose sample products and illustrative pricing");
 assert.ok(templatesHtml.includes("neon-builder-api.js"), "template page must load the Neon API client");
 assert.ok(read("../admin/website-builder.html").includes("neon-builder-api.js"), "editor must load the Neon API client");
 assert.ok(apiClient.includes("client.auth.getSession") && apiClient.includes("client.from(") && apiClient.includes("client.rpc("), "Neon SDK must manage sessions and Data API requests");
