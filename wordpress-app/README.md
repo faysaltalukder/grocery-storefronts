@@ -2,6 +2,11 @@
 
 This directory is the standalone WordPress/Grocery Builder application. Its source repository is `faysaltalukder/grocery-storefronts`; its backend and authentication are owned by the dedicated Neon environment.
 
+## Hosting
+- Independent admin: https://wordpress-studio.shipstatic.com/admin/
+- Public storefront renderer: https://wordpress-studio.shipstatic.com/storefront.html?site=YOUR_SITE_SLUG
+- Hosted from this repository's `wordpress-app/` source, independently of Halal Food GitHub Pages.
+
 ## Isolation contract
 - No Halal Food Supabase URL, key, JWT, session, Edge Function, storage bucket, database table, or secret is used by this application.
 - Admin authentication is Neon Managed Auth. Durable template, tenant, page, catalogue, and order data use the dedicated Neon Data API and owner-scoped RLS.
