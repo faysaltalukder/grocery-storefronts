@@ -154,6 +154,7 @@ function suppliersPage(){
  panel("Supplier directory",table(["Supplier","Store scope","Phone","Email","Status",""],tableRows,800));
 }
 function purchasingPage(){
+ if(state.store==="all")return pageHead("PROCUREMENT","Purchasing & receiving","Choose one storefront from the Store scope selector before creating or receiving purchase orders.")+panel("Select a storefront",'<div class="oc-alert">Purchase orders and receiving are store-specific. Choose one store in the top selector, then return here.</div>');
  const sites=chosenSites().length?chosenSites():state.data.websites||[],selected=site(state.store!=="all"?state.store:(sites[0]?.id||""));
  const target=selected||state.data.websites[0],products=target?productsForSite(target.id).filter(p=>p.is_active):[];
  const suppliers=target?suppliersForSite(target.id):[];
@@ -171,6 +172,7 @@ function purchasingPage(){
  panel("Purchase orders",table(["PO number","Store","Supplier","Status","Subtotal","Balance due","Actions"],rows,950))+receiveBox+payBox;
 }
 function deliveryPage(){
+ if(state.store==="all")return pageHead("DELIVERY","Delivery & store settings","Choose one storefront from the Store scope selector before editing delivery areas and contact details.")+panel("Select a storefront",'<div class="oc-alert">Delivery coverage is configured separately for each storefront. Choose a store in the top selector, then return here.</div>');
  const targets=chosenSites(),w=targets[0]||state.data.websites[0];
  if(!w)return pageHead("DELIVERY","Delivery & stores","No stores found.")+'<div class="oc-empty">No stores configured.</div>';
  const zones=(state.data.deliveryZones||[]).filter(z=>z.website_id===w.id);
@@ -200,6 +202,7 @@ function returnsPage(){
  panel("Return register",table(["Order","Store","Customer","Reason","Status","Actions"],rows,900));
 }
 function wholesalePage(){
+ if(state.store==="all")return pageHead("B2B PROCUREMENT","Wholesale price tiers","Choose the Wholesale & Bulk storefront from the Store scope selector to configure its quantity pricing.")+panel("Select a storefront",'<div class="oc-alert">Wholesale price tiers must belong to one storefront. Choose the relevant store in the top selector.</div>');
  const siteRows=state.data.websites||[],w=site(state.store!=="all"?state.store:siteRows.find(s=>s.template_key==="wholesale-bulk")?.id||siteRows[0]?.id),products=w?productsForSite(w.id):[];
  const form='<form id="ocTierForm" class="oc-form-grid"><label class="oc-field wide">Store '+siteSelect("website_id",w?.id||"")+'</label><label class="oc-field wide">Product<select class="oc-select" name="product_id" required><option value="">Choose a product</option>'+products.map(p=>'<option value="'+p.id+'">'+esc(p.name)+'</option>').join("")+'</select></label><label class="oc-field">Minimum quantity<input class="oc-input" name="minimum_quantity" type="number" min=".001" step=".001" required></label><label class="oc-field">Tier unit price (৳)<input class="oc-input" name="unit_price" type="number" min=".01" step=".01" required></label><label class="oc-field wide">Tier label<input class="oc-input" name="label" placeholder="e.g. Restaurant 20+"></label><div class="oc-form-actions wide"><button class="oc-btn primary" type="submit">Save wholesale tier</button></div></form>';
  const rows=scoped(state.data.priceTiers).map(t=>'<tr><td>'+esc(siteName(t.website_id))+'</td><td>'+esc(state.data.products.find(p=>p.id===t.product_id)?.name||"Product")+'</td><td class="oc-num">'+t.minimum_quantity+'</td><td class="oc-num">'+money(t.unit_price)+'</td><td>'+esc(t.label||"—")+'</td><td>'+badge(t.is_active?"active":"inactive")+'</td></tr>');
