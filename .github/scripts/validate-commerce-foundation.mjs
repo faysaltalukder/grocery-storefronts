@@ -15,10 +15,15 @@ assert.ok(storefront.includes("function reorderTrackedOrder("),"Order reorder mu
 assert.ok(storefront.includes("data-reorder-tracked"),"Reorder control must be rendered");
 assert.ok(storefront.includes("deliveryZoneForArea")&&storefront.includes("Area / city (optional)"),"Checkout must support optional delivery area with configured zone pricing.");
 const orderMigration=fs.readFileSync("migrations/20261108_generic_storefront_order_processing.sql","utf8");
+const demoOrderMigration=fs.readFileSync("migrations/20261108_demo_storefront_checkout.sql","utf8");
+assert.ok(demoOrderMigration.includes("v_is_demo")&&demoOrderMigration.includes("[DEMO ORDER")&&demoOrderMigration.includes("IF NOT v_is_demo THEN"),"Demo orders must be marked in the owner dashboard and must not consume sample inventory");
+assert.ok(demoOrderMigration.includes("'demo',v_is_demo"),"Checkout response must identify demo orders for customer confirmation");
 assert.ok(orderMigration.includes("IF FOUND THEN")&&orderMigration.includes("default_fee")&&!orderMigration.includes("Choose a delivery area before placing the order"),"Server checkout must accept an address without requiring a delivery zone.");
 assert.ok(storefront.includes("case\"about\":case\"contact\":case\"faq\":case\"delivery\":return contentPage(key);case\"returns\":return returnsPage();"),"About/contact/FAQ/delivery must route to their own content pages");
 assert.ok(storefront.includes("function quantityStep(p)"),"Fresh produce must support variable-weight quantity steps");
-assert.ok(storefront.includes("function canOrderProduct(p)")&&storefront.includes("inventory_verified"),"Unverified or demo inventory must be visibly non-orderable in the customer experience");
+assert.ok(storefront.includes("function canOrderProduct(p)")&&storefront.includes("demoMode||(!Boolean(a.demo)&&Boolean(a.inventory_verified))"),"Demo catalog products must remain orderable while unverified live inventory stays blocked");
+assert.ok(storefront.includes("DEMO STOREFRONT")&&storefront.includes("DEMO ORDER · TEST ONLY"),"Demo storefronts must explain test checkout and identify demo order confirmations");
+assert.ok(!storefront.includes("Orders are disabled in private preview"),"Preview mode must not block checkout on published demo storefronts");
 assert.ok(storefront.includes('location.pathname.endsWith("/storefront.html")'),"Central Studio preview product and checkout links must stay on storefront.html, not route to the dashboard.");
 assert.ok(storefront.includes("function searchSuggestions(query)")&&storefront.includes("sf-search-suggestions"),"Header search must provide live product suggestions");
 assert.ok(storefront.includes("function mobileDock()")&&storefront.includes("sf-mobile-dock"),"All storefronts must provide mobile-first quick navigation");
