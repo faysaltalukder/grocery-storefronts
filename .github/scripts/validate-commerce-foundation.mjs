@@ -96,7 +96,7 @@ assert.ok(!bundle["admin/neon-auth.js"].includes("AUTHORIZED_EMAIL")&&!bundle["a
 assert.ok(bundle["admin/neon-auth.js"].includes("signUp.email"),"Workspace must provide merchant account creation");
 assert.ok(!bundle["admin/neon-preview-auth.js"].includes("halalfoodbd.official@gmail.com"),"Private preview must accept any authenticated merchant owner");
 assert.ok(bundle["admin/wordpress-templates.js"].includes("updateBrowserPreviewLinks")&&!bundle["admin/wordpress-templates.js"].includes('encodeURIComponent("hf-"+t.key)'),"Template preview must resolve the signed-in merchant's own store slug");
-assert.ok(storefront.includes("window.WPNeonClientReady"),"Private preview must reuse the independent WordPress Neon session");
+assert.ok(storefront.includes("const storefrontApi=()=>window.HFNeonBuilderApi||window.WPNeonBuilderApi;"),"Private preview must use the independent WordPress Neon API client when running inside Studio");
 assert.ok(tenantMigration.includes("ALTER POLICY owner_identity_guard"),"Legacy single-owner restrictive policies must be neutralized only after replacement tenant guards exist");
 assert.doesNotThrow(()=>new Function(api),"Shared storefront API must parse");
 assert.doesNotThrow(()=>new Function(adminApi),"Admin API must parse");
