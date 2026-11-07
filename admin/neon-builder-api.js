@@ -369,7 +369,7 @@
 
   async function loadCentralCommerce(){
     const {user}=await authContext();
-    const [websites,products,categories,orders,orderItems,suppliers,purchaseOrders,purchaseItems,inventoryMovements,deliveryZones,payments,supplierPayments,customers,customerLinks,returns,finance,priceTiers]=await Promise.all([
+    const [websites,products,categories,orders,orderItems,suppliers,purchaseOrders,purchaseItems,inventoryMovements,deliveryZones,payments,supplierPayments,customers,customerLinks,returns,finance,priceTiers,quoteRequests]=await Promise.all([
       request("websites","?select=id,owner_id,name,slug,template_key,status,brand,settings,created_at,updated_at&order=created_at.asc"),
       request("products","?select=id,website_id,owner_id,category_id,name,description,sku,price,compare_at_price,unit,stock,image_url,gallery,attributes,is_active,sort_order,created_at,updated_at&order=updated_at.desc&limit=3000"),
       request("categories","?select=id,website_id,owner_id,name,slug,parent_id,sort_order,is_active&order=sort_order.asc&limit=2000"),
@@ -386,10 +386,11 @@
       request("customer_site_links","?select=*&limit=5000"),
       request("return_requests","?select=*&order=created_at.desc&limit=1000"),
       request("finance_entries","?select=*&order=occurred_at.desc&limit=3000"),
-      request("product_price_tiers","?select=*&order=minimum_quantity.asc&limit=3000")
+      request("product_price_tiers","?select=*&order=minimum_quantity.asc&limit=3000"),
+      request("quote_requests","?select=*&owner_id=eq."+$(user.id)+"&order=created_at.desc&limit=1000")
     ]);
     const ids=new Set((websites||[]).map(w=>w.id)),keep=rows=>(rows||[]).filter(r=>!r.website_id||ids.has(r.website_id));
-    return {user:{id:user.id,email:user.email},websites:websites||[],products:keep(products),categories:keep(categories),orders:keep(orders),orderItems:orderItems||[],suppliers:suppliers||[],purchaseOrders:keep(purchaseOrders),purchaseItems:purchaseItems||[],inventoryMovements:keep(inventoryMovements),deliveryZones:keep(deliveryZones),payments:keep(payments),supplierPayments:keep(supplierPayments),customers:customers||[],customerLinks:customerLinks||[],returns:keep(returns),finance:keep(finance),priceTiers:keep(priceTiers)};
+    return {user:{id:user.id,email:user.email},websites:websites||[],products:keep(products),categories:keep(categories),orders:keep(orders),orderItems:orderItems||[],suppliers:suppliers||[],purchaseOrders:keep(purchaseOrders),purchaseItems:purchaseItems||[],inventoryMovements:keep(inventoryMovements),deliveryZones:keep(deliveryZones),payments:keep(payments),supplierPayments:keep(supplierPayments),customers:customers||[],customerLinks:customerLinks||[],returns:keep(returns),finance:keep(finance),priceTiers:keep(priceTiers),quoteRequests:quoteRequests||[]};
   }
   async function saveCentralSupplier(input){
     const {user}=await authContext(),id=String(input?.id||"").trim(),siteId=String(input?.website_id||"").trim()||null;
@@ -454,6 +455,17 @@
     const rows=await request("return_requests","?id=eq."+$(returnId)+"&owner_id=eq."+$(user.id)+"&select=*",{method:"PATCH",body:{status,notes:String(notes||"").slice(0,2000),updated_at:new Date().toISOString()}});
     if(!rows?.[0])throw new Error("Return status update was not confirmed.");return rows[0];
   }
+  async function updateCentralQuote(quoteId,status,quotedAmount=0,validUntil=null,responseNotes=""){
+    const {user}=await authContext();
+    if(!["requested","reviewing","quoted","approved","rejected","closed"].includes(status))throw new Error("Invalid quotation status.");
+    const amount=Number(quotedAmount||0);
+    if(!Number.isFinite(amount)||amount<0)throw new Error("Enter a valid quotation amount.");
+    if(status==="quoted"&&amount<=0)throw new Error("A quotation amount is required before marking a request as quoted.");
+    if(validUntil&&!/^\\d{4}-\\d{2}-\\d{2}$/.test(String(validUntil)))throw new Error("Enter a valid quotation expiry date.");
+    const rows=await request("quote_requests","?id=eq."+$(quoteId)+"&owner_id=eq."+$(user.id)+"&select=*",{method:"PATCH",body:{status,quoted_amount:amount,valid_until:validUntil||null,response_notes:String(responseNotes||"").slice(0,2000),updated_at:new Date().toISOString()}});
+    if(!rows?.[0])throw new Error("Quotation update was not confirmed.");
+    return rows[0];
+  }
   async function centralAdjustInventory(website,productId,delta,reason,type="adjustment"){
     await verifyWebsiteOwner(website);
     const result=await request("rpc/central_adjust_inventory","",{method:"POST",body:{p_website_id:website.id,p_product_id:productId,p_delta:Number(delta),p_reason:String(reason||""),p_movement_type:type}});
@@ -484,5 +496,5 @@
     if(!rows?.[0])throw new Error("Wholesale price tier save was not confirmed.");return rows[0];
   }
 
-  window.WPNeonBuilderApi=Object.freeze({apiBase:API_BASE,loadTemplateCatalog,loadTemplatePages,ensureWebsite,loadWebsiteDocuments,seedWebsitePages,loadPageDocument,savePageDocument,loadDocument:loadPageDocument,saveDocument:(website,document,pageKey="home")=>savePageDocument(website,pageKey,document),loadStorefrontData,placeOrder,trackOrder,submitReturnRequest,submitQuoteRequest,getWebsiteStats,loadWebsiteOrders,updateOrderStatus,loadWebsiteCatalog,saveWebsiteCategory,saveWebsiteProduct,setWebsiteProductActive,setWebsiteCategoryActive,saveWebsiteProfile,verifyWebsiteCatalog,loadCentralCommerce,saveCentralSupplier,saveCentralCustomer,saveCentralDeliveryZone,setCentralZoneActive,saveCentralStoreProfile,createCentralFinanceEntry,createCentralReturn,updateCentralReturn,centralAdjustInventory,centralCreatePurchaseOrder,centralReceivePurchaseOrder,centralRecordOrderPayment,centralRecordSupplierPayment,centralSavePriceTier,createCustomPage,publishWebsite,defaultPageDocument});
+  window.WPNeonBuilderApi=Object.freeze({apiBase:API_BASE,loadTemplateCatalog,loadTemplatePages,ensureWebsite,loadWebsiteDocuments,seedWebsitePages,loadPageDocument,savePageDocument,loadDocument:loadPageDocument,saveDocument:(website,document,pageKey="home")=>savePageDocument(website,pageKey,document),loadStorefrontData,placeOrder,trackOrder,submitReturnRequest,submitQuoteRequest,getWebsiteStats,loadWebsiteOrders,updateOrderStatus,loadWebsiteCatalog,saveWebsiteCategory,saveWebsiteProduct,setWebsiteProductActive,setWebsiteCategoryActive,saveWebsiteProfile,verifyWebsiteCatalog,loadCentralCommerce,saveCentralSupplier,saveCentralCustomer,saveCentralDeliveryZone,setCentralZoneActive,saveCentralStoreProfile,createCentralFinanceEntry,createCentralReturn,updateCentralReturn,centralAdjustInventory,centralCreatePurchaseOrder,centralReceivePurchaseOrder,centralRecordOrderPayment,centralRecordSupplierPayment,centralSavePriceTier,updateCentralQuote,createCustomPage,publishWebsite,defaultPageDocument});
 })();
