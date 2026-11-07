@@ -11,9 +11,11 @@ for (const [path, source] of scripts) new vm.Script(source, { filename: path });
 const api = bundle["admin/neon-builder-api.js"];
 const catalog = bundle["admin/website-catalog.js"];
 const storefront = bundle["storefront.js"];
+const orderRpc = readFileSync(new URL("../backups/place_storefront_order.after.sql", import.meta.url), "utf8");
 if (!api.includes("inventory_verified") || !api.includes("Publishing blocked")) throw new Error("Real-inventory publishing guard is missing.");
 if (!catalog.includes("importProductsCsv") || !catalog.includes("exportProductsCsv") || !catalog.includes("hfStoreOperationsForm")) throw new Error("Catalogue CSV or operations workflow is missing.");
-if (!storefront.includes("posts=docFor") || !storefront.includes("sf-rich-block") || !storefront.includes("WPNeonClientReady")) throw new Error("Rich storefront renderer or WordPress Neon integration is missing.");
+if (!storefront.includes("posts=docFor") || !storefront.includes("sf-rich-block") || !storefront.includes("WPNeonClientReady") || !storefront.includes('name="area" required')) throw new Error("Rich storefront renderer, delivery-area checkout or WordPress Neon integration is missing.");
+if (!orderRpc.includes("demo_catalog") || !orderRpc.includes("inventory_verified") || !orderRpc.includes("Delivery is not available in the selected area") || !orderRpc.includes("Duplicate product lines")) throw new Error("Database order RPC safety checks are incomplete.");
 for (const [path, content] of Object.entries(bundle)) {
   if (path.endsWith(".html") && content.includes("_ship=bv6dsk2")) throw new Error("Stale deployment pin remains in " + path);
 }
