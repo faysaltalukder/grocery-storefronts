@@ -2,6 +2,8 @@
 -- RESTRICTIVE policies are ANDed with legacy permissive policies. No existing rows or
 -- policies are deleted. Public SELECT remains available only for published storefront data.
 DO $tenant_scope$
+DECLARE
+  v_table text;
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname='builder' AND tablename='websites' AND policyname='tenant_scope_websites_select') THEN
     EXECUTE $p$CREATE POLICY tenant_scope_websites_select ON builder.websites AS RESTRICTIVE FOR SELECT TO authenticated USING (owner_id=auth.uid() OR status='published')$p$;
@@ -111,5 +113,13 @@ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname='builder' AND tablename='audit_log' AND policyname='tenant_scope_audit_log_delete') THEN
     EXECUTE $p$CREATE POLICY tenant_scope_audit_log_delete ON builder.audit_log AS RESTRICTIVE FOR DELETE TO authenticated USING (owner_id=auth.uid() AND (website_id IS NULL OR EXISTS (SELECT 1 FROM builder.websites w WHERE w.id=audit_log.website_id AND w.owner_id=auth.uid())))$p$;
   END IF;
+  -- Neutralize the legacy single-owner restrictive guard only after the replacement
+  -- tenant-scoped restrictive policies above have been created in this same transaction.
+  FOREACH v_table IN ARRAY ARRAY['websites','assets','audit_log','categories','order_items','orders','products','website_documents','website_plugins']
+  LOOP
+    IF EXISTS (SELECT 1 FROM pg_policies WHERE schemaname='builder' AND tablename=v_table AND policyname='owner_identity_guard') THEN
+      EXECUTE format('ALTER POLICY owner_identity_guard ON builder.%I USING (true) WITH CHECK (true)',v_table);
+    END IF;
+  END LOOP;
 END;
 $tenant_scope$;
