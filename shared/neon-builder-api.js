@@ -1,6 +1,6 @@
 /* Halal Food multi-page storefront API.
  * GitHub owns renderer code. Neon owns catalog, pages, tenant content and orders.
- * Admin writes use the current Supabase Auth JWT; public reads are restricted by
+ * Admin writes use the current independent Neon Auth session; public reads are restricted by
  * Neon RLS to published websites. No database credentials are shipped to browsers.
  */
 (() => {
