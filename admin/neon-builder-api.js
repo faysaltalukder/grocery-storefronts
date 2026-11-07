@@ -183,6 +183,9 @@
   async function placeOrder(siteSlug,items,customer,shippingAddress,notes=""){
     return await request("rpc/place_storefront_order","",{method:"POST",public:true,body:{p_website_slug:siteSlug,p_items:items,p_customer:customer,p_shipping_address:shippingAddress,p_notes:notes}});
   }
+  async function submitReturnRequest(siteSlug,orderNumber,phone,reason,notes=""){
+    return await request("rpc/submit_storefront_return_request","",{method:"POST",public:true,body:{p_website_slug:siteSlug,p_order_number:orderNumber,p_phone:phone,p_reason:reason,p_notes:notes}});
+  }
   async function trackOrder(siteSlug,orderNumber,phone){
     return await request("rpc/track_storefront_order","",{method:"POST",public:true,body:{p_website_slug:siteSlug,p_order_number:orderNumber,p_phone:phone}});
   }
@@ -473,5 +476,5 @@
     if(!rows?.[0])throw new Error("Wholesale price tier save was not confirmed.");return rows[0];
   }
 
-  window.WPNeonBuilderApi=Object.freeze({apiBase:API_BASE,loadTemplateCatalog,loadTemplatePages,ensureWebsite,loadWebsiteDocuments,seedWebsitePages,loadPageDocument,savePageDocument,loadDocument:loadPageDocument,saveDocument:(website,document,pageKey="home")=>savePageDocument(website,pageKey,document),loadStorefrontData,placeOrder,trackOrder,getWebsiteStats,loadWebsiteOrders,updateOrderStatus,loadWebsiteCatalog,saveWebsiteCategory,saveWebsiteProduct,setWebsiteProductActive,setWebsiteCategoryActive,saveWebsiteProfile,verifyWebsiteCatalog,loadCentralCommerce,saveCentralSupplier,saveCentralCustomer,saveCentralDeliveryZone,setCentralZoneActive,saveCentralStoreProfile,createCentralFinanceEntry,createCentralReturn,updateCentralReturn,centralAdjustInventory,centralCreatePurchaseOrder,centralReceivePurchaseOrder,centralRecordOrderPayment,centralRecordSupplierPayment,centralSavePriceTier,createCustomPage,publishWebsite,defaultPageDocument});
+  window.WPNeonBuilderApi=Object.freeze({apiBase:API_BASE,loadTemplateCatalog,loadTemplatePages,ensureWebsite,loadWebsiteDocuments,seedWebsitePages,loadPageDocument,savePageDocument,loadDocument:loadPageDocument,saveDocument:(website,document,pageKey="home")=>savePageDocument(website,pageKey,document),loadStorefrontData,placeOrder,trackOrder,submitReturnRequest,getWebsiteStats,loadWebsiteOrders,updateOrderStatus,loadWebsiteCatalog,saveWebsiteCategory,saveWebsiteProduct,setWebsiteProductActive,setWebsiteCategoryActive,saveWebsiteProfile,verifyWebsiteCatalog,loadCentralCommerce,saveCentralSupplier,saveCentralCustomer,saveCentralDeliveryZone,setCentralZoneActive,saveCentralStoreProfile,createCentralFinanceEntry,createCentralReturn,updateCentralReturn,centralAdjustInventory,centralCreatePurchaseOrder,centralReceivePurchaseOrder,centralRecordOrderPayment,centralRecordSupplierPayment,centralSavePriceTier,createCustomPage,publishWebsite,defaultPageDocument});
 })();
