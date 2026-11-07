@@ -58,7 +58,7 @@ account:["Your orders, made easier","You can look up an order using the order nu
 wishlist:["Your saved picks","Products you save stay in this browser on this device.","Your wishlist is a convenience feature and does not reserve stock or place an order.",["Open a product and choose Save to wishlist","Return here to review saved products","Add available items to your basket when you are ready"]]
 };
 const d=details[key]||details.about;
-const list=d.slice(3);
+const list=d.slice(3).flat(Infinity);
 const listHtml=key==="faq"?list.reduce((html,item,index)=>index%2===0?html+'<details class="sf-faq-item"><summary>'+esc(item)+'</summary><p>'+esc(list[index+1]||"Contact the store for details.")+'</p></details>':html,""):list.length?'<ul>'+list.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul>':"";
 let contactHtml="";
 if(key==="contact"){
