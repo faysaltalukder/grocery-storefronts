@@ -233,5 +233,77 @@
     if(!result?.[0])throw new Error("Neon did not confirm the publish status.");
     return result[0];
   }
-  window.WPNeonBuilderApi=Object.freeze({apiBase:API_BASE,loadTemplateCatalog,loadTemplatePages,ensureWebsite,loadWebsiteDocuments,seedWebsitePages,loadPageDocument,savePageDocument,loadDocument:loadPageDocument,saveDocument:(website,document,pageKey="home")=>savePageDocument(website,pageKey,document),loadStorefrontData,placeOrder,trackOrder,getWebsiteStats,loadWebsiteOrders,updateOrderStatus,createCustomPage,publishWebsite,defaultPageDocument});
+
+  async function verifyWebsiteOwner(website){
+    const {user}=await authContext();
+    if(!website?.id||website.owner_id!==user.id)throw new Error("Website ownership check failed.");
+    return user;
+  }
+  async function loadWebsiteCatalog(website){
+    const user=await verifyWebsiteOwner(website);
+    const [categories,products]=await Promise.all([
+      request("categories","?select=id,website_id,owner_id,name,slug,parent_id,sort_order,is_active,created_at&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&order=sort_order.asc"),
+      request("products","?select=id,website_id,owner_id,category_id,name,description,sku,price,compare_at_price,unit,stock,image_url,gallery,attributes,is_active,sort_order,created_at,updated_at&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&order=sort_order.asc")
+    ]);
+    return {categories:categories||[],products:products||[]};
+  }
+  function catalogSlug(value){
+    return String(value||"").trim().toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,70);
+  }
+  async function saveWebsiteCategory(website,input){
+    const user=await verifyWebsiteOwner(website),name=String(input?.name||"").trim().slice(0,100),slug=catalogSlug(input?.slug||name);
+    if(name.length<2||!slug)throw new Error("Enter a category name with at least two characters.");
+    const payload={website_id:website.id,owner_id:user.id,name,slug,sort_order:Math.max(0,Number(input.sort_order)||0),is_active:input.is_active!==false};
+    if(input.id){
+      const rows=await request("categories","?id=eq."+$(input.id)+"&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&select=id,name,slug,sort_order,is_active",{method:"PATCH",body:payload});
+      if(!rows?.[0])throw new Error("Category update was not confirmed.");
+      return rows[0];
+    }
+    const rows=await request("categories","?select=id,name,slug,sort_order,is_active",{method:"POST",body:payload});
+    if(!rows?.[0])throw new Error("Category creation was not confirmed.");
+    return rows[0];
+  }
+  async function saveWebsiteProduct(website,input){
+    const user=await verifyWebsiteOwner(website);
+    const name=String(input?.name||"").trim().slice(0,160),description=String(input?.description||"").trim().slice(0,5000);
+    const price=Number(input?.price),stock=Number(input?.stock),compare=input?.compare_at_price===""||input?.compare_at_price==null?null:Number(input.compare_at_price);
+    if(name.length<2)throw new Error("Product name must contain at least two characters.");
+    if(!Number.isFinite(price)||price<=0)throw new Error("Enter a product price greater than zero.");
+    if(!Number.isFinite(stock)||stock<0)throw new Error("Stock must be zero or greater.");
+    if(compare!==null&&(!Number.isFinite(compare)||compare<0))throw new Error("Compare-at price must be zero or greater.");
+    const categoryId=String(input?.category_id||"").trim()||null;
+    if(categoryId){
+      const matches=await request("categories","?select=id&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&id=eq."+$(categoryId)+"&is_active=eq.true&limit=1");
+      if(!matches?.length)throw new Error("Choose an active category from this website.");
+    }
+    const imageUrl=String(input?.image_url||"").trim();
+    if(imageUrl&&!(imageUrl.startsWith("https://")||imageUrl.startsWith("http://")))throw new Error("Product image must use a valid https:// or http:// URL.");
+    const minQty=Math.max(1,Number(input?.minimum_order_quantity)||1);
+    const payload={website_id:website.id,owner_id:user.id,category_id:categoryId,name,description,sku:String(input?.sku||"").trim().slice(0,80)||null,price,compare_at_price:compare,unit:String(input?.unit||"piece").trim().slice(0,30)||"piece",stock,image_url:imageUrl||null,gallery:[],attributes:{minimum_order_quantity:minQty,brand:String(input?.brand||"").trim().slice(0,100)},is_active:input?.is_active!==false,sort_order:Math.max(0,Number(input?.sort_order)||0),updated_at:new Date().toISOString()};
+    if(input.id){
+      const rows=await request("products","?id=eq."+$(input.id)+"&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&select=id,name,sku,price,stock,is_active,updated_at",{method:"PATCH",body:payload});
+      if(!rows?.[0])throw new Error("Product update was not confirmed.");
+      return rows[0];
+    }
+    const rows=await request("products","?select=id,name,sku,price,stock,is_active,created_at",{method:"POST",body:payload});
+    if(!rows?.[0])throw new Error("Product creation was not confirmed.");
+    return rows[0];
+  }
+  async function setWebsiteProductActive(website,productId,isActive){
+    const user=await verifyWebsiteOwner(website);
+    const rows=await request("products","?id=eq."+$(productId)+"&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&select=id,is_active",{method:"PATCH",body:{is_active:Boolean(isActive),updated_at:new Date().toISOString()}});
+    if(!rows?.[0])throw new Error("Product status update was not confirmed.");
+    return rows[0];
+  }
+  async function setWebsiteCategoryActive(website,categoryId,isActive){
+    const user=await verifyWebsiteOwner(website);
+    if(!isActive){
+      const products=await request("products","?select=id&website_id=eq."+$(website.id)+"&category_id=eq."+$(categoryId)+"&is_active=eq.true&limit=1");
+      if(products?.length)throw new Error("Move or archive the active products in this category before archiving it.");
+    }
+    const rows=await request("categories","?id=eq."+$(categoryId)+"&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&select=id,is_active",{method:"PATCH",body:{is_active:Boolean(isActive)}});
+    if(!rows?.[0])throw new Error("Category status update was not confirmed.");
+    return rows[0];
+  }
+  window.WPNeonBuilderApi=Object.freeze({apiBase:API_BASE,loadTemplateCatalog,loadTemplatePages,ensureWebsite,loadWebsiteDocuments,seedWebsitePages,loadPageDocument,savePageDocument,loadDocument:loadPageDocument,saveDocument:(website,document,pageKey="home")=>savePageDocument(website,pageKey,document),loadStorefrontData,placeOrder,trackOrder,getWebsiteStats,loadWebsiteOrders,updateOrderStatus,loadWebsiteCatalog,saveWebsiteCategory,saveWebsiteProduct,setWebsiteProductActive,setWebsiteCategoryActive,createCustomPage,publishWebsite,defaultPageDocument});
 })();
