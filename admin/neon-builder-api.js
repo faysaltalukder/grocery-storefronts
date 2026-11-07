@@ -460,10 +460,11 @@
     if(!["requested","reviewing","quoted","approved","rejected","closed"].includes(status))throw new Error("Invalid quotation status.");
     const amount=Number(quotedAmount||0);
     if(!Number.isFinite(amount)||amount<0)throw new Error("Enter a valid quotation amount.");
-    if(status==="quoted"&&amount<=0)throw new Error("A quotation amount is required before marking a request as quoted.");
-    if(validUntil&&!/\d{4}-\d{2}-\d{2}$/.test(String(validUntil)))throw new Error("Enter a valid quotation expiry date.");
-    const rows=await request("quote_requests","?id=eq."+$(quoteId)+"&owner_id=eq."+$(user.id)+"&select=*",{method:"PATCH",body:{status,quoted_amount:amount,valid_until:validUntil||null,response_notes:String(responseNotes||"").slice(0,2000),updated_at:new Date().toISOString()}});
-    if(!rows?.[0])throw new Error("Quotation update was not confirmed.");
+    if(status==="quoted"&&amount<=0)throw new Error("A positive quotation amount is required before marking a request as quoted.");
+    if(validUntil&&!/^\\d{4}-\\d{2}-\\d{2}$/.test(String(validUntil)))throw new Error("Enter a valid quotation expiry date.");
+    const rows=await request("rpc/respond_to_storefront_quote_request","",{method:"POST",body:{p_quote_id:quoteId,p_status:status,p_quoted_amount:amount,p_valid_until:validUntil||null,p_response_notes:String(responseNotes||"").slice(0,2000)}});
+    if(!Array.isArray(rows)||!rows[0]?.id)throw new Error("Quotation update was not confirmed.");
+    if(rows[0].owner_id!==user.id)throw new Error("Quotation response ownership could not be confirmed.");
     return rows[0];
   }
   async function centralAdjustInventory(website,productId,delta,reason,type="adjustment"){
