@@ -1,7 +1,6 @@
 /* Independent WordPress storefront API.
  * GitHub owns renderer code. Neon owns catalog, pages, tenant content and orders.
- * Authentication is provided by this standalone Neon client; no Halal Food
- * Supabase session, key, schema, or runtime is used by this application.
+ * Authentication and data access are provided by this standalone Neon client.
  */
 (() => {
   "use strict";
