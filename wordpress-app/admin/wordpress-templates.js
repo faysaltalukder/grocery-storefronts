@@ -25,6 +25,28 @@
  $("wpStorefront").addEventListener("click",e=>{const add=e.target.closest("[data-add]");if(add){let n=1;if(templates[active].key==="wholesale-bulk"){const input=$("hfQty"+add.dataset.add);n=Math.max(1,Number(input?.value)||1);}setCart(n);add.textContent="Added ✓";setTimeout(()=>{if(add.isConnected)add.textContent=templates[active].key==="express-grocery"?"+ Add":templates[active].key==="wholesale-bulk"?"Add to order":"+";},900);return;}const cat=e.target.closest("[data-category]");if(cat){category=cat.dataset.category;filterProducts();return;}if(e.target.closest("[data-scroll-products]")){$("hfShopProducts")?.scrollIntoView({behavior:"smooth",block:"start"});return;}if(e.target.closest("[data-quote]")){window.alert("Quote request is a design preview. Connect a merchant account and backend workflow before accepting real requests.");}});
  $("wpStorefront").addEventListener("input",e=>{if(e.target.id==="hfShopSearch"){query=e.target.value;filterProducts();}});
  document.querySelectorAll("[data-preview-device]").forEach(b=>b.addEventListener("click",()=>{const mobile=b.dataset.previewDevice==="mobile";$("wpTemplateViewport").classList.toggle("is-mobile",mobile);$("wpTemplateViewport").classList.toggle("is-desktop",!mobile);document.querySelectorAll("[data-preview-device]").forEach(x=>{const on=x===b;x.classList.toggle("is-active",on);x.setAttribute("aria-pressed",String(on));});}));
+ const categoryNames={"clothing-fashion":"Clothing & Fashion","medicine-pharmacy":"Medicine & Pharmacy","hospital-healthcare":"Hospital & Healthcare","real-estate-property":"Real Estate & Property","restaurant-food":"Restaurant & Food","education-training":"Education & Training","travel-tourism":"Travel & Tourism","hotel-accommodation":"Hotel & Accommodation","beauty-salon":"Beauty & Salon","fitness-gym":"Fitness & Gym","automotive-services":"Automotive & Vehicle Services","professional-services":"Professional & Business Services","construction-interior":"Construction & Interior","events-weddings":"Event & Wedding Services","portfolio-agency":"Portfolio & Creative Agency","news-media":"News & Media","nonprofit-organization":"Nonprofit & Organization","logistics-delivery":"Logistics & Delivery","legal-accounting":"Legal & Accounting"};
+ const requestedCategory=params.get("category")||"ecommerce-grocery";
+ if(requestedCategory!=="ecommerce-grocery"){
+  const businessName=categoryNames[requestedCategory]||"Business Templates";
+  const selectedNumber=Math.min(4,Math.max(1,Number(params.get("template")||1)));
+  document.title=businessName+" Templates · WordPress Studio";
+  $("wpTemplateCategoryTitle").textContent=businessName;
+  $("wpTemplateIntro").textContent="Four dedicated website design slots for "+businessName.toLowerCase()+". Each design will be built for the needs of this business category.";
+  document.querySelector(".hf-wpt-architecture p").textContent="This category is part of the independent WordPress Studio template library. Its four design slots are reserved; category-specific storefront designs are not published yet. The existing E-commerce & Grocery collection remains available separately.";
+  $("wpTemplateConnection").textContent="CATEGORY COLLECTION · DESIGN SLOTS";
+  document.querySelector(".hf-wpt-template-bar-copy .hf-wpt-eyebrow").textContent="BUSINESS TEMPLATE COLLECTION";
+  document.querySelector(".hf-wpt-template-bar-copy strong").textContent="Choose a template slot";
+  $("wpTemplateTabs").innerHTML=Array.from({length:4},(_,i)=>'<a class="hf-wpt-template-slot '+(i+1===selectedNumber?'is-active':'')+'" href="./wordpress-templates.html?category='+encodeURIComponent(requestedCategory)+'&template='+(i+1)+'"><span>0'+(i+1)+'</span><strong>Template '+(i+1)+'</strong><small>Design slot</small></a>').join("");
+  $("wpTemplateViewport").closest(".hf-wpt-preview-shell").hidden=true;
+  $("wpTemplateDetails").hidden=true;
+  document.querySelector(".hf-wpt-next-step").hidden=true;
+  const slots=document.createElement("section");
+  slots.className="wp-category-slot-grid";
+  slots.innerHTML=Array.from({length:4},(_,i)=>'<article class="wp-category-slot '+(i+1===selectedNumber?'is-selected':'')+'"><span class="wp-category-slot-number">0'+(i+1)+'</span><div><small>DESIGN SLOT '+(i+1)+'</small><h2>Template '+(i+1)+'</h2><p>A dedicated '+esc(businessName.toLowerCase())+' website design will be created here. This slot is reserved and is not yet a finished or selectable storefront.</p></div><span class="wp-category-slot-status">Design planned</span></article>').join("");
+  $("pageContent").insertBefore(slots,document.querySelector(".hf-wpt-architecture").nextSibling);
+  return;
+ }
  render();
  const loadNeonCatalog=async()=>{
   const status=$("wpTemplateConnection");
