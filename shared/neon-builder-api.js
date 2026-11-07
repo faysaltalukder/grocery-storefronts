@@ -217,10 +217,11 @@
     const {user}=await authContext();
     if(!website?.id||website.owner_id!==user.id)throw new Error("Website ownership check failed.");
     const [products,categories]=await Promise.all([
-      request("products","?select=id&website_id=eq."+$(website.id)+"&is_active=eq.true&limit=1"),
+      request("products","?select=id,attributes&website_id=eq."+$(website.id)+"&is_active=eq.true&limit=500"),
       request("categories","?select=id&website_id=eq."+$(website.id)+"&is_active=eq.true&limit=1")
     ]);
     if(!products?.length||!categories?.length)throw new Error("Add at least one active category and one active product before publishing.");
+    if(products.some(product=>product.attributes?.demo===true))throw new Error("This website still contains DEMO catalogue products. Replace or remove every sample product and confirm real prices and stock before publishing.");
     const result=await request("websites","?id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&select=id,status,updated_at",{method:"PATCH",prefer:"return=representation",body:{status:"published",brand:brand||website.brand||{},settings:settings||website.settings||{},updated_at:new Date().toISOString()}});
     if(!result?.[0])throw new Error("Neon did not confirm the publish status.");
     return result[0];
