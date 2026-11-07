@@ -17,6 +17,7 @@ assert.ok(storefront.includes("deliveryZoneForArea"),"Checkout must use configur
 assert.ok(storefront.includes("case\"about\":case\"contact\":case\"faq\":case\"delivery\":return contentPage(key);case\"returns\":return returnsPage();"),"About/contact/FAQ/delivery must route to their own content pages");
 assert.ok(storefront.includes("function quantityStep(p)"),"Fresh produce must support variable-weight quantity steps");
 assert.ok(storefront.includes("function canOrderProduct(p)")&&storefront.includes("inventory_verified"),"Unverified or demo inventory must be visibly non-orderable in the customer experience");
+assert.ok(storefront.includes('location.pathname.endsWith("/storefront.html")'),"Central Studio preview product and checkout links must stay on storefront.html, not route to the dashboard.");
 assert.ok(storefront.includes("function searchSuggestions(query)")&&storefront.includes("sf-search-suggestions"),"Header search must provide live product suggestions");
 assert.ok(storefront.includes("function mobileDock()")&&storefront.includes("sf-mobile-dock"),"All storefronts must provide mobile-first quick navigation");
 assert.ok(storefront.includes("Catalogue preview")&&storefront.includes("noindex,nofollow"),"Unverified catalogues and unpublished storefronts must be clearly marked and noindexed");
@@ -50,16 +51,14 @@ assert.equal(bundle["storefront.js"],storefront,"ShipStatic preview storefront J
 assert.equal(bundle["storefront.css"],css,"ShipStatic preview CSS must match the tested shared styles");
 assert.equal(bundle["admin/neon-builder-api.js"],adminApi,"ShipStatic preview API must match the tested Neon API");
 const templateScript=bundle["admin/wordpress-templates.js"];
-const target=templateScript.indexOf('$("wpTemplateBrowserBottom").href="../storefront.html?site="+encodeURIComponent("hf-"+t.key)+"&preview=1";');
-const top=templateScript.indexOf('$("wpTemplateBrowserTop").href=$("wpTemplateBrowserBottom").href;',target);
-assert.ok(target>=0&&top>target,"The top preview button must receive the selected template URL, not the previous template URL");
-assert.ok(bundle["storefront.html"].includes("storefront.js?v=20261107-commerce-ux-v3"),"Preview HTML must bust stale storefront JS cache");
-assert.ok(bundle["admin/wordpress-templates.html"].includes("wordpress-templates.js?v=20261107-commerce-ux-v3"),"Template library must bust stale preview-link JS cache");
+assert.ok(templateScript.includes("async function updateBrowserPreviewLinks(templateKey)") && templateScript.includes('const href="../storefront.html?site="+encodeURIComponent(website.slug)+"&preview=1"') && templateScript.includes('links.forEach(link=>{link.href=href;link.dataset.previewReady="true";})'),"Preview buttons must resolve the signed-in merchant storefront slug before opening preview.");
+assert.ok(bundle["storefront.html"].includes("storefront.js?v=20261108-preview-route-v1"),"Preview HTML must bust stale storefront JS cache");
+assert.ok(bundle["admin/wordpress-templates.html"].includes("wordpress-templates.js?v=20261108-preview-route-v1"),"Template library must bust stale preview-link JS cache");
 for(const site of ["general-supermarket","fresh-produce","express-grocery","wholesale-bulk"]){
  const html=fs.readFileSync(site+"/index.html","utf8");
  assert.ok(html.includes("@neon/neon-js"),site+" must use the independent Neon client");
  assert.ok(!html.toLowerCase().includes("supabase"),site+" must not use Supabase");
- assert.ok(html.includes("20261107-commerce-ux-v3"),site+" must use the current customer storefront asset cache version");
+ assert.ok(html.includes("20261108-preview-route-v1"),site+" must use the current customer storefront asset cache version");
 }
 assert.ok(!api.toLowerCase().includes("supabase"),"Shared API must remain independent of Supabase");
 assert.ok(!storefront.toLowerCase().includes("supabase"),"Shared storefront must remain independent of Supabase");
