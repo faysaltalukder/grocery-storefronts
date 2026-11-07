@@ -1,5 +1,5 @@
 -- Additive B2B quote-request persistence for the four isolated grocery storefronts.
--- This migration creates new objects only; it does not alter or delete existing commerce data.
+-- This migration creates new objects only and does not alter or delete existing commerce data.
 
 CREATE TABLE IF NOT EXISTS builder.quote_requests (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
