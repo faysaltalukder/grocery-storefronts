@@ -154,7 +154,7 @@
       const pages=await loadTemplatePages(templateKey,{public:true});
       return {
         website:{id:null,owner_id:null,name:"Template preview",slug:siteSlug,template_key:templateKey,status:"preview",brand:{},settings:{template_preview:true}},
-        pages,documents:[],categories:[],products:[],previewOnly:true
+        pages,documents:[],categories:[],products:[],deliveryZones:[],priceTiers:[],previewOnly:true
       };
     }
     if(preview){
@@ -162,16 +162,21 @@
       const {data,error}=await client.auth.getSession();
       if(error||!data?.session?.user?.id)throw new Error("Sign in to the independent WordPress workspace to preview this draft.");
     }
-    const [pages,documents,categories,products]=await Promise.all([
+    const [pages,documents,categories,products,deliveryZones,priceTiers]=await Promise.all([
       loadTemplatePages(website.template_key,opts),
       request("website_documents","?select=page_key,schema_version,document,updated_at&website_id=eq."+$(website.id),opts),
       request("categories","?select=id,name,slug,parent_id,sort_order,is_active&website_id=eq."+$(website.id)+"&is_active=eq.true&order=sort_order.asc",opts),
-      request("products","?select=id,category_id,name,description,sku,price,compare_at_price,unit,stock,image_url,gallery,attributes,sort_order&website_id=eq."+$(website.id)+"&is_active=eq.true&order=sort_order.asc",opts)
+      request("products","?select=id,category_id,name,description,sku,price,compare_at_price,unit,stock,image_url,gallery,attributes,sort_order&website_id=eq."+$(website.id)+"&is_active=eq.true&order=sort_order.asc",opts),
+      request("delivery_zones","?select=id,name,normalized_name,delivery_fee,minimum_order,eta_label&website_id=eq."+$(website.id)+"&is_active=eq.true&order=name.asc",opts),
+      request("product_price_tiers","?select=id,product_id,minimum_quantity,unit_price,label&website_id=eq."+$(website.id)+"&is_active=eq.true&order=minimum_quantity.asc",opts)
     ]);
-    return {website,pages,documents:documents||[],categories:categories||[],products:products||[],previewOnly:false};
+    return {website,pages,documents:documents||[],categories:categories||[],products:products||[],deliveryZones:deliveryZones||[],priceTiers:priceTiers||[],previewOnly:false};
   }
   async function placeOrder(siteSlug,items,customer,shippingAddress,notes=""){
     return await request("rpc/place_storefront_order","",{method:"POST",public:true,body:{p_website_slug:siteSlug,p_items:items,p_customer:customer,p_shipping_address:shippingAddress,p_notes:notes}});
+  }
+  async function submitReturnRequest(siteSlug,orderNumber,phone,reason,notes=""){
+    return await request("rpc/submit_storefront_return_request","",{method:"POST",public:true,body:{p_website_slug:siteSlug,p_order_number:orderNumber,p_phone:phone,p_reason:reason,p_notes:notes}});
   }
   async function trackOrder(siteSlug,orderNumber,phone){
     return await request("rpc/track_storefront_order","",{method:"POST",public:true,body:{p_website_slug:siteSlug,p_order_number:orderNumber,p_phone:phone}});
@@ -226,5 +231,5 @@
     if(!result?.[0])throw new Error("Neon did not confirm the publish status.");
     return result[0];
   }
-  window.HFNeonBuilderApi=Object.freeze({apiBase:API_BASE,loadTemplateCatalog,loadTemplatePages,ensureWebsite,loadWebsiteDocuments,seedWebsitePages,loadPageDocument,savePageDocument,loadDocument:loadPageDocument,saveDocument:(website,document,pageKey="home")=>savePageDocument(website,pageKey,document),loadStorefrontData,placeOrder,trackOrder,getWebsiteStats,loadWebsiteOrders,updateOrderStatus,createCustomPage,publishWebsite,defaultPageDocument});
+  window.HFNeonBuilderApi=Object.freeze({apiBase:API_BASE,loadTemplateCatalog,loadTemplatePages,ensureWebsite,loadWebsiteDocuments,seedWebsitePages,loadPageDocument,savePageDocument,loadDocument:loadPageDocument,saveDocument:(website,document,pageKey="home")=>savePageDocument(website,pageKey,document),loadStorefrontData,placeOrder,trackOrder,submitReturnRequest,getWebsiteStats,loadWebsiteOrders,updateOrderStatus,createCustomPage,publishWebsite,defaultPageDocument});
 })();
