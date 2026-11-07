@@ -12,6 +12,7 @@ const api = bundle["admin/neon-builder-api.js"];
 const catalog = bundle["admin/website-catalog.js"];
 const storefront = bundle["storefront.js"];
 const orderRpc = readFileSync(new URL("../backups/place_storefront_order.after.sql", import.meta.url), "utf8");
+const quoteRpc = readFileSync(new URL("../../migrations/20261107_quote_response_rpc.sql", import.meta.url), "utf8");
 if (!api.includes("inventory_verified") || !api.includes("Publishing blocked")) throw new Error("Real-inventory publishing guard is missing.");
 if (!api.includes("Resolve all of these items first") || !api.includes("const blockers=[]")) throw new Error("Publish readiness does not report all launch blockers together.");
 const commerce = bundle["admin/commerce.js"];
@@ -26,8 +27,11 @@ if (!storefront.includes("posts=docFor") || !storefront.includes("sf-rich-block"
 if (!storefront.includes("priceForProduct") || !storefront.includes("deliveryFeeForArea") || !storefront.includes("minimumOrderForArea") || !storefront.includes("deliveryZones") || !storefront.includes("priceTiers")) throw new Error("Storefront wholesale pricing or delivery-zone totals are missing.");
 if (!storefront.includes("sfReturnForm") || !storefront.includes("submitReturnRequest") || !storefront.includes("Quick bulk order sheet") || !storefront.includes("sfBrandFilter")) throw new Error("Customer returns, wholesale quick ordering or catalogue filters are missing.");
 if (!api.includes("submitReturnRequest")) throw new Error("Storefront return request API is missing.");
-if (!api.includes("updateCentralQuote") || !api.includes("quoteRequests:quoteRequests||[]")) throw new Error("Central quotation request API is missing.");
+if (!api.includes("updateCentralQuote") || !api.includes("quoteRequests:quoteRequests||[]") || !api.includes("rpc/respond_to_storefront_quote_request")) throw new Error("Central quotation request API is missing.");
+if (!quoteRpc.includes("SECURITY DEFINER") || !quoteRpc.includes("auth.uid()") || !quoteRpc.includes("q.owner_id = v_user_id") || !quoteRpc.includes("TO authenticated") || !quoteRpc.includes("FROM anonymous")) throw new Error("Owner-scoped quotation response RPC security is incomplete.");
 if (!commerce.includes("function quotesPage()") || !commerce.includes("data-quote-update") || !commerce.includes("updateCentralQuote")) throw new Error("Central wholesale quotation management is missing.");
+if (!storefront.includes("function quantityStep(p)") || !storefront.includes("sfSubstitution") || !storefront.includes("const storefrontApi=()=>window.HFNeonBuilderApi||window.WPNeonBuilderApi;")) throw new Error("Fresh produce or private preview commerce features are missing.");
+if (!storefront.includes("case\"about\":case\"contact\":case\"faq\":case\"delivery\":return contentPage(key);")) throw new Error("Storefront information pages are not routed correctly.");
 if (!bundle["admin/commerce.html"].includes('data-tab="quotes"')) throw new Error("Central commerce quotation navigation is missing.");
 
 if (!orderRpc.includes("product_price_tiers") || !orderRpc.includes("v_unit_price") || !orderRpc.includes("delivery_zones")) throw new Error("Server-side tier pricing or delivery-zone checks are missing.");
