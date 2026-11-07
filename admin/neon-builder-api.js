@@ -315,10 +315,10 @@
   async function saveWebsiteProduct(website,input){
     const user=await verifyWebsiteOwner(website);
     const name=String(input?.name||"").trim().slice(0,160),description=String(input?.description||"").trim().slice(0,5000);
-    const price=Number(input?.price),stock=Number(input?.stock),compare=input?.compare_at_price===""||input?.compare_at_price==null?null:Number(input.compare_at_price);
+    const price=Number(input?.price),requestedStock=input?.stock===""||input?.stock==null?null:Number(input.stock),compare=input?.compare_at_price===""||input?.compare_at_price==null?null:Number(input.compare_at_price);
     if(name.length<2)throw new Error("Product name must contain at least two characters.");
     if(!Number.isFinite(price)||price<=0)throw new Error("Enter a product price greater than zero.");
-    if(!Number.isFinite(stock)||stock<0)throw new Error("Stock must be zero or greater.");
+    if(requestedStock!==null&&(!Number.isFinite(requestedStock)||requestedStock<0))throw new Error("Stock must be zero or greater.");
     if(compare!==null&&(!Number.isFinite(compare)||compare<0))throw new Error("Compare-at price must be zero or greater.");
     const categoryId=String(input?.category_id||"").trim()||null;
     if(categoryId){const matches=await request("categories","?select=id&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&id=eq."+$(categoryId)+"&is_active=eq.true&limit=1");if(!matches?.length)throw new Error("Choose an active category from this website.");}
@@ -326,7 +326,9 @@
     if(imageUrl&&!(imageUrl.startsWith("https://")||imageUrl.startsWith("http://")))throw new Error("Product image must use a valid https:// or http:// URL.");
     const minQty=Math.max(1,Number(input?.minimum_order_quantity)||1),productId=String(input?.id||"").trim();
     let existing=null;
-    if(productId){const found=await request("products","?select=id,attributes,gallery&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&id=eq."+$(productId)+"&limit=1");if(!found?.[0])throw new Error("The product to edit could not be found.");existing=found[0];}
+    if(productId){const found=await request("products","?select=id,attributes,gallery,stock&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&id=eq."+$(productId)+"&limit=1");if(!found?.[0])throw new Error("The product to edit could not be found.");existing=found[0];if(requestedStock!==null&&requestedStock!==Number(existing.stock))throw new Error("Product details cannot change stock. Use the audited stock-adjustment control so every stock change is logged.");}
+    const stock=productId?Number(existing.stock):requestedStock;
+    if(!Number.isFinite(stock)||stock<0)throw new Error("New products need a valid opening stock quantity.");
     const verified=input?.real_inventory_verified===true||input?.real_inventory_verified==="true"||input?.real_inventory_verified==="on";
     const sku=String(input?.sku||"").trim().slice(0,80)||null;
     if(verified&&(!sku||description.length<20||!imageUrl.startsWith("https://")))throw new Error("To verify real inventory, add a unique SKU, a useful description (at least 20 characters), and an HTTPS product image.");
