@@ -16,6 +16,10 @@ assert.ok(storefront.includes("data-reorder-tracked"),"Reorder control must be r
 assert.ok(storefront.includes("deliveryZoneForArea"),"Checkout must use configured delivery zones");
 assert.ok(storefront.includes("case\"about\":case\"contact\":case\"faq\":case\"delivery\":return contentPage(key);case\"returns\":return returnsPage();"),"About/contact/FAQ/delivery must route to their own content pages");
 assert.ok(storefront.includes("function quantityStep(p)"),"Fresh produce must support variable-weight quantity steps");
+assert.ok(storefront.includes("function canOrderProduct(p)")&&storefront.includes("inventory_verified"),"Unverified or demo inventory must be visibly non-orderable in the customer experience");
+assert.ok(storefront.includes("function searchSuggestions(query)")&&storefront.includes("sf-search-suggestions"),"Header search must provide live product suggestions");
+assert.ok(storefront.includes("function mobileDock()")&&storefront.includes("sf-mobile-dock"),"All storefronts must provide mobile-first quick navigation");
+assert.ok(storefront.includes("Catalogue preview")&&storefront.includes("noindex,nofollow"),"Unverified catalogues and unpublished storefronts must be clearly marked and noindexed");
 assert.ok(storefront.includes("sfSubstitution"),"Fresh produce checkout must capture substitution preferences");
 assert.ok(storefront.includes("const storefrontApi=()=>window.HFNeonBuilderApi||window.WPNeonBuilderApi;"),"The shared renderer must support both public and private-preview API clients");
 assert.ok(storefront.includes("quickOrderSheet(12)"),"Wholesale home must expose a short quick-order sheet");
@@ -41,7 +45,7 @@ for(const site of ["general-supermarket","fresh-produce","express-grocery","whol
  const html=fs.readFileSync(site+"/index.html","utf8");
  assert.ok(html.includes("@neon/neon-js"),site+" must use the independent Neon client");
  assert.ok(!html.toLowerCase().includes("supabase"),site+" must not use Supabase");
- assert.ok(html.includes("20261107-commerce-core-v6"),site+" must use the current customer storefront asset cache version");
+ assert.ok(html.includes("20261107-commerce-ux-v3"),site+" must use the current customer storefront asset cache version");
 }
 assert.ok(!api.toLowerCase().includes("supabase"),"Shared API must remain independent of Supabase");
 assert.ok(!storefront.toLowerCase().includes("supabase"),"Shared storefront must remain independent of Supabase");
