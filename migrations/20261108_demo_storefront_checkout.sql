@@ -205,3 +205,45 @@ $function$
 
 COMMENT ON FUNCTION builder.place_storefront_order(text,jsonb,jsonb,jsonb,text)
 IS 'Public storefront checkout with atomic inventory reservation; optional delivery zones, store-wide defaults, and demo checkout without stock deduction.';
+
+
+-- Demo orders are non-fulfilment tests and never decrement inventory.
+-- Cancelling one must therefore never restore sample stock.
+CREATE OR REPLACE FUNCTION builder.update_storefront_order_status(p_website_id uuid, p_order_id uuid, p_status text)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'pg_catalog', 'builder'
+AS $function$
+DECLARE
+ v_website builder.websites%ROWTYPE;
+ v_order builder.orders%ROWTYPE;
+ v_item record;
+ v_previous numeric;
+ v_next numeric;
+ v_is_demo boolean:=false;
+BEGIN
+ IF p_status NOT IN ('processing','shipped','delivered','cancelled') THEN
+  RAISE EXCEPTION 'Unsupported order status' USING ERRCODE='22023';
+ END IF;
+ SELECT * INTO v_website FROM builder.websites WHERE id=p_website_id AND owner_id=auth.uid() FOR SHARE;
+ IF NOT FOUND THEN RAISE EXCEPTION 'Website ownership check failed' USING ERRCODE='42501'; END IF;
+ SELECT * INTO v_order FROM builder.orders WHERE id=p_order_id AND website_id=v_website.id AND owner_id=auth.uid() FOR UPDATE;
+ IF NOT FOUND THEN RAISE EXCEPTION 'Order not found' USING ERRCODE='P0002'; END IF;
+ IF v_order.status IN ('delivered','cancelled') THEN RAISE EXCEPTION 'This order is already in a final state' USING ERRCODE='22023'; END IF;
+ IF v_order.status='pending' AND p_status NOT IN ('processing','cancelled') THEN RAISE EXCEPTION 'A pending order can only be processed or cancelled' USING ERRCODE='22023'; END IF;
+ IF v_order.status='processing' AND p_status NOT IN ('shipped','cancelled') THEN RAISE EXCEPTION 'A processing order can only be shipped or cancelled' USING ERRCODE='22023'; END IF;
+ IF v_order.status='shipped' AND p_status<>'delivered' THEN RAISE EXCEPTION 'A shipped order can only be marked delivered' USING ERRCODE='22023'; END IF;
+ v_is_demo:=COALESCE(v_order.notes,'') LIKE '[DEMO ORDER%';
+ IF p_status='cancelled' AND NOT v_is_demo THEN
+  FOR v_item IN SELECT oi.product_id,oi.quantity,p.stock FROM builder.order_items oi JOIN builder.products p ON p.id=oi.product_id WHERE oi.order_id=v_order.id AND oi.product_id IS NOT NULL FOR UPDATE OF p LOOP
+   v_previous:=v_item.stock;v_next:=v_previous+v_item.quantity;
+   UPDATE builder.products SET stock=v_next,updated_at=now() WHERE id=v_item.product_id AND website_id=v_website.id;
+   INSERT INTO builder.inventory_movements(owner_id,website_id,product_id,movement_type,quantity_delta,previous_stock,new_stock,reference_type,reference_id,reason,actor_id)
+   VALUES(auth.uid(),v_website.id,v_item.product_id,'release',v_item.quantity,v_previous,v_next,'order',v_order.id,'Stock restored after order cancellation '||v_order.order_number,auth.uid());
+  END LOOP;
+ END IF;
+ UPDATE builder.orders SET status=p_status WHERE id=v_order.id AND website_id=v_website.id;
+ RETURN jsonb_build_object('id',v_order.id,'order_number',v_order.order_number,'status',p_status,'payment_status',v_order.payment_status,'demo',v_is_demo);
+END;
+$function$;
