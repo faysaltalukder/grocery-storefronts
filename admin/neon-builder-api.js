@@ -279,10 +279,11 @@
     const incomplete=(products||[]).filter(p=>!p.sku||!String(p.image_url||"").startsWith("https://")||String(p.description||"").trim().length<20||!Number.isFinite(Number(p.price))||Number(p.price)<=0||!Number.isFinite(Number(p.stock))||Number(p.stock)<0);
     if(incomplete.length)blockers.push(incomplete.length+" active product(s) need a SKU, HTTPS image, useful description and valid price/stock.");
     const delivery=siteSettings.delivery||{},zones=(deliveryZones||[]).filter(z=>z.is_active);
-    if(!zones.length)blockers.push("Add at least one real delivery zone with its area name, delivery fee and minimum order.");
+    const defaultFee=Number(delivery.default_fee??0),defaultMinimum=Number(delivery.minimum_order??0);
+    if(!Number.isFinite(defaultFee)||defaultFee<0||!Number.isFinite(defaultMinimum)||defaultMinimum<0)blockers.push("Set a valid store-wide default delivery fee and minimum order (zero is allowed).");
     const invalidZones=zones.filter(z=>!String(z.name||"").trim()||!Number.isFinite(Number(z.delivery_fee))||Number(z.delivery_fee)<0||!Number.isFinite(Number(z.minimum_order))||Number(z.minimum_order)<0);
     if(invalidZones.length)blockers.push(invalidZones.length+" active delivery zone(s) have incomplete or invalid fees/minimum order values.");
-    if(/demo configuration/i.test(String(delivery.note||"")))blockers.push("Replace the demo delivery note with the actual delivery policy.");
+    
     const contact=siteSettings.contact||{},supportPhone=String(siteBrand.phone||contact.phone||"").trim(),supportEmail=String(siteBrand.email||contact.email||"").trim(),phoneDigits=supportPhone.replace(/[^0-9]/g,"").length;
     if(!supportPhone&&!supportEmail)blockers.push("Add a real customer-support phone number or email address.");
     if(supportPhone&&(phoneDigits<7||phoneDigits>20))blockers.push("Correct the customer-support phone number.");
