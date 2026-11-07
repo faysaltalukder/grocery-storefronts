@@ -26,6 +26,10 @@ if (!storefront.includes("posts=docFor") || !storefront.includes("sf-rich-block"
 if (!storefront.includes("priceForProduct") || !storefront.includes("deliveryFeeForArea") || !storefront.includes("minimumOrderForArea") || !storefront.includes("deliveryZones") || !storefront.includes("priceTiers")) throw new Error("Storefront wholesale pricing or delivery-zone totals are missing.");
 if (!storefront.includes("sfReturnForm") || !storefront.includes("submitReturnRequest") || !storefront.includes("Quick bulk order sheet") || !storefront.includes("sfBrandFilter")) throw new Error("Customer returns, wholesale quick ordering or catalogue filters are missing.");
 if (!api.includes("submitReturnRequest")) throw new Error("Storefront return request API is missing.");
+if (!api.includes("updateCentralQuote") || !api.includes("quoteRequests:quoteRequests||[]")) throw new Error("Central quotation request API is missing.");
+if (!commerce.includes("function quotesPage()") || !commerce.includes("data-quote-update") || !commerce.includes("updateCentralQuote")) throw new Error("Central wholesale quotation management is missing.");
+if (!bundle["admin/commerce.html"].includes('data-tab="quotes"')) throw new Error("Central commerce quotation navigation is missing.");
+
 if (!orderRpc.includes("product_price_tiers") || !orderRpc.includes("v_unit_price") || !orderRpc.includes("delivery_zones")) throw new Error("Server-side tier pricing or delivery-zone checks are missing.");
 if (!orderRpc.includes("demo_catalog") || !orderRpc.includes("inventory_verified") || !orderRpc.includes("Delivery is not available in the selected area") || !orderRpc.includes("Duplicate product lines")) throw new Error("Database order RPC safety checks are incomplete.");
 for (const [path, content] of Object.entries(bundle)) {
