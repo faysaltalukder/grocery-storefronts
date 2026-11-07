@@ -188,6 +188,9 @@
   async function submitReturnRequest(siteSlug,orderNumber,phone,reason,notes=""){
     return await request("rpc/submit_storefront_return_request","",{method:"POST",public:true,body:{p_website_slug:siteSlug,p_order_number:orderNumber,p_phone:phone,p_reason:reason,p_notes:notes}});
   }
+  async function submitQuoteRequest(siteSlug,business,items,notes=""){
+    return await request("rpc/submit_storefront_quote_request","",{method:"POST",public:true,body:{p_website_slug:siteSlug,p_business:business,p_items:items,p_notes:notes}});
+  }
   async function getWebsiteStats(website){
     if(!website?.id)throw new Error("Website context is missing.");
     const [products,categories,docs]=await Promise.all([
@@ -275,5 +278,5 @@
     if(!result?.[0])throw new Error("Neon did not confirm the publish status.");
     return {...result[0],preflight};
   }
-  window.HFNeonBuilderApi=Object.freeze({apiBase:API_BASE,loadTemplateCatalog,loadTemplatePages,ensureWebsite,loadWebsiteDocuments,seedWebsitePages,loadPageDocument,savePageDocument,loadDocument:loadPageDocument,saveDocument:(website,document,pageKey="home")=>savePageDocument(website,pageKey,document),loadStorefrontData,placeOrder,trackOrder,submitReturnRequest,getWebsiteStats,loadWebsiteOrders,updateOrderStatus,createCustomPage,getPublishPreflight,publishWebsite,defaultPageDocument});
+  window.HFNeonBuilderApi=Object.freeze({apiBase:API_BASE,loadTemplateCatalog,loadTemplatePages,ensureWebsite,loadWebsiteDocuments,seedWebsitePages,loadPageDocument,savePageDocument,loadDocument:loadPageDocument,saveDocument:(website,document,pageKey="home")=>savePageDocument(website,pageKey,document),loadStorefrontData,placeOrder,trackOrder,submitReturnRequest,submitQuoteRequest,getWebsiteStats,loadWebsiteOrders,updateOrderStatus,createCustomPage,getPublishPreflight,publishWebsite,defaultPageDocument});
 })();
