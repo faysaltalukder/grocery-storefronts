@@ -7,6 +7,31 @@ const money=v=>"৳"+Number(v||0).toLocaleString("en-BD",{maximumFractionDigits:
 const date=v=>v?new Date(v).toLocaleString("en-BD",{dateStyle:"medium",timeStyle:"short"}):"—";
 const dateOnly=v=>v?new Date(v).toLocaleDateString("en-BD"):"—";
 const csvCell=v=>'"'+String(v??"").replaceAll('"','""')+'"';
+function parseCSV(text){
+ const source=String(text||"").replace(/^\uFEFF/,""),rows=[];
+ let row=[],cell="",quoted=false;
+ for(let i=0;i<source.length;i++){
+  const ch=source[i];
+  if(quoted){
+   if(ch==='"'&&source[i+1]==='"'){cell+='"';i++;}
+   else if(ch==='"')quoted=false;
+   else cell+=ch;
+  }else if(ch==='"'&&cell==="")quoted=true;
+  else if(ch===","){row.push(cell);cell="";}
+  else if(ch==="\n"){row.push(cell);rows.push(row);row=[];cell="";}
+  else if(ch!=="\r")cell+=ch;
+ }
+ if(cell.length||row.length){row.push(cell);rows.push(row);}
+ if(!rows.length)return [];
+ const headers=rows.shift().map(h=>h.trim().toLowerCase().replace(/[^a-z0-9]+/g,"_"));
+ return rows.filter(r=>r.some(v=>String(v||"").trim())).map(r=>Object.fromEntries(headers.map((h,i)=>[h,String(r[i]??"").trim()])));
+}
+function downloadCSVFile(filename,content){
+ const blob=new Blob(["\uFEFF"+content],{type:"text/csv;charset=utf-8"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
 let state={data:null,tab:"overview",store:"all",search:"",editingProduct:null,selectedOrder:null,selectedPO:null};
 
 function notice(message,type="info"){
@@ -119,7 +144,8 @@ function productsPage(){
 
  return pageHead("CATALOGUE OPERATIONS","Products & inventory","Manage products across all stores from one place. All stock changes create an inventory movement record.",'<button class="oc-btn secondary" data-action="export-products" type="button">Export CSV</button> <button class="oc-btn primary" data-action="new-product" type="button">+ Add product</button>')+
  '<div class="oc-grid-2"><div>'+panel(editing?"Edit product":"Add a product",form)+'</div><div>'+panel("Audited stock adjustment",'<form id="ocStockForm" class="oc-form-grid"><label class="oc-field wide">Product<select class="oc-select" name="product_id" required>'+stockOptions+'</select></label><label class="oc-field">Quantity change (+ / −)<input class="oc-input" name="delta" type="number" step=".001" required placeholder="e.g. 12 or -3"></label><label class="oc-field">Movement type<select class="oc-select" name="movement_type"><option value="adjustment">Stock correction</option><option value="damage">Damaged / lost</option><option value="return">Customer return</option></select></label><label class="oc-field wide">Reason<input class="oc-input" name="reason" required minlength="3" placeholder="e.g. Physical stock count"></label><div class="oc-form-actions wide"><button class="oc-btn primary" type="submit">Save stock movement</button></div></form>')+'</div></div>'+
- panel("Product library",'<div class="oc-filters"><input id="ocProductSearch" class="oc-input oc-search" type="search" placeholder="Search by name, SKU, barcode or store…" value="'+esc(state.search)+'"><span class="oc-help">'+rows.length+' products in this scope</span></div>'+table(["Product","Store","Price","Stock","Verification","Visibility","Actions"],tableRows,920));+
+ panel("Bulk catalogue import",'<form id="ocProductImportForm" class="oc-form-grid"><label class="oc-field wide">Target storefront '+siteSelect("website_id",selected?.id||"")+'</label><label class="oc-field wide">CSV file<input class="oc-input" type="file" name="csv_file" accept=".csv,text/csv" required></label><div class="oc-help wide">Up to 200 new products per import. Existing SKUs are skipped. Opening stock is written through the audited inventory ledger. Mark inventory_verified=true only after checking the real stock, price and product details.</div><div class="oc-form-actions wide"><button class="oc-btn primary" type="submit">Import products from CSV</button><button class="oc-btn secondary" id="ocDownloadProductTemplate" type="button">Download CSV template</button></div></form>')+
+ panel("Product library",'<div class="oc-filters"><input id="ocProductSearch" class="oc-input oc-search" type="search" placeholder="Search by name, SKU, barcode or store…" value="'+esc(state.search)+'"><span class="oc-help">'+rows.length+' products in this scope</span></div>'+table(["Product","Store","Price","Stock","Verification","Visibility","Actions"],tableRows,920))+
  '<div class="oc-grid-2" style="margin-top:13px"><div>'+panel("Category management",categoryForm+table(["Category","Sort","State"],categoryRows,430))+'</div><div>'+panel("Recent stock movements",table(["Date","Product","Movement","Change","New stock","Reason"],movementRows,650))+'</div></div>';
 }
 function ordersPage(){
@@ -234,6 +260,48 @@ function bindPage(){
  const productForm=$("#ocProductForm");if(productForm){const sf=productForm.elements.namedItem("website_id");sf?.addEventListener("change",()=>{const cf=productForm.elements.namedItem("category_id"),list=categoriesForSite(sf.value);cf.innerHTML='<option value="">Uncategorized</option>'+list.map(c=>'<option value="'+c.id+'">'+esc(c.name)+'</option>').join("");});}if(productForm)productForm.addEventListener("submit",async e=>{
   e.preventDefault();const f=e.currentTarget,x=formObj(f),w=site(x.website_id);if(!w)throw new Error("Select a store.");
   try{busy(true);await api().saveWebsiteProduct(w,{id:state.editingProduct||"",name:x.name,category_id:x.category_id,sku:x.sku,price:x.price,compare_at_price:x.compare_at_price,unit:x.unit,stock:state.editingProduct?state.data.products.find(p=>p.id===state.editingProduct)?.stock||0:0,brand:x.brand,barcode:x.barcode,pack_size:x.pack_size,origin:x.origin,grade:x.grade,expiry_date:x.expiry_date,farm_name:x.farm_name,image_url:x.image_url,description:x.description,is_active:f.elements.is_active.checked,real_inventory_verified:f.elements.real_inventory_verified.checked});state.editingProduct=null;await refresh();notice("Product saved to the selected store's central catalogue.","success");}catch(err){notice(err.message||"Product save failed.","error");}finally{busy(false);}
+ });
+ const templateButton=$("#ocDownloadProductTemplate");if(templateButton)templateButton.addEventListener("click",()=>downloadCSVFile("grocery-product-import-template.csv","name,sku,price,stock,unit,category,description,image_url,brand,barcode,pack_size,origin,grade,expiry_date,farm_name,compare_at_price,inventory_verified,is_active\n"));
+ const importForm=$("#ocProductImportForm");if(importForm)importForm.addEventListener("submit",async e=>{
+  e.preventDefault();const form=e.currentTarget,x=formObj(form),w=site(x.website_id),file=form.elements.csv_file.files?.[0];
+  if(!w){notice("Choose a target storefront before importing.","error");return;}
+  if(!file){notice("Choose a CSV file to import.","error");return;}
+  try{
+   busy(true);
+   const rows=parseCSV(await file.text());
+   if(!rows.length)throw new Error("The CSV file has no product rows.");
+   if(rows.length>200)throw new Error("Import is limited to 200 product rows at a time.");
+   const required=["name","sku","price","stock","description"];
+   const missing=required.filter(k=>!Object.prototype.hasOwnProperty.call(rows[0],k));
+   if(missing.length)throw new Error("Missing CSV columns: "+missing.join(", "));
+   let created=0,stocked=0;const errors=[];
+   const cats=categoriesForSite(w.id);
+   for(let i=0;i<rows.length;i++){
+    const r=rows[i],rowNo=i+2;
+    try{
+     const name=String(r.name||"").trim(),sku=String(r.sku||"").trim(),price=Number(r.price),stock=Number(r.stock);
+     if(name.length<2||!sku)throw new Error("Product name and SKU are required.");
+     if(!Number.isFinite(price)||price<=0||!Number.isFinite(stock)||stock<0)throw new Error("Price must be positive and stock cannot be negative.");
+     if(state.data.products.some(p=>p.website_id===w.id&&String(p.sku||"").toLowerCase()===sku.toLowerCase()))throw new Error("SKU already exists in this storefront.");
+     let categoryId=null;
+     if(r.category){
+      const wanted=String(r.category).trim().toLowerCase();
+      const category=cats.find(c=>String(c.name||"").trim().toLowerCase()===wanted||String(c.slug||"").trim().toLowerCase()===wanted);
+      if(!category)throw new Error("Category not found: "+r.category+". Create the category first.");
+      categoryId=category.id;
+     }
+     const verified=["true","1","yes","verified"].includes(String(r.inventory_verified||"").trim().toLowerCase());
+     const active=!["false","0","no","inactive"].includes(String(r.is_active||"").trim().toLowerCase());
+     const product=await api().saveWebsiteProduct(w,{id:"",name,category_id:categoryId,sku,price,compare_at_price:r.compare_at_price||"",unit:r.unit||"piece",stock:0,brand:r.brand||"",barcode:r.barcode||"",pack_size:r.pack_size||"",origin:r.origin||"",grade:r.grade||"",expiry_date:r.expiry_date||"",farm_name:r.farm_name||"",image_url:r.image_url||"",description:r.description||"",is_active:active,real_inventory_verified:verified});
+     created++;
+     if(stock>0){try{await api().centralAdjustInventory(w,product.id,stock,"Opening stock imported from CSV","adjustment");stocked++;}catch(stockError){errors.push("Row "+rowNo+": product created, but opening stock was not recorded — "+stockError.message);}}
+    }catch(rowError){errors.push("Row "+rowNo+": "+(rowError.message||"Import failed"));}
+   }
+   await refresh();
+   const summary="Imported "+created+" products; "+stocked+" opening-stock entries recorded"+(errors.length?"; "+errors.length+" row issue(s).":" .");
+   notice(summary+(errors.length?" First issue: "+errors[0]:""),errors.length?"error":"success");
+  }catch(err){notice(err.message||"CSV import failed.","error");}
+  finally{busy(false);}
  });
  const stockForm=$("#ocStockForm");if(stockForm)stockForm.addEventListener("submit",async e=>{e.preventDefault();const x=formObj(e.currentTarget),p=state.data.products.find(p=>p.id===x.product_id),w=site(p?.website_id);try{busy(true);await api().centralAdjustInventory(w,x.product_id,x.delta,x.reason,x.movement_type);await refresh();notice("Stock and inventory movement log updated together.","success");}catch(err){notice(err.message||"Stock adjustment failed.","error");}finally{busy(false);}});
  const orderStatus=$("#ocOrderStatusForm");if(orderStatus)orderStatus.addEventListener("submit",async e=>{e.preventDefault();const x=formObj(e.currentTarget),o=state.data.orders.find(o=>o.id===x.order_id),w=site(o?.website_id);try{busy(true);await api().updateOrderStatus(w,o.id,x.status);state.selectedOrder=null;await refresh();notice("Order fulfilment status updated.","success");}catch(err){notice(err.message||"Order status update failed.","error");}finally{busy(false);}});
