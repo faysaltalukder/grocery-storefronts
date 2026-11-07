@@ -60,7 +60,7 @@ assert.ok(commerceBundle["admin/commerce.js"].includes("function quotesPage()")&
 assert.ok(commerceBundle["admin/commerce.html"].includes('data-tab="quotes"'),"Quote management must be reachable from Central Commerce navigation");
 assert.ok(commerceBundle["admin/commerce.js"].includes("data-return-refund")&&commerceBundle["admin/commerce.js"].includes("return-received"),"Refund controls must be present in the production Studio bundle.");
 assert.ok(commerceBundle["admin/neon-builder-api.js"].includes("centralProcessReturnRefund"),"Refund API must be present in the production Studio bundle.");
-assert.ok(commerceBundle["admin/commerce.html"].includes("20261107-refund-management-v1"),"Production Studio bundle must use the refund workflow cache version.");
+assert.ok(commerceBundle["admin/commerce.html"].includes("20261108-central-order-ops-v1"),"Production Studio bundle must use the current central order desk cache version.");
 assert.ok(commerceBundle["admin/commerce.js"].includes("function isGroceryScope()"),"Production bundle must expose the order desk from the all-grocery scope");
 assert.ok(commerceBundle["admin/neon-builder-api.js"].includes("category_slug,status,brand,settings"),"Production bundle must load the business category for central navigation");
 assert.ok(commerceBundle["storefront.js"].includes("DEMO TEST ORDER · NOT FOR FULFILMENT"),"Production storefront tracking must identify demo orders");
