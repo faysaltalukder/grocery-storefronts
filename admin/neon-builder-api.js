@@ -461,7 +461,7 @@
     const amount=Number(quotedAmount||0);
     if(!Number.isFinite(amount)||amount<0)throw new Error("Enter a valid quotation amount.");
     if(status==="quoted"&&amount<=0)throw new Error("A positive quotation amount is required before marking a request as quoted.");
-    if(validUntil&&!/^\\d{4}-\\d{2}-\\d{2}$/.test(String(validUntil)))throw new Error("Enter a valid quotation expiry date.");
+    if(validUntil&&!/^\d{4}-\d{2}-\d{2}$/.test(String(validUntil)))throw new Error("Enter a valid quotation expiry date.");
     const rows=await request("rpc/respond_to_storefront_quote_request","",{method:"POST",body:{p_quote_id:quoteId,p_status:status,p_quoted_amount:amount,p_valid_until:validUntil||null,p_response_notes:String(responseNotes||"").slice(0,2000)}});
     if(!Array.isArray(rows)||!rows[0]?.id)throw new Error("Quotation update was not confirmed.");
     if(rows[0].owner_id!==user.id)throw new Error("Quotation response ownership could not be confirmed.");
