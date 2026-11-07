@@ -39,8 +39,8 @@ const templateScript=bundle["admin/wordpress-templates.js"];
 const target=templateScript.indexOf('$("wpTemplateBrowserBottom").href="../storefront.html?site="+encodeURIComponent("hf-"+t.key)+"&preview=1";');
 const top=templateScript.indexOf('$("wpTemplateBrowserTop").href=$("wpTemplateBrowserBottom").href;',target);
 assert.ok(target>=0&&top>target,"The top preview button must receive the selected template URL, not the previous template URL");
-assert.ok(bundle["storefront.html"].includes("storefront.js?v=20261107-template-experience-v2"),"Preview HTML must bust stale storefront JS cache");
-assert.ok(bundle["admin/wordpress-templates.html"].includes("wordpress-templates.js?v=20261107-template-experience-v2"),"Template library must bust stale preview-link JS cache");
+assert.ok(bundle["storefront.html"].includes("storefront.js?v=20261107-commerce-ux-v3"),"Preview HTML must bust stale storefront JS cache");
+assert.ok(bundle["admin/wordpress-templates.html"].includes("wordpress-templates.js?v=20261107-commerce-ux-v3"),"Template library must bust stale preview-link JS cache");
 for(const site of ["general-supermarket","fresh-produce","express-grocery","wholesale-bulk"]){
  const html=fs.readFileSync(site+"/index.html","utf8");
  assert.ok(html.includes("@neon/neon-js"),site+" must use the independent Neon client");
