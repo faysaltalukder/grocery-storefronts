@@ -89,7 +89,7 @@ BEGIN
   IF length(v_phone) < 7 OR length(v_phone) > 20 THEN
     RAISE EXCEPTION 'Enter a valid business contact phone number' USING ERRCODE = '22023';
   END IF;
-  IF v_email <> '' AND v_email !~* '^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$' THEN
+  IF v_email <> '' AND v_email !~* '^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$' THEN
     RAISE EXCEPTION 'Enter a valid business email address' USING ERRCODE = '22023';
   END IF;
   IF length(COALESCE(p_notes, '')) > 2000 THEN
