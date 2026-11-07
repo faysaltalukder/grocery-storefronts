@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>Products & Categories · WordPress Studio</title>
+<link rel="stylesheet" href="./shared.css?v=20261106-wordpress-categories-v1"><link rel="stylesheet" href="./workspace-global-theme.css?v=20261101-merchant-fieldbook-v1"><link rel="stylesheet" href="./website-catalog.css?v=20261107-catalog-v1"><link rel="stylesheet" href="./wp-admin-shell.css">
+</head>
+<body data-page="wordpress">
+<div id="authGate" class="auth-gate"><div class="auth-gate-card"><strong>Checking secure admin access…</strong><p>Catalogue access is restricted to the authorized website owner.</p></div></div>
+<div id="adminApp" hidden><main id="pageContent" class="hf-catalog-page" tabindex="-1">
+<header class="hf-catalog-head"><div><span class="hf-catalog-kicker">NEON COMMERCE · PRIVATE CATALOGUE</span><h1 id="hfCatalogTitle">Products & Categories</h1><p>Manage this website's own categories, products, prices and stock. Each template has an isolated catalogue.</p></div><div class="hf-catalog-actions"><a class="hf-catalog-btn secondary" id="hfCatalogPages">Website pages</a><a class="hf-catalog-btn secondary" id="hfCatalogOrders">Orders</a><a class="hf-catalog-btn secondary" id="hfCatalogPreview" target="_blank" rel="noopener">Preview ↗</a></div></header>
+<div id="hfCatalogStatus" class="hf-catalog-status" role="status" aria-live="polite">Connecting to Neon…</div>
+<section class="hf-catalog-stats" id="hfCatalogStats"></section>
+<div class="hf-catalog-layout">
+<section class="hf-catalog-panel"><div class="hf-catalog-panel-head"><div><span class="hf-catalog-kicker">STORE STRUCTURE</span><h2>Categories</h2><p>Organize products into clear collections.</p></div></div>
+<form id="hfCategoryForm" class="hf-catalog-form"><input type="hidden" name="id"><label>Category name<input name="name" maxlength="100" placeholder="e.g. Fresh Vegetables" required></label><label>URL slug<input name="slug" maxlength="70" placeholder="fresh-vegetables"></label><div class="hf-catalog-form-actions"><button class="hf-catalog-btn" type="submit">Save category</button><button class="hf-catalog-btn secondary" type="button" id="hfCategoryCancel" hidden>Cancel edit</button></div></form>
+<div id="hfCategoryList" class="hf-category-list"></div></section>
+<section class="hf-catalog-panel hf-product-panel"><div class="hf-catalog-panel-head"><div><span class="hf-catalog-kicker">LIVE STORE INVENTORY</span><h2 id="hfProductFormHeading">Add a product</h2><p>Only products saved here can appear in the storefront or be ordered.</p></div></div>
+<form id="hfProductForm" class="hf-catalog-form"><input type="hidden" name="id">
+<div class="hf-catalog-form-grid">
+<label class="wide">Product name<input name="name" maxlength="160" required placeholder="Product name"></label>
+<label>Category<select name="category_id" id="hfProductCategory"><option value="">Uncategorized</option></select></label>
+<label>SKU / Code<input name="sku" maxlength="80" placeholder="Optional unique SKU"></label>
+<label>Price (৳)<input name="price" type="number" min="0.01" step="0.01" required></label>
+<label>Compare-at price (৳)<input name="compare_at_price" type="number" min="0" step="0.01" placeholder="Optional"></label>
+<label>Unit<input name="unit" maxlength="30" value="piece" placeholder="piece, kg, pack"></label>
+<label>Available stock<input name="stock" type="number" min="0" step="0.01" value="0" required></label>
+<label>Minimum order quantity<input name="minimum_order_quantity" type="number" min="1" step="1" value="1"></label>
+<label>Brand<input name="brand" maxlength="100" placeholder="Optional brand"></label>
+<label class="wide">Product image URL<input name="image_url" type="url" placeholder="https://…"></label>
+<label class="wide">Product description<textarea name="description" rows="3" maxlength="5000" placeholder="Describe the product, pack size and useful details."></textarea></label>
+<label class="hf-catalog-active"><input name="is_active" type="checkbox" checked> Visible in storefront</label>
+</div>
+<div class="hf-catalog-form-actions"><button class="hf-catalog-btn" type="submit" id="hfProductSave">Save product</button><button class="hf-catalog-btn secondary" type="button" id="hfProductCancel" hidden>Cancel edit</button></div>
+</form></section></div>
+<section class="hf-catalog-panel hf-catalog-products"><div class="hf-catalog-panel-head"><div><span class="hf-catalog-kicker">PRODUCT LIBRARY</span><h2>All products</h2></div><div class="hf-catalog-tools"><input id="hfProductSearch" type="search" placeholder="Search product, SKU or category…" aria-label="Search products"><select id="hfProductFilter" aria-label="Filter products"><option value="all">All products</option><option value="active">Active</option><option value="archived">Archived</option></select><button class="hf-catalog-btn secondary" id="hfCatalogRefresh" type="button">Refresh</button></div></div><div id="hfProductList" class="hf-product-list"></div></section>
+<footer class="hf-catalog-footer">Catalogue data is stored in the independent WordPress Neon database. No sample products or test orders are inserted automatically. Archive hides an item without deleting its history.</footer>
+</main></div>
+<script defer src="./neon-client.js?v=6"></script><script defer src="./neon-auth.js?v=5"></script><script defer src="./neon-builder-api.js?v=20261107-catalog-v1"></script><script defer src="./website-catalog.js?v=20261107-catalog-v1"></script>
+</body></html>
