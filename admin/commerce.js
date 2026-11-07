@@ -42,9 +42,23 @@ function notice(message,type="info"){
 function status(message){const el=$("#ocConnection");if(el)el.textContent=message;}
 function formObj(form){return Object.fromEntries(new FormData(form).entries());}
 function site(id){return (state.data?.websites||[]).find(x=>x.id===id)||null;}
-function siteName(id){return site(id)?.brand?.name||site(id)?.name||"Unknown store";}
-function chosenSites(){return state.store==="all"?(state.data?.websites||[]):(state.data?.websites||[]).filter(x=>x.id===state.store);}
-function scoped(rows){const ids=new Set(chosenSites().map(x=>x.id));return state.store==="all"?(rows||[]):(rows||[]).filter(x=>ids.has(x.website_id));}
+function siteName(id){return site(id)?.brand?.name||site(id)?.name||"Unknown business";}
+function categoryLabel(slug){
+ const labels={"ecommerce-grocery":"E-commerce & Grocery","clothing-fashion":"Clothing & Fashion","medicine-pharmacy":"Medicine & Pharmacy","hospital-healthcare":"Hospital & Healthcare","real-estate-property":"Real Estate & Property","restaurant-food":"Restaurant & Food","education-training":"Education & Training","travel-tourism":"Travel & Tourism","hotel-accommodation":"Hotel & Accommodation","beauty-salon":"Beauty & Salon","fitness-gym":"Fitness & Gym","automotive-services":"Automotive & Vehicle Services","professional-services":"Professional & Business Services","construction-interior":"Construction & Interior","events-weddings":"Event & Wedding Services","portfolio-agency":"Portfolio & Creative Agency","news-media":"News & Media","nonprofit-organization":"Nonprofit & Organization","logistics-delivery":"Logistics & Delivery","legal-accounting":"Legal & Accounting"};
+ const value=String(slug||"other");
+ return labels[value]||value.split(/[-_]/).map(x=>x?x[0].toUpperCase()+x.slice(1):"").join(" ");
+}
+function chosenSites(){
+ const rows=state.data?.websites||[];
+ if(state.store==="all")return rows;
+ if(state.store.startsWith("category:")){const category=state.store.slice(9);return rows.filter(x=>(x.category_slug||"other")===category);}
+ return rows.filter(x=>x.id===state.store);
+}
+function scoped(rows){
+ if(state.store==="all")return rows||[];
+ const ids=new Set(chosenSites().map(x=>x.id));
+ return (rows||[]).filter(x=>!x.website_id||ids.has(x.website_id));
+}
 function siteSelect(name="website_id",selected=""){
  const rows=state.data?.websites||[];
  return '<select class="oc-select" name="'+name+'" required>'+rows.map(w=>'<option value="'+w.id+'" '+(w.id===selected?"selected":"")+'>'+esc(w.brand?.name||w.name)+' · '+esc(w.template_key)+'</option>').join("")+'</select>';
@@ -82,30 +96,73 @@ function orderItems(orderId){return (state.data.orderItems||[]).filter(i=>i.orde
 function productsForSite(siteId){return (state.data.products||[]).filter(p=>p.website_id===siteId);}
 function categoriesForSite(siteId){return (state.data.categories||[]).filter(c=>c.website_id===siteId&&c.is_active);}
 function suppliersForSite(siteId){return (state.data.suppliers||[]).filter(s=>s.is_active&&(!s.website_id||s.website_id===siteId));}
+function selectedCategorySlug(){
+ if(state.store==="all")return null;
+ const rows=chosenSites();
+ if(state.store.startsWith("category:"))return state.store.slice(9);
+ if(rows.length&&rows.every(w=>(w.category_slug||"other")===(rows[0].category_slug||"other")))return rows[0].category_slug||"other";
+ return null;
+}
 function render(){
- const nav=$("#ocNav");$$("#ocNav button").forEach(b=>b.classList.toggle("is-active",b.dataset.tab===state.tab));
+ const category=selectedCategorySlug(),isGrocery=category==="ecommerce-grocery";
+ const nav=$("#ocNav");
+ $$("#ocNav button").forEach(b=>{
+  const visible=b.dataset.common==="true"||(b.dataset.business==="commerce"&&isGrocery)||(b.dataset.category==="true"&&!!category&&!isGrocery);
+  b.hidden=!visible;
+  b.classList.toggle("is-active",b.dataset.tab===state.tab);
+ });
+ if(!isGrocery&&!["overview","websites","category-workspace"].includes(state.tab))state.tab="overview";
  const filter=$("#ocStoreFilter");if(filter&&filter.value!==state.store)filter.value=state.store;
- const pages={overview:overviewPage,products:productsPage,orders:ordersPage,customers:customersPage,suppliers:suppliersPage,purchasing:purchasingPage,delivery:deliveryPage,finance:financePage,returns:returnsPage,wholesale:wholesalePage,reports:reportsPage};
+ const pages={overview:overviewPage,websites:websitesPage,"category-workspace":categoryWorkspacePage,products:productsPage,orders:ordersPage,customers:customersPage,suppliers:suppliersPage,purchasing:purchasingPage,delivery:deliveryPage,finance:financePage,returns:returnsPage,wholesale:wholesalePage,quotes:quotesPage,reports:reportsPage};
  $("#ocMain").innerHTML=(pages[state.tab]||overviewPage)();
  bindPage();
 }
+function businessWebsiteCard(w){
+ const cat=categoryLabel(w.category_slug),template=esc(w.template_key||"Template not assigned"),name=esc(w.brand?.name||w.name),slug=esc(w.slug||"—");
+ const selected=state.store===w.id;
+ return '<article class="oc-business-card"><div class="oc-business-card-top"><div class="oc-business-mark">'+esc((w.brand?.name||w.name||"B").trim().slice(0,1).toUpperCase())+'</div><div class="oc-business-identity"><strong>'+name+'</strong><span>'+esc(cat)+'</span></div><div class="oc-business-status">'+badge(w.status)+'</div></div><div class="oc-business-meta"><span><small>WEBSITE SLUG</small><strong>'+slug+'</strong></span><span><small>ACTIVE TEMPLATE</small><strong>'+template+'</strong></span></div><div class="oc-business-actions"><button class="oc-btn secondary" type="button" data-action="select-business" data-id="'+esc(w.id)+'">'+(selected?"Selected":"Open business scope")+'</button></div></article>';
+}
+function websitesPage(){
+ const all=state.data.websites||[],sites=chosenSites(),groups={};
+ sites.forEach(w=>{const key=w.category_slug||"other";(groups[key]||(groups[key]=[])).push(w);});
+ const sections=Object.entries(groups).sort((a,b)=>categoryLabel(a[0]).localeCompare(categoryLabel(b[0]))).map(([slug,rows])=>panel(categoryLabel(slug)+' <span class="oc-count">'+rows.length+'</span>','<div class="oc-business-grid">'+rows.map(businessWebsiteCard).join("")+'</div>')).join("");
+ return pageHead("WEBSITE PORTFOLIO","Connected websites","Every website registered to this owner account is managed from this portfolio. Select a business to open its operational workspace.",'<a class="oc-btn primary" href="./wordpress-templates.html">Explore templates ↗</a>')+
+ stats([["Websites in scope",String(sites.length),"Registered in the central platform"],["Business categories",String(new Set(sites.map(w=>w.category_slug||"other")).size),"Across the selected scope"],["Published websites",String(sites.filter(w=>w.status==="published").length),"Live publishing status"],["Draft / attention",String(sites.filter(w=>w.status!=="published").length),"Review configuration and publishing",sites.some(w=>w.status!=="published")?"warning":""]])+
+ (sections||'<div class="oc-empty">No websites are connected to this scope yet. Create a website from the template library and it will appear here after registration.</div>');
+}
+function categoryWorkspacePage(){
+ const category=selectedCategorySlug(),sites=chosenSites(),label=categoryLabel(category);
+ const modules=category==="restaurant-food"?[["Menu & catalogue","Menu items, modifiers and availability"],["Reservations","Table bookings, seating and service slots"],["Orders & fulfilment","Dine-in, pickup and delivery workflows"]]:
+ category==="hotel-accommodation"?[["Rooms & availability","Room inventory, rates and occupancy"],["Reservations","Guest bookings, check-in and check-out"],["Guest operations","Guest profiles and service requests"]]:
+ category==="real-estate-property"?[["Property portfolio","Listings, pricing and availability"],["Enquiries & leads","Buyer, renter and seller enquiries"],["Viewing schedule","Appointments and agent assignments"]]:
+ category==="hospital-healthcare"||category==="medicine-pharmacy"?[["Service catalogue","Services, departments or pharmacy catalogue"],["Appointments & requests","Patient-facing requests and scheduling"],["Compliance controls","Role-based access and audit records"]]:
+ [["Business catalogue","Category-specific services, products or content"],["Customer relationships","Leads, enquiries and customer records"],["Business analytics","Category-specific performance and reports"]];
+ return pageHead("CATEGORY WORKSPACE",label+" workspace","A dedicated operating area for the selected business category. Shared website controls are available now; category-specific workflows can be activated as this business type is implemented.")+
+ '<div class="oc-category-intro"><span class="oc-category-orbit">◈</span><div><strong>'+esc(label)+'</strong><p>'+sites.length+' connected website'+(sites.length===1?"":"s")+' in this category. This workspace is designed to keep this business type separate from unrelated store operations.</p></div></div>'+
+ '<div class="oc-module-grid">'+modules.map((m,i)=>'<article class="oc-module-card"><span class="oc-module-index">0'+(i+1)+'</span><h3>'+esc(m[0])+'</h3><p>'+esc(m[1])+'</p><span class="oc-module-state">CATEGORY WORKFLOW · NOT YET CONFIGURED</span></article>').join("")+'</div>'+
+ panel("Connected websites",'<div class="oc-business-grid">'+sites.map(businessWebsiteCard).join("")+'</div>')+
+ '<p class="oc-help">No live category-specific records or actions are claimed here until the corresponding Neon data model and workflows are connected and verified.</p>';
+}
 function overviewPage(){
- const sites=state.data.websites||[],orders=scoped(state.data.orders),products=scoped(state.data.products),finance=scoped(state.data.finance);
- const activeOrders=orders.filter(o=>o.status!=="cancelled"),gross=activeOrders.reduce((n,o)=>n+Number(o.total||0),0);
- const collected=scoped(state.data.payments).filter(p=>p.transaction_type==="collection"&&p.status==="confirmed").reduce((n,p)=>n+Number(p.amount||0),0);
- const expenses=finance.filter(f=>f.entry_type==="expense").reduce((n,f)=>n+Number(f.amount||0),0),low=lowStockProducts();
- const demo=products.filter(p=>p.attributes?.demo===true).length,verified=products.filter(p=>p.attributes?.inventory_verified===true&&p.attributes?.demo!==true).length;
- const recent=[...orders].slice(0,8).map(o=>'<tr><td><strong>'+esc(o.order_number)+'</strong><small>'+date(o.created_at)+'</small></td><td>'+esc(siteName(o.website_id))+'</td><td>'+esc(o.customer?.name||"Customer")+'<small>'+esc(o.customer?.phone||"")+'</small></td><td class="oc-num">'+money(o.total)+'</td><td>'+badge(o.status)+'</td><td>'+badge(o.payment_status)+'</td></tr>');
- const storeCards=sites.filter(w=>state.store==="all"||w.id===state.store).map(w=>{
-  const wp=products.filter(p=>p.website_id===w.id),wo=orders.filter(o=>o.website_id===w.id),real=wp.filter(p=>p.is_active&&p.attributes?.inventory_verified===true&&p.attributes?.demo!==true).length,dm=wp.filter(p=>p.is_active&&p.attributes?.demo===true).length;
-  const zones=(state.data.deliveryZones||[]).filter(z=>z.website_id===w.id&&z.is_active).length,contact=!!(w.brand?.phone||w.brand?.email||w.settings?.contact?.phone||w.settings?.contact?.email);
-  const readiness=[w.status==="published",real>0,zones>0,contact].filter(Boolean).length;
-  return '<article class="oc-store-card"><strong>'+esc(w.brand?.name||w.name)+'</strong><small>'+esc(w.template_key)+' · '+badge(w.status)+'</small><div class="oc-store-meta"><span>'+wo.length+' orders</span><span>'+wp.length+' products</span><span>'+readiness+'/4 setup checks</span></div><div class="oc-progress" style="margin-top:9px"><span style="width:'+(readiness*25)+'%"></span></div><small style="margin-top:7px">'+real+' verified · '+dm+' demo · '+zones+' delivery zones</small></article>';
- }).join("");
- return pageHead("BUSINESS CONTROL CENTER","Business overview","A live operational view across your grocery storefronts. Data is sourced from the central Neon commerce database.")+
- stats([["Gross order value",money(gross),activeOrders.length+" non-cancelled orders"],["Payments collected",money(collected),"Confirmed collections"],["Operating expenses",money(expenses),"Recorded expenses"],["Low-stock products",String(low.length),"At or below configured alert level",low.length?"warning":"positive"]])+
- '<div class="oc-grid-2"><div>'+panel("Recent orders",table(["Order","Store","Customer","Total","Status","Payment"],recent))+'</div><div>'+panel("Store readiness",'<div class="oc-store-cards">'+(storeCards||'<div class="oc-empty">No storefronts are available.</div>')+'</div>')+panel("Catalogue integrity",'<div class="oc-row-actions">'+badge("Verified "+verified)+' '+badge("Demo "+demo)+'</div><p class="oc-help">Sample/demo products are kept separate from verified real inventory. Publishing stays blocked until each storefront is properly configured.</p>'+btn("Open products & inventory","tab","") )+'</div></div>'+
- panel("Immediate operations",'<div class="oc-row-actions">'+btn("Manage products","tab","products")+' '+btn("Review orders","tab","orders")+' '+btn("Receive purchases","tab","purchasing")+' '+btn("Configure delivery","tab","delivery")+' '+btn("View reports","tab","reports")+'</div>');
+ const allSites=state.data.websites||[],sites=chosenSites(),allCategories=[...new Set(allSites.map(w=>w.category_slug||"other"))];
+ const published=sites.filter(w=>w.status==="published").length,attention=sites.length-published;
+ const categoryCounts={};sites.forEach(w=>{const key=w.category_slug||"other";categoryCounts[key]=(categoryCounts[key]||0)+1;});
+ const categoryCards=Object.entries(categoryCounts).sort((a,b)=>categoryLabel(a[0]).localeCompare(categoryLabel(b[0]))).map(([slug,count])=>'<button class="oc-category-card" type="button" data-action="select-scope" data-id="category:'+esc(slug)+'"><span class="oc-category-icon">◈</span><span><strong>'+esc(categoryLabel(slug))+'</strong><small>'+count+' connected website'+(count===1?"":"s")+'</small></span><span class="oc-category-arrow">→</span></button>').join("");
+ const websiteCards=sites.slice(0,8).map(businessWebsiteCard).join("");
+ const category=selectedCategorySlug(),isGrocery=category==="ecommerce-grocery";
+ let operationalSummary="";
+ if(isGrocery){
+  const orders=scoped(state.data.orders),products=scoped(state.data.products),finance=scoped(state.data.finance),activeOrders=orders.filter(o=>o.status!=="cancelled");
+  const collected=scoped(state.data.payments).filter(p=>p.transaction_type==="collection"&&p.status==="confirmed").reduce((n,p)=>n+Number(p.amount||0),0),openQuotes=scoped(state.data.quoteRequests||[]).filter(q=>["requested","reviewing"].includes(q.status)).length;
+  const expenses=finance.filter(f=>f.entry_type==="expense").reduce((n,f)=>n+Number(f.amount||0),0),low=lowStockProducts();
+  const recent=orders.slice(0,6).map(o=>'<tr><td><strong>'+esc(o.order_number)+'</strong><small>'+date(o.created_at)+'</small></td><td>'+esc(siteName(o.website_id))+'</td><td>'+esc(o.customer?.name||"Customer")+'</td><td class="oc-num">'+money(o.total)+'</td><td>'+badge(o.status)+'</td></tr>');
+  operationalSummary=stats([["Order value",money(activeOrders.reduce((n,o)=>n+Number(o.total||0),0)),activeOrders.length+" active orders"],["Payments collected",money(collected),"Confirmed collections"],["Operating expenses",money(expenses),"Recorded expenses"],["Low-stock products",String(low.length),"Configured stock alerts",low.length?"warning":""],["Open quote requests",String(openQuotes),"Wholesale enquiries awaiting action",openQuotes?"warning":""]])+'<div class="oc-grid-2"><div>'+panel("Recent orders",table(["Order","Website","Customer","Total","Status"],recent))+'</div><div>'+panel("Grocery operations",'<div class="oc-quick-actions">'+btn("Products & inventory","tab","products")+btn("Orders & fulfilment","tab","orders")+btn("Finance & payments","tab","finance")+btn("Quote requests","tab","quotes")+btn("Reports","tab","reports")+'</div><p class="oc-help">These modules are shown only when the selected business scope is E-commerce & Grocery.</p>')+'</div></div>';
+ }
+ return pageHead("CENTRAL COMMAND","Business network","A single control layer for all your websites. The selected scope changes the portfolio and exposes only the operating tools relevant to that business category.",'<a class="oc-btn primary" href="./wordpress-templates.html">Create / add website ↗</a>')+
+ stats([["Websites in scope",String(sites.length),"Connected to the central control center"],["Categories in scope",String(new Set(sites.map(w=>w.category_slug||"other")).size),"Business types represented"],["Published",String(published),"Websites with published status"],["Needs attention",String(attention),"Draft, setup or review required",attention?"warning":""]])+
+ '<div class="oc-command-grid"><div>'+panel("Business categories","<div class=\"oc-category-list\">"+(categoryCards||'<div class="oc-empty">No categories registered yet.</div>')+"</div>")+'</div><div>'+panel("Platform coverage",'<div class="oc-coverage"><div><strong>'+allSites.length+'</strong><span>Total connected websites</span></div><div><strong>'+allCategories.length+'</strong><span>Registered business categories</span></div><div><strong>'+allSites.filter(w=>w.status==="published").length+'</strong><span>Published websites</span></div></div><p class="oc-help">The portfolio is populated from the central Neon websites registry. New category websites appear here when they are registered.</p>')+'</div></div>'+
+ panel("Website portfolio",'<div class="oc-business-grid">'+(websiteCards||'<div class="oc-empty">No websites are connected yet.</div>')+'</div>',sites.length>8?"Showing the first 8 websites. Open Website portfolio to view all.":"All websites in the selected scope.")+
+ (isGrocery?operationalSummary:category&&!isGrocery?panel("Category workspace",'<p class="oc-help">This scope is '+esc(categoryLabel(category))+'. Open its dedicated workspace for category-specific modules; Grocery operations are intentionally hidden.</p>'+btn("Open business workspace","tab","category-workspace")):"");
 }
 function productsPage(){
  const rows=scoped(state.data.products).filter(p=>!state.search||[p.name,p.sku,p.attributes?.barcode,p.attributes?.brand,siteName(p.website_id)].join(" ").toLowerCase().includes(state.search.toLowerCase()));
@@ -232,6 +289,17 @@ function returnsPage(){
  '<div class="oc-grid-2"><div>'+panel("Create a return request",form)+'</div><div>'+panel("Return policy controls",'<div class="oc-alert">Approving a return does not automatically issue money or restock an item. Inspect the goods, record any approved refund and add a stock return movement separately.</div>')+'</div></div>'+
  panel("Return register",table(["Order","Store","Customer","Reason","Status","Actions"],rows,900));
 }
+function quotesPage(){
+ const rows=scoped(state.data.quoteRequests||[]).slice().sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+ const requested=rows.filter(q=>q.status==="requested").length,reviewing=rows.filter(q=>q.status==="reviewing").length,quoted=rows.filter(q=>q.status==="quoted").length;
+ const cards=rows.map(q=>{
+  const items=Array.isArray(q.requested_items)?q.requested_items:[];
+  const itemHtml=items.length?'<ul class="oc-quote-items">'+items.map(item=>'<li>'+esc(item.description||item.name||item.product_name||"Requested item")+(item.quantity?' · Qty '+esc(item.quantity):"")+'</li>').join("")+'</ul>':'<p class="oc-help">No line items were supplied.</p>';
+  const options=["requested","reviewing","quoted","approved","rejected","closed"].map(x=>'<option value="'+x+'" '+(q.status===x?"selected":"")+'>'+x.replaceAll("_"," ")+'</option>').join("");
+  return '<article class="oc-quote-card"><header class="oc-quote-card-head"><div><span class="oc-kicker">'+esc(q.quote_number)+'</span><h3>'+esc(q.business_name)+'</h3><p>'+esc(q.contact_name)+' · '+esc(q.business_type||"Business customer")+'</p></div><div>'+badge(q.status)+'<small>'+date(q.created_at)+'</small></div></header><div class="oc-quote-contact"><span><small>PHONE</small><strong>'+esc(q.phone)+'</strong></span><span><small>EMAIL</small><strong>'+esc(q.email||"Not supplied")+'</strong></span><span><small>BUSINESS ID</small><strong>'+esc(q.tax_id||"—")+'</strong></span><span><small>STORE</small><strong>'+esc(siteName(q.website_id))+'</strong></span></div><div class="oc-quote-items-wrap"><strong>Requested products / pack sizes</strong>'+itemHtml+(q.notes?'<p class="oc-quote-note">'+esc(q.notes)+'</p>':"")+'</div><form class="oc-quote-response" data-quote-update data-quote-id="'+esc(q.id)+'"><label class="oc-field">Status<select class="oc-select" name="status">'+options+'</select></label><label class="oc-field">Quoted total (৳)<input class="oc-input" name="quoted_amount" type="number" min="0" step=".01" value="'+Number(q.quoted_amount||0)+'"></label><label class="oc-field">Valid until<input class="oc-input" name="valid_until" type="date" value="'+esc(q.valid_until||"")+'"></label><label class="oc-field wide">Response notes<textarea class="oc-input" name="response_notes" rows="2" maxlength="2000" placeholder="Add price breakdown, availability, lead time or terms">'+esc(q.response_notes||"")+'</textarea></label><div class="oc-form-actions wide"><button class="oc-btn primary" type="submit">Save quotation response</button>'+(q.converted_order_id?'<span class="oc-help">Converted to order '+esc(q.converted_order_id)+'</span>':"")+'</div></form></article>';
+ }).join("");
+ return pageHead("B2B SALES DESK","Quote requests","Review incoming wholesale enquiries, set a quotation amount and validity date, and send a clear response for the business customer.")+stats([["New requests",String(requested),"Awaiting first review"],["In review",String(reviewing),"Being checked"],["Quoted",String(quoted),"Price response prepared"],["All requests",String(rows.length),"In selected store scope"]])+(cards?'<div class="oc-quote-list">'+cards+'</div>':panel("No quotation requests yet",'<div class="oc-empty">New wholesale requests submitted from the storefront will appear here. The customer-facing form is available on the Wholesale & Bulk template.</div>'));
+}
 function wholesalePage(){
  if(state.store==="all")return pageHead("B2B PROCUREMENT","Wholesale price tiers","Choose the Wholesale & Bulk storefront from the Store scope selector to configure its quantity pricing.")+panel("Select a storefront",'<div class="oc-alert">Wholesale price tiers must belong to one storefront. Choose the relevant store in the top selector.</div>');
  const siteRows=state.data.websites||[],w=site(state.store!=="all"?state.store:siteRows.find(s=>s.template_key==="wholesale-bulk")?.id||siteRows[0]?.id),products=w?productsForSite(w.id):[];
@@ -256,6 +324,7 @@ function reportsPage(){
 function bindPage(){
  $("#ocNav").querySelectorAll("button").forEach(b=>b.onclick=()=>{state.tab=b.dataset.tab;state.search="";state.editingProduct=null;render();});
  const search=$("#ocProductSearch")||$("#ocOrderSearch")||$("#ocCustomerSearch");if(search)search.addEventListener("input",e=>{state.search=e.target.value;const p=$("#ocPageBody");if(p){const at=p.selectionStart;}const current=state.tab;const cursor=e.target.selectionStart;const value=e.target.value;render();const n=$("#ocProductSearch")||$("#ocOrderSearch")||$("#ocCustomerSearch");if(n){n.focus();n.setSelectionRange(cursor,cursor);n.value=value;}});
+ const quoteForms=$("[data-quote-update]");quoteForms.forEach(form=>form.addEventListener("submit",async e=>{e.preventDefault();const x=formObj(form);try{busy(true);await api().updateCentralQuote(form.dataset.quoteId,x.status,x.quoted_amount,x.valid_until||null,x.response_notes||"");await refresh();notice("Wholesale quotation response saved.","success");}catch(err){notice(err.message||"Quotation update failed.","error");}finally{busy(false);}}));
  const categoryForm=$("#ocCategoryForm");if(categoryForm)categoryForm.addEventListener("submit",async e=>{e.preventDefault();const x=formObj(e.currentTarget),w=site(x.website_id);try{busy(true);await api().saveWebsiteCategory(w,x);await refresh();notice("Category saved to the selected storefront.","success");}catch(err){notice(err.message||"Category save failed.","error");}finally{busy(false);}});
  const productForm=$("#ocProductForm");if(productForm){const sf=productForm.elements.namedItem("website_id");sf?.addEventListener("change",()=>{const cf=productForm.elements.namedItem("category_id"),list=categoriesForSite(sf.value);cf.innerHTML='<option value="">Uncategorized</option>'+list.map(c=>'<option value="'+c.id+'">'+esc(c.name)+'</option>').join("");});}if(productForm)productForm.addEventListener("submit",async e=>{
   e.preventDefault();const f=e.currentTarget,x=formObj(f),w=site(x.website_id);if(!w)throw new Error("Select a store.");
@@ -319,7 +388,7 @@ function bindPage(){
 }
 function busy(on){$$("button[type=submit]").forEach(b=>{if(on){b.dataset.wasDisabled=b.disabled?"1":"0";b.disabled=true;}else if(b.dataset.wasDisabled!==undefined){b.disabled=b.dataset.wasDisabled==="1";delete b.dataset.wasDisabled;}});}
 async function refresh(){
- try{status("Syncing central operations…");state.data=await api().loadCentralCommerce();status("Neon connected · "+state.data.websites.length+" stores");const sel=$("#ocStoreFilter");if(sel){const value=state.store;sel.innerHTML='<option value="all">All storefronts</option>'+state.data.websites.map(w=>'<option value="'+w.id+'">'+esc(w.brand?.name||w.name)+'</option>').join("");sel.value=state.data.websites.some(w=>w.id===value)||value==="all"?value:"all";}render();}
+ try{status("Syncing business operations…");state.data=await api().loadCentralCommerce();const websites=state.data.websites||[];status("Neon connected · "+websites.length+" business websites");const sel=$("#ocStoreFilter");if(sel){const value=state.store,categories=[...new Set(websites.map(w=>w.category_slug||"other"))];const categoryOptions=categories.map(category=>{const count=websites.filter(w=>(w.category_slug||"other")===category).length;return '<option value="category:'+esc(category)+'">All '+esc(categoryLabel(category))+' businesses ('+count+')</option>';}).join("");const siteOptions=websites.map(w=>'<option value="'+esc(w.id)+'">'+esc(w.brand?.name||w.name)+' · '+esc(categoryLabel(w.category_slug))+'</option>').join("");sel.innerHTML='<option value="all">All businesses ('+websites.length+')</option>'+categoryOptions+(siteOptions?'<optgroup label="Individual websites">'+siteOptions+'</optgroup>':"");const validCategory=value.startsWith("category:")&&categories.includes(value.slice(9));sel.value=websites.some(w=>w.id===value)||validCategory||value==="all"?value:"all";state.store=sel.value;}render();}
  catch(e){status("Secure data connection failed");notice(e.message||"Central commerce data could not be loaded.","error");$("#ocMain").innerHTML='<div class="oc-empty">The central workspace could not connect to Neon. Check the owner session, then refresh the page.</div>';}
 }
 function downloadCsv(filename,headers,rows){
@@ -327,6 +396,8 @@ function downloadCsv(filename,headers,rows){
 }
 function globalAction(action,id){
  if(action==="tab"){state.tab=id;state.search="";render();return;}
+ if(action==="select-business"){state.store=id;state.tab="overview";const filter=$("#ocStoreFilter");if(filter)filter.value=id;render();return;}
+ if(action==="select-scope"){state.store=id;state.tab="overview";const filter=$("#ocStoreFilter");if(filter)filter.value=id;render();return;}
  if(action==="new-product"){state.editingProduct=null;state.tab="products";render();return;}
  if(action==="cancel-product"){state.editingProduct=null;render();return;}
  if(action==="edit-product"){state.editingProduct=id;state.tab="products";render();return;}
@@ -347,7 +418,7 @@ function init(){
  ready.then(async session=>{if(!session?.user?.id){notice("Sign in with the authorized owner account.","error");return;}await refresh();}).catch(e=>notice(e.message||"Secure sign-in failed.","error"));
  $("#ocNav").addEventListener("click",e=>{const b=e.target.closest("button[data-tab]");if(b){state.tab=b.dataset.tab;state.search="";state.editingProduct=null;render();}});
  $("#ocRefresh").addEventListener("click",()=>refresh());
- $("#ocStoreFilter").addEventListener("change",e=>{state.store=e.target.value;state.search="";state.selectedOrder=null;state.selectedPO=null;render();});
+ $("#ocStoreFilter").addEventListener("change",e=>{state.store=e.target.value;state.search="";state.selectedOrder=null;state.selectedPO=null;state.tab="overview";render();});
  $("#ocMain").addEventListener("click",e=>{const b=e.target.closest("[data-action]");if(b)globalAction(b.dataset.action,b.dataset.id||"");});
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
