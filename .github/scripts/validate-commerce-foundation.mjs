@@ -45,6 +45,8 @@ assert.ok(commerce.includes("function isGroceryScope()")&&commerce.includes("isG
 assert.ok(commerce.includes("transitions={pending:")&&commerce.includes("shipped:[[\"delivered\""),"Central order controls must only offer valid next fulfilment transitions");
 assert.ok(commerce.includes("Demo order:</strong> this is a test checkout only. Payment collection is disabled"),"Central dashboard must not offer payment collection on demo orders");
 assert.ok(commerce.includes("Test only:</strong> do not pack, dispatch or collect payment"),"Central order detail must warn operators not to fulfil demo orders");
+assert.ok(commerce.includes("orderStatusFilter")&&commerce.includes("All statuses"),"Central orders must support fulfilment status filtering");
+assert.ok(commerce.includes("Customer tracking ↗")&&commerce.includes("Store order desk ↗"),"Order details must link to customer tracking and the selected storefront's order desk");
 const refundMigration=fs.readFileSync("migrations/20261107_return_refund_management.sql","utf8");
 assert.ok(adminApi.includes("async function centralProcessReturnRefund(")&&adminApi.includes("rpc/central_process_return_refund")&&adminApi.includes("centralProcessReturnRefund,"),"Central Commerce must expose the owner-authorized refund RPC.");
 assert.ok(commerce.includes("data-return-refund")&&commerce.includes("return-received")&&commerce.includes("refundableForOrder"),"Returns UI must require receipt inspection and show the capped refund form.");
