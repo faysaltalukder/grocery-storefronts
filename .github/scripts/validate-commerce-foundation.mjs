@@ -39,7 +39,7 @@ assert.ok(adminApi.includes("async function updateCentralQuote(")&&adminApi.incl
 const centralOrderMigration=fs.readFileSync("migrations/20261108_central_order_desk_finish.sql","utf8");
 assert.ok(centralOrderMigration.includes("Demo orders are test records; payment collection is disabled"),"Server must reject payment collection on demo test orders");
 assert.ok(centralOrderMigration.includes("'demo',COALESCE(v_order.notes,'') LIKE '[DEMO ORDER%'"),"Public order tracking must clearly identify demo test orders");
-assert.ok(adminApi.includes("category_slug,status,brand,settings")&&adminApi.includes("&owner_id=eq."+$(user.id)),"Central loader must fetch the grocery category and explicitly scope websites to the owner");
+assert.ok(adminApi.includes("category_slug,status,brand,settings")&&adminApi.includes('&owner_id=eq."+$(user.id)'),"Central loader must fetch the grocery category and explicitly scope websites to the owner");
 const commerce=fs.readFileSync("admin/commerce.js","utf8");
 assert.ok(commerce.includes("function isGroceryScope()")&&commerce.includes("isGrocery=isGroceryScope()"),"All-grocery portfolio scope must expose the central order desk by default");
 assert.ok(commerce.includes("transitions={pending:")&&commerce.includes("shipped:[[\"delivered\""),"Central order controls must only offer valid next fulfilment transitions");
