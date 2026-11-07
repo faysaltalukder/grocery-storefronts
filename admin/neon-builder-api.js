@@ -382,10 +382,10 @@
   async function loadCentralCommerce(){
     const {user}=await authContext();
     const [websites,products,categories,orders,orderItems,suppliers,purchaseOrders,purchaseItems,inventoryMovements,deliveryZones,payments,supplierPayments,customers,customerLinks,returns,finance,priceTiers,quoteRequests]=await Promise.all([
-      request("websites","?select=id,owner_id,name,slug,template_key,status,brand,settings,created_at,updated_at&order=created_at.asc"),
+      request("websites","?select=id,owner_id,name,slug,template_key,category_slug,status,brand,settings,created_at,updated_at&owner_id=eq."+$(user.id)+"&order=created_at.asc"),
       request("products","?select=id,website_id,owner_id,category_id,name,description,sku,price,compare_at_price,unit,stock,image_url,gallery,attributes,is_active,sort_order,created_at,updated_at&order=updated_at.desc&limit=3000"),
       request("categories","?select=id,website_id,owner_id,name,slug,parent_id,sort_order,is_active&order=sort_order.asc&limit=2000"),
-      request("orders","?select=id,website_id,owner_id,order_number,customer,customer_id,shipping_address,subtotal,delivery_fee,discount,total,payment_method,payment_status,status,notes,created_at&order=created_at.desc&limit=2000"),
+      request("orders","?select=id,website_id,owner_id,order_number,customer,customer_id,shipping_address,subtotal,delivery_fee,discount,total,payment_method,payment_status,status,notes,created_at&owner_id=eq."+$(user.id)+"&order=created_at.desc&limit=2000"),
       request("order_items","?select=id,order_id,product_id,product_snapshot,quantity,unit_price,line_total&limit=5000"),
       request("suppliers","?select=*&order=created_at.desc&limit=1000"),
       request("purchase_orders","?select=*&order=created_at.desc&limit=1000"),
@@ -401,8 +401,8 @@
       request("product_price_tiers","?select=*&order=minimum_quantity.asc&limit=3000"),
       request("quote_requests","?select=*&owner_id=eq."+$(user.id)+"&order=created_at.desc&limit=1000")
     ]);
-    const ids=new Set((websites||[]).map(w=>w.id)),keep=rows=>(rows||[]).filter(r=>!r.website_id||ids.has(r.website_id));
-    return {user:{id:user.id,email:user.email},websites:websites||[],products:keep(products),categories:keep(categories),orders:keep(orders),orderItems:orderItems||[],suppliers:suppliers||[],purchaseOrders:keep(purchaseOrders),purchaseItems:purchaseItems||[],inventoryMovements:keep(inventoryMovements),deliveryZones:keep(deliveryZones),payments:keep(payments),supplierPayments:keep(supplierPayments),customers:customers||[],customerLinks:customerLinks||[],returns:keep(returns),finance:keep(finance),priceTiers:keep(priceTiers),quoteRequests:quoteRequests||[]};
+    const ids=new Set((websites||[]).map(w=>w.id)),orderIds=new Set((orders||[]).map(o=>o.id)),keep=rows=>(rows||[]).filter(r=>!r.website_id||ids.has(r.website_id));
+    return {user:{id:user.id,email:user.email},websites:websites||[],products:keep(products),categories:keep(categories),orders:keep(orders),orderItems:(orderItems||[]).filter(item=>orderIds.has(item.order_id)),suppliers:suppliers||[],purchaseOrders:keep(purchaseOrders),purchaseItems:purchaseItems||[],inventoryMovements:keep(inventoryMovements),deliveryZones:keep(deliveryZones),payments:keep(payments),supplierPayments:keep(supplierPayments),customers:customers||[],customerLinks:customerLinks||[],returns:keep(returns),finance:keep(finance),priceTiers:keep(priceTiers),quoteRequests:quoteRequests||[]};
   }
   async function saveCentralSupplier(input){
     const {user}=await authContext(),id=String(input?.id||"").trim(),siteId=String(input?.website_id||"").trim()||null;
