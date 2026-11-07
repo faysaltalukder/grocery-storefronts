@@ -1,0 +1,45 @@
+name: Independent WordPress Builder Quality Gate
+
+on:
+  pull_request:
+    paths:
+      - "wordpress-app/**"
+      - ".github/workflows/wordpress-app-check.yml"
+  push:
+    branches: [main, "feature/wordpress-independent-admin"]
+    paths:
+      - "wordpress-app/**"
+      - ".github/workflows/wordpress-app-check.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  wordpress-app:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: wordpress-app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: JavaScript syntax checks
+        run: |
+          set -e
+          for file in admin/*.js storefront.js scripts/*.mjs; do
+            node --check "$file"
+          done
+      - name: Template, Neon and RLS contract
+        run: node scripts/grocery-template-suite-check.mjs
+      - name: Storefront checkout contract
+        run: node scripts/wordpress-app-contract-check.mjs
+      - name: Block Halal Food Supabase coupling
+        run: |
+          set -e
+          if grep -RniE "supabase\.co|supabase-js|HFAdminReady|HFNeon|STORE_CONFIG|store-config\.js|shared\.js|app\.js" admin storefront.html storefront.js; then
+            echo "WordPress runtime contains a Halal Food/Supabase dependency."
+            exit 1
+          fi
+          echo "No Halal Food Supabase runtime dependency found."
