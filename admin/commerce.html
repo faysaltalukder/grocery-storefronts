@@ -5,14 +5,14 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light">
-<title>Central Commerce · WordPress Studio</title>
+<title>Business Control Center · WordPress Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./shared.css">
 <link rel="stylesheet" href="./workspace-global-theme.css">
 <link rel="stylesheet" href="./wp-admin-shell.css">
-<link rel="stylesheet" href="./commerce.css?v=20261107-central-ops-v2">
+<link rel="stylesheet" href="./commerce.css?v=20261107-multi-business-v3">
 </head>
 <body data-page="commerce">
 <div id="authGate" class="auth-gate"><div class="auth-gate-card"><strong>Checking secure owner access…</strong><p>Central Commerce is available only to the authorized WordPress owner.</p></div></div>
@@ -21,42 +21,45 @@
 <header class="oc-header">
   <div class="oc-brand">
     <a class="oc-back" href="./index.html" aria-label="Back to WordPress Studio">←</a>
-    <div><span class="oc-eyebrow">WORDPRESS STUDIO · COMMERCE OPERATIONS</span><h1>Central Commerce</h1><p>One operations workspace for all four grocery storefronts.</p></div>
+    <div><span class="oc-eyebrow">WORDPRESS STUDIO · CENTRAL BUSINESS CONTROL</span><h1>Business Control Center</h1><p>One command center for every website, business category and connected operation.</p></div>
   </div>
   <div class="oc-header-actions">
-    <label class="oc-store-filter">Store scope <select id="ocStoreFilter"><option value="all">All storefronts</option></select></label>
+    <label class="oc-store-filter">Business scope <select id="ocStoreFilter"><option value="all">All businesses</option></select></label>
     <span id="ocConnection" class="oc-connection" role="status">Connecting to Neon…</span>
     <button id="ocRefresh" class="oc-btn secondary" type="button">↻ Refresh</button>
-    <a class="oc-btn primary" href="./wordpress-templates.html?category=ecommerce-grocery&template=1">Templates ↗</a>
+    <a class="oc-btn primary" href="./wordpress-templates.html?category=ecommerce-grocery&template=1">Template library ↗</a>
   </div>
 </header>
 <div class="oc-layout">
   <aside class="oc-sidebar">
     <div class="oc-sidebar-label">OPERATIONS</div>
-    <nav id="ocNav" aria-label="Central commerce navigation">
-      <button type="button" data-tab="overview" class="is-active"><span>▦</span>Overview</button>
-      <button type="button" data-tab="products"><span>▤</span>Products & inventory</button>
-      <button type="button" data-tab="orders"><span>▣</span>Orders & fulfilment</button>
-      <button type="button" data-tab="customers"><span>♙</span>Customers</button>
-      <button type="button" data-tab="suppliers"><span>♧</span>Suppliers</button>
-      <button type="button" data-tab="purchasing"><span>⇧</span>Purchasing</button>
-      <button type="button" data-tab="delivery"><span>⌖</span>Delivery & stores</button>
-      <button type="button" data-tab="finance"><span>৳</span>Finance & payments</button>
-      <button type="button" data-tab="returns"><span>↩</span>Returns</button>
-      <button type="button" data-tab="wholesale"><span>▥</span>Wholesale pricing</button>
-      <button type="button" data-tab="reports"><span>▧</span>Reports</button>
+    <nav id="ocNav" aria-label="Central business control navigation">
+      <button type="button" data-tab="overview" data-common="true" class="is-active"><span>▦</span>Overview</button>
+      <button type="button" data-tab="websites" data-common="true"><span>▧</span>Website portfolio</button>
+      <button type="button" data-tab="category-workspace" data-category="true"><span>◈</span>Business workspace</button>
+      <button type="button" data-tab="products" data-business="commerce"><span>▤</span>Products & inventory</button>
+      <button type="button" data-tab="orders" data-business="commerce"><span>▣</span>Orders & fulfilment</button>
+      <button type="button" data-tab="customers" data-business="commerce"><span>♙</span>Customers</button>
+      <button type="button" data-tab="suppliers" data-business="commerce"><span>♧</span>Suppliers</button>
+      <button type="button" data-tab="purchasing" data-business="commerce"><span>⇧</span>Purchasing</button>
+      <button type="button" data-tab="delivery" data-business="commerce"><span>⌖</span>Delivery & stores</button>
+      <button type="button" data-tab="finance" data-business="commerce"><span>৳</span>Finance & payments</button>
+      <button type="button" data-tab="returns" data-business="commerce"><span>↩</span>Returns</button>
+      <button type="button" data-tab="wholesale" data-business="commerce"><span>▥</span>Wholesale pricing</button>
+      <button type="button" data-tab="quotes" data-business="commerce"><span>✉</span>Quote requests</button>
+      <button type="button" data-tab="reports" data-business="commerce"><span>▧</span>Reports</button>
     </nav>
-    <div class="oc-sidebar-foot"><span class="oc-health-dot"></span><div><strong>Neon data layer</strong><small>Owner-scoped · Multi-store</small></div></div>
+    <div class="oc-sidebar-foot"><span class="oc-health-dot"></span><div><strong>Neon data layer</strong><small>Owner-scoped · Multi-business</small></div></div>
   </aside>
   <section class="oc-workspace">
     <div id="ocNotice" class="oc-notice" aria-live="polite"></div>
-    <div id="ocMain" class="oc-main"><div class="oc-loading"><span></span><strong>Loading your commerce workspace</strong><small>Connecting stores, catalogues and operations data</small></div></div>
+    <div id="ocMain" class="oc-main"><div class="oc-loading"><span></span><strong>Loading your business control center</strong><small>Connecting websites, categories and business operations</small></div></div>
   </section>
 </div>
 </main>
 </div>
 <script defer src="./neon-client.js?v=6"></script>
-<script defer src="./neon-auth.js?v=5"></script>
-<script defer src="./neon-builder-api.js?v=20261107-publish-preflight-v3"></script>
-<script defer src="./commerce.js?v=20261107-catalog-import-v1"></script>
+<script defer src="./neon-auth.js?v=20261107-business-ops-v2"></script>
+<script defer src="./neon-builder-api.js?v=20261107-business-ops-v2"></script>
+<script defer src="./commerce.js?v=20261107-multi-business-v3"></script>
 </body></html>
