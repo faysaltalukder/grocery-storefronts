@@ -63,4 +63,20 @@ for(const site of ["general-supermarket","fresh-produce","express-grocery","whol
 }
 assert.ok(!api.toLowerCase().includes("supabase"),"Shared API must remain independent of Supabase");
 assert.ok(!storefront.toLowerCase().includes("supabase"),"Shared storefront must remain independent of Supabase");
+assert.ok(!adminApi.includes("halalfoodbd.official@gmail.com"),"Admin API must not hard-code a single merchant email");
+assert.ok(adminApi.includes("template_key=eq.")&&adminApi.includes("store-"),"Each merchant must receive a unique store slug while reusing owned template sites");
+assert.ok(api.includes("place_storefront_order_idempotent")&&adminApi.includes("place_storefront_order_idempotent"),"Both storefront API clients must use the server-side idempotent checkout RPC");
+assert.ok(storefront.includes("checkoutIdempotencyKey")&&storefront.includes("sessionStorage.setItem"),"Checkout retry keys must persist across client retries");
+const tenantMigration=fs.readFileSync("migrations/20261107_multi_tenant_owner_scope.sql","utf8");
+const idempotencyMigration=fs.readFileSync("migrations/20261107_checkout_idempotency.sql","utf8");
+assert.ok(tenantMigration.includes("AS RESTRICTIVE")&&tenantMigration.includes("auth.uid()"),"Tenant scope migration must constrain authenticated access to the signed-in owner");
+assert.ok(idempotencyMigration.includes("place_storefront_order_idempotent")&&idempotencyMigration.includes("storefront_checkout_rate_limits"),"Checkout migration must include idempotency and server-side attempt limiting");
+assert.ok(!bundle["admin/neon-auth.js"].includes("AUTHORIZED_EMAIL")&&!bundle["admin/neon-client.js"].includes("OWNER_EMAIL"),"Production auth bundle must support independent merchant accounts");
+assert.ok(bundle["admin/neon-auth.js"].includes("signUp.email"),"Workspace must provide merchant account creation");
+assert.ok(tenantMigration.includes("ALTER POLICY owner_identity_guard"),"Legacy single-owner restrictive policies must be neutralized only after replacement tenant guards exist");
+assert.doesNotThrow(()=>new Function(api),"Shared storefront API must parse");
+assert.doesNotThrow(()=>new Function(adminApi),"Admin API must parse");
+assert.doesNotThrow(()=>new Function(storefront),"Shared storefront runtime must parse");
+assert.doesNotThrow(()=>new Function(bundle["admin/neon-auth.js"]),"Merchant auth and signup runtime must parse");
+assert.doesNotThrow(()=>new Function(bundle["admin/neon-client.js"]),"Merchant Neon client runtime must parse");
 console.log("Grocery commerce integration and preview regression checks passed.");

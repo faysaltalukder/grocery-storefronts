@@ -17,7 +17,7 @@
     const {data,error}=await client.auth.getSession();
     const session=data?.session;
     const user=data?.user;
-    if(error||!user?.id||String(user.email||"").trim().toLowerCase()!=="halalfoodbd.official@gmail.com")throw new Error("WordPress access requires the authorized owner account. Please sign in to the WordPress workspace.");
+    if(error||!user?.id)throw new Error("Sign in to the WordPress workspace before managing this website.");
     return {client,session,user,token:null};
   }
   function applyFilters(builder,params){
@@ -124,10 +124,11 @@
   }
   async function ensureWebsite(templateKey,name){
     if(!ALLOWED_TEMPLATES.has(templateKey))throw new Error("Unsupported grocery template.");
-    const {user}=await authContext(),slug="hf-"+templateKey;
-    const query="?select=id,owner_id,name,slug,category_slug,template_key,status,brand,settings&owner_id=eq."+$(user.id)+"&slug=eq."+$(slug)+"&limit=1";
+    const {user}=await authContext();
+    const query="?select=id,owner_id,name,slug,category_slug,template_key,status,brand,settings&owner_id=eq."+$(user.id)+"&template_key=eq."+$(templateKey)+"&limit=1";
     const found=await request("websites",query);
     if(found?.[0])return found[0];
+    const slug="store-"+String(user.id).replace(/-/g,"").slice(0,10)+"-"+templateKey;
     const created=await request("websites","?select=id,owner_id,name,slug,category_slug,template_key,status,brand,settings",{method:"POST",prefer:"return=representation",body:{owner_id:user.id,name:String(name||templateKey).slice(0,120),slug,category_slug:"ecommerce-grocery",template_key:templateKey,status:"draft",brand:{},settings:{builder_version:2,isolated_sandbox:true}}});
     if(!created?.[0])throw new Error("Neon did not return the newly created website record.");
     return created[0];
@@ -180,8 +181,9 @@
     ]);
     return {website,pages,documents:documents||[],categories:categories||[],products:products||[],deliveryZones:deliveryZones||[],priceTiers:priceTiers||[]};
   }
-  async function placeOrder(siteSlug,items,customer,shippingAddress,notes=""){
-    return await request("rpc/place_storefront_order","",{method:"POST",public:true,body:{p_website_slug:siteSlug,p_items:items,p_customer:customer,p_shipping_address:shippingAddress,p_notes:notes}});
+  async function placeOrder(siteSlug,items,customer,shippingAddress,notes="",idempotencyKey=""){
+    if(!/^[a-f0-9]{32}$/.test(String(idempotencyKey)))throw new Error("A secure checkout retry key is required. Please refresh checkout and try again.");
+    return await request("rpc/place_storefront_order_idempotent","",{method:"POST",public:true,body:{p_website_slug:siteSlug,p_items:items,p_customer:customer,p_shipping_address:shippingAddress,p_notes:notes,p_idempotency_key:idempotencyKey}});
   }
   async function submitQuoteRequest(siteSlug,business,items,notes=""){
     return await request("rpc/submit_storefront_quote_request","",{method:"POST",public:true,body:{p_website_slug:siteSlug,p_business:business,p_items:items,p_notes:notes}});
