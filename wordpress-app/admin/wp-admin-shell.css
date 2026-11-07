@@ -57,3 +57,133 @@
 .hf-wpt-template-slot small{color:#8b8795;font-size:9px}
 .hf-wpt-template-slot.is-active{border-color:#c97b3d;background:#fff8f1}
 @media(max-width:680px){.wp-category-slot-grid{grid-template-columns:1fr}.wp-category-slot{padding:16px}.wp-category-slot-status{display:none}}
+
+
+/* Warm, high-clarity navigation theme — comfortable for long admin sessions */
+.wp-studio-layout{background:#f7f5ef;color:#373343}
+.wp-studio-sidebar{
+  background:#f1eee6;
+  color:#373343;
+  border-right:1px solid #e2dbce;
+  box-shadow:4px 0 22px rgba(61,49,35,.045);
+}
+.wp-studio-brand{color:#373343;border-bottom-color:#ded7ca}
+.wp-studio-brand-mark{background:#c97b3d;color:#fffaf4;box-shadow:0 3px 9px rgba(153,91,43,.18)}
+.wp-studio-brand strong{color:#373343}
+.wp-studio-brand small{color:#777283}
+.wp-studio-nav{gap:20px}
+.wp-studio-nav-label{color:#8b7b6a;letter-spacing:.14em}
+.wp-studio-nav-link{color:#554e60;border:1px solid transparent}
+.wp-studio-nav-link:hover{background:#fffaf2;color:#302b3b;border-color:#e8ddcc}
+.wp-studio-nav-link.active{
+  color:#4b3020;
+  background:#fbe8d5;
+  border-color:#edc8a5;
+  box-shadow:inset 3px 0 #c97b3d,0 2px 7px rgba(102,72,43,.045);
+}
+.wp-studio-nav-icon{color:#b66e37}
+.wp-studio-sidebar-foot{border-color:#dfd7c9;background:#faf7f0;color:#716a78}
+.wp-studio-sidebar-foot strong{color:#397456}
+.wp-studio-category{gap:4px}
+.wp-studio-category-row{grid-template-columns:minmax(0,1fr) 32px;gap:5px}
+.wp-studio-category-link{
+  min-height:39px;
+  padding:8px 11px;
+  border:1px solid #e5ddcf;
+  border-radius:9px;
+  background:#fffdf8;
+  color:#494354;
+  font-size:11px;
+  font-weight:700;
+  box-shadow:0 1px 2px rgba(57,46,33,.035);
+  transition:background .16s,border-color .16s,box-shadow .16s,color .16s;
+}
+.wp-studio-category-link:hover{
+  background:#fff5e9;
+  border-color:#dfb58f;
+  color:#603b24;
+}
+.wp-studio-category-link.active{
+  background:#fbe8d5;
+  border-color:#d99a68;
+  color:#59371f;
+  box-shadow:inset 3px 0 #c97b3d,0 2px 8px rgba(126,79,39,.07);
+}
+.wp-studio-category-toggle{
+  width:32px;height:32px;
+  border:1px solid #e2d8c8;
+  background:#fffaf2;
+  color:#8b603e;
+}
+.wp-studio-category-toggle:hover{
+  background:#fbe8d5;
+  border-color:#d9a477;
+  color:#613d25;
+}
+.wp-studio-category.is-expanded .wp-studio-category-toggle{
+  background:#f4dfca;
+  border-color:#d9a477;
+  color:#704426;
+}
+.wp-studio-template-links{
+  gap:4px;
+  margin:2px 0 7px 13px;
+  padding:5px 0 5px 12px;
+  border-left:2px solid #e3c5a8;
+}
+.wp-studio-template-link{
+  min-height:34px;
+  padding:7px 10px;
+  border:1px solid transparent;
+  border-radius:8px;
+  background:#f8f5ee;
+  color:#696273;
+  font-size:10px;
+  font-weight:700;
+  transition:background .16s,border-color .16s,color .16s,box-shadow .16s;
+}
+.wp-studio-template-link:before{color:#c97b3d}
+.wp-studio-template-link:hover{
+  background:#fffaf2;
+  border-color:#e8d6c2;
+  color:#4b3b31;
+}
+.wp-studio-template-link.active{
+  background:#f6e3d0;
+  border-color:#e2b58f;
+  color:#57371f;
+  box-shadow:inset 2px 0 #c97b3d;
+}
+.wp-studio-category-link:focus-visible,.wp-studio-category-toggle:focus-visible,
+.wp-studio-template-link:focus-visible,.wp-studio-nav-link:focus-visible,
+.wp-studio-menu-toggle:focus-visible,.wp-studio-signout:focus-visible{
+  outline:3px solid #d69a69;
+  outline-offset:2px;
+}
+.wp-category-slot{
+  background:#fffdf8;
+  border-color:#e6ddcf;
+  box-shadow:0 3px 12px rgba(57,46,33,.035);
+}
+.wp-category-slot.is-selected{
+  background:#fff8f0;
+  border-color:#d99a68;
+  box-shadow:0 0 0 2px #c97b3d20,0 4px 14px rgba(126,79,39,.06);
+}
+.wp-category-slot-number{
+  background:#f2dfca;
+  color:#704426;
+  border:1px solid #e6c6a6;
+}
+.wp-category-slot-status{background:#f7eee2;color:#806044}
+.hf-wpt-template-slot{
+  background:#fffdf8;
+  border-color:#e5ddcf;
+  box-shadow:0 2px 8px rgba(57,46,33,.035);
+}
+.hf-wpt-template-slot:hover{background:#fff6eb;border-color:#dfb58f}
+.hf-wpt-template-slot.is-active{border-color:#d99a68;background:#fbe8d5;box-shadow:0 0 0 2px #c97b3d16}
+@media(max-width:850px){
+  .wp-studio-sidebar{background:#f1eee6;box-shadow:18px 0 45px rgba(39,32,27,.15)}
+  .wp-studio-layout.sidebar-open:after{background:rgba(43,42,61,.38)}
+}
