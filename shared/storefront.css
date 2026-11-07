@@ -53,3 +53,15 @@ body[data-template="wholesale-bulk"] .sf-product-info h3{font-family:"IBM Plex S
 .sf-blog-end{display:flex;gap:10px;flex-wrap:wrap;padding-top:20px;margin-top:24px;border-top:1px solid var(--sf-line)}
 .sf-category-tile small{display:block;margin-top:7px;color:var(--sf-muted);font-size:11px;line-height:1.5}
 @media(max-width:720px){.sf-blog-grid{grid-template-columns:1fr;gap:14px}.sf-blog-card-body{padding:16px}.sf-blog-article{padding:17px}.sf-blog-article>p{font-size:14px}}
+
+/* Audit-driven commerce foundation */
+.sf-facet-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:-5px 0 20px}
+.sf-facet-row input.sf-sort{width:130px;min-width:110px}
+.sf-stock-filter{display:inline-flex;align-items:center;gap:7px;padding:9px 12px;border:1px solid var(--sf-line);border-radius:12px;background:var(--sf-surface);font-size:12px;font-weight:700;color:var(--sf-ink)}
+.sf-tier-hint{display:block;margin-top:4px;color:var(--sf-muted);font-size:10px;font-weight:700}
+.sf-quick-order{min-width:900px}
+.sf-quick-order td{vertical-align:middle}
+.sf-quick-order td div{white-space:nowrap;color:var(--sf-primary);font-weight:700}
+.sf-quick-qty{width:82px;min-height:36px;border:1px solid var(--sf-line);border-radius:9px;padding:5px 8px;background:var(--sf-surface);color:var(--sf-ink)}
+.sf-quick-order tr[hidden]{display:none}
+@media(max-width:720px){.sf-facet-row{align-items:stretch}.sf-facet-row>*{flex:1;min-width:0}.sf-facet-row input.sf-sort{width:100%}.sf-quick-order{min-width:820px}}
