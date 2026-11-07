@@ -20,6 +20,8 @@ if (!commerce.includes("ocCategoryForm") || !commerce.includes("Recent stock mov
 if (!bundle["admin/commerce.html"].includes("WPAuthReady") && !bundle["admin/commerce.js"].includes("WPAuthReady")) throw new Error("Central commerce owner authentication is missing.");
 if (!catalog.includes("importProductsCsv") || !catalog.includes("exportProductsCsv") || !catalog.includes("hfStoreOperationsForm")) throw new Error("Catalogue CSV or operations workflow is missing.");
 if (!storefront.includes("posts=docFor") || !storefront.includes("sf-rich-block") || !storefront.includes("WPNeonClientReady") || !storefront.includes('name="area" required')) throw new Error("Rich storefront renderer, delivery-area checkout or WordPress Neon integration is missing.");
+if (!storefront.includes("priceForProduct") || !storefront.includes("deliveryFeeForArea") || !storefront.includes("minimumOrderForArea") || !storefront.includes("deliveryZones") || !storefront.includes("priceTiers")) throw new Error("Storefront wholesale pricing or delivery-zone totals are missing.");
+if (!orderRpc.includes("product_price_tiers") || !orderRpc.includes("v_unit_price") || !orderRpc.includes("delivery_zones")) throw new Error("Server-side tier pricing or delivery-zone checks are missing.");
 if (!orderRpc.includes("demo_catalog") || !orderRpc.includes("inventory_verified") || !orderRpc.includes("Delivery is not available in the selected area") || !orderRpc.includes("Duplicate product lines")) throw new Error("Database order RPC safety checks are incomplete.");
 for (const [path, content] of Object.entries(bundle)) {
   if (path.endsWith(".html") && content.includes("_ship=bv6dsk2")) throw new Error("Stale deployment pin remains in " + path);
