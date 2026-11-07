@@ -1,0 +1,468 @@
+/* Independent WordPress/Grocery API.
+ * GitHub hosts renderer code. The dedicated Neon branch owns authentication,
+ * templates, tenant content, catalogue and orders. Neon SDK manages guest and
+ * signed-in sessions. No Halal Food credentials or backend services are used.
+ */
+(() => {
+  "use strict";
+  const API_BASE="https://ep-wild-lab-a1jqqu0p.apirest.ap-southeast-1.aws.neon.tech/halal_food_db/rest/v1";
+  const ALLOWED_TEMPLATES=new Set(["general-supermarket","fresh-produce","express-grocery","wholesale-bulk"]);
+  const $=v=>encodeURIComponent(String(v??""));
+  async function getClient(){
+    if(!window.WPNeonClientReady)throw new Error("The independent Neon authentication client did not load.");
+    return await window.WPNeonClientReady;
+  }
+  async function authContext(){
+    const client=await getClient();
+    const {data,error}=await client.auth.getSession();
+    const session=data?.session;
+    const user=data?.user;
+    if(error||!user?.id||String(user.email||"").trim().toLowerCase()!=="halalfoodbd.official@gmail.com")throw new Error("WordPress access requires the authorized owner account. Please sign in to the WordPress workspace.");
+    return {client,session,user,token:null};
+  }
+  function applyFilters(builder,params){
+    for(const [key,raw] of params.entries()){
+      if(["select","order","limit","on_conflict"].includes(key))continue;
+      const dot=raw.indexOf(".");
+      if(dot<1)continue;
+      const op=raw.slice(0,dot),value=raw.slice(dot+1);
+      if(op==="eq")builder=builder.eq(key,value);
+      else if(op==="neq")builder=builder.neq(key,value);
+      else if(op==="gt")builder=builder.gt(key,value);
+      else if(op==="gte")builder=builder.gte(key,value);
+      else if(op==="lt")builder=builder.lt(key,value);
+      else if(op==="lte")builder=builder.lte(key,value);
+      else if(op==="is")builder=builder.is(key,value==="null"?null:value);
+      else if(op==="like")builder=builder.like(key,value);
+      else if(op==="ilike")builder=builder.ilike(key,value);
+      else if(op==="in"){
+        const list=value.replace(/^\(|\)$/g,"").split(",").map(v=>v.replace(/^"|"$/g,""));
+        builder=builder.in(key,list);
+      }
+    }
+    const order=params.get("order");
+    if(order)for(const part of order.split(",")){
+      const [column,direction]=part.split(".");
+      if(column)builder=builder.order(column,{ascending:direction!=="desc"});
+    }
+    const limit=params.get("limit");
+    if(limit&&Number.isFinite(Number(limit)))builder=builder.limit(Number(limit));
+    return builder;
+  }
+  async function request(table,query="",options={}){
+    const client=await getClient(),method=options.method||"GET",params=new URLSearchParams(query);
+    let builder;
+    if(table.startsWith("rpc/")){
+      builder=client.rpc(table.slice(4),options.body||{});
+    }else if(method==="GET"){
+      builder=client.from(table).select(params.get("select")||"*");
+    }else if(method==="POST"){
+      const conflict=params.get("on_conflict");
+      builder=conflict
+        ?client.from(table).upsert(options.body,{onConflict:conflict})
+        :client.from(table).insert(options.body);
+      if(params.get("select"))builder=builder.select(params.get("select"));
+    }else if(method==="PATCH"){
+      builder=client.from(table).update(options.body||{});
+      if(params.get("select"))builder=builder.select(params.get("select"));
+    }else{
+      throw new Error("Unsupported Neon Data API method: "+method);
+    }
+    if(!table.startsWith("rpc/"))builder=applyFilters(builder,params);
+    const {data,error}=await builder;
+    if(error)throw new Error("Neon "+table+" request failed: "+String(error.message||error.details||"Unknown database error").slice(0,260));
+    return data;
+  }
+  const defaultContent={
+    home:{heading:"A better way to shop, every day",description:"Discover carefully selected favourites, fresh picks and everyday essentials.",cta:"Shop now"},
+    shop:{heading:"Shop the collection",description:"Browse our complete selection and find something good.",cta:""},
+    category:{heading:"Explore this collection",description:"Thoughtfully selected products for every day.",cta:""},
+    product:{heading:"Product details",description:"Quality you can trust, with all the details before you buy.",cta:"Add to cart"},
+    search:{heading:"Find what you need",description:"Search the store and discover your next favourite.",cta:""},
+    cart:{heading:"Your basket",description:"Review your selections before checkout.",cta:"Continue to checkout"},
+    checkout:{heading:"Secure checkout",description:"A few details and your order will be on its way.",cta:"Place order"},
+    "order-confirmation":{heading:"Thank you for your order",description:"Your order has been received.",cta:"Continue shopping"},
+    "order-tracking":{heading:"Track your order",description:"Enter your order number and phone number to see the latest status.",cta:"Track order"},
+    content:{heading:"A little more about us",description:"We believe good products and thoughtful service make everyday life better.",cta:""},
+    contact:{heading:"We would love to hear from you",description:"Questions, feedback or a special request? Get in touch.",cta:"Send message"},
+    faq:{heading:"How can we help?",description:"Answers to the questions we hear most often.",cta:""},
+    legal:{heading:"Information and policies",description:"Please read the information below.",cta:""},
+    account:{heading:"Your account",description:"Look up an order or get help with your shopping.",cta:""},
+    wishlist:{heading:"Your saved favourites",description:"Keep the products you love in one place.",cta:""}
+  };
+  function defaultPageDocument(page,templateKey){
+    const type=page.page_type||"content",content=defaultContent[type]||defaultContent.content;
+    const title=page.title||"New page";
+    const slug=page.slug||page.page_key;
+    const color={"general-supermarket":"#b94f35","fresh-produce":"#657c4a","express-grocery":"#df6b35","wholesale-bulk":"#344b70"}[templateKey]||"#b94f35";
+    const bg={"general-supermarket":"#fbf8f1","fresh-produce":"#f7f7ef","express-grocery":"#f7f8fb","wholesale-bulk":"#f5f7fa"}[templateKey]||"#fbf8f1";
+    return {
+      schemaVersion:1,site:{templateKey},page:{id:page.page_key||slug,title,pageType:type,slug,seoTitle:title,seoDescription:content.description},
+      content:{heading:content.heading,description:content.description,cta:content.cta,sections:page.page_spec?.sections||[]},
+      theme:{colors:{primary:color,paper:bg}},
+      tree:[{id:"page-"+slug+"-hero",type:"section",label:"Page introduction",props:{background:bg,padding:44,width:"100%",align:"left"},children:[
+        {id:"page-"+slug+"-title",type:"heading",label:"Page heading",text:content.heading,props:{color:"#263247",fontSize:38,align:"left",width:"100%"},children:[]},
+        {id:"page-"+slug+"-description",type:"paragraph",label:"Page introduction",text:content.description,props:{color:"#68758a",fontSize:16,align:"left",width:"100%"},children:[]}
+      ]}]
+    };
+  }
+  async function loadTemplateCatalog(){
+    const [catalog,designs]=await Promise.all([
+      request("template_catalog","?select=template_key,category_slug,name,tagline,description,business_types,feature_flags,sort_order,is_builtin&is_builtin=eq.true&order=sort_order.asc",{public:true}),
+      request("template_designs","?select=template_key,design_version,design_spec,preview_settings,source_commit,is_active&is_active=eq.true&order=design_version.desc",{public:true})
+    ]);
+    const latest=new Map();(designs||[]).forEach(row=>{if(!latest.has(row.template_key))latest.set(row.template_key,row);});
+    const rows=(catalog||[]).filter(row=>ALLOWED_TEMPLATES.has(row.template_key)).map(row=>({...row,design:latest.get(row.template_key)||null}));
+    if(rows.length!==4||rows.some(row=>!row.design))throw new Error("Neon catalog is missing one or more active grocery template design records.");
+    return rows;
+  }
+  async function loadTemplatePages(templateKey){
+    if(!ALLOWED_TEMPLATES.has(templateKey))throw new Error("Unsupported grocery template.");
+    const rows=await request("template_pages","?select=template_key,page_key,page_type,title,slug,sort_order,page_spec,is_required,is_active&template_key=eq."+$(templateKey)+"&is_active=eq.true&order=sort_order.asc",{public:true});
+    if((rows||[]).length<25)throw new Error("Neon page catalog is incomplete for "+templateKey+" (expected 25 designed pages).");
+    return rows;
+  }
+  async function ensureWebsite(templateKey,name){
+    if(!ALLOWED_TEMPLATES.has(templateKey))throw new Error("Unsupported grocery template.");
+    const {user}=await authContext(),slug="hf-"+templateKey;
+    const query="?select=id,owner_id,name,slug,category_slug,template_key,status,brand,settings&owner_id=eq."+$(user.id)+"&slug=eq."+$(slug)+"&limit=1";
+    const found=await request("websites",query);
+    if(found?.[0])return found[0];
+    const created=await request("websites","?select=id,owner_id,name,slug,category_slug,template_key,status,brand,settings",{method:"POST",prefer:"return=representation",body:{owner_id:user.id,name:String(name||templateKey).slice(0,120),slug,category_slug:"ecommerce-grocery",template_key:templateKey,status:"draft",brand:{},settings:{builder_version:2,isolated_sandbox:true}}});
+    if(!created?.[0])throw new Error("Neon did not return the newly created website record.");
+    return created[0];
+  }
+  async function loadWebsiteDocuments(websiteId){
+    return await request("website_documents","?select=id,website_id,owner_id,page_key,schema_version,document,updated_at&website_id=eq."+$(websiteId)+"&order=updated_at.desc");
+  }
+  async function seedWebsitePages(website,templateKey){
+    const [pages,docs]=await Promise.all([loadTemplatePages(templateKey),loadWebsiteDocuments(website.id)]);
+    const existing=new Set((docs||[]).map(row=>row.page_key));
+    const missing=pages.filter(page=>!existing.has(page.page_key));
+    if(missing.length){
+      const {user}=await authContext();
+      if(website.owner_id!==user.id)throw new Error("Website ownership check failed while preparing page documents.");
+      const records=missing.map(page=>({website_id:website.id,owner_id:user.id,page_key:page.page_key,schema_version:1,document:defaultPageDocument(page,templateKey)}));
+      const saved=await request("website_documents","?on_conflict=website_id,page_key&select=id,page_key",{method:"POST",prefer:"resolution=merge-duplicates,return=representation",body:records});
+      if(!Array.isArray(saved)||saved.length!==missing.length)throw new Error("Neon did not confirm all 25 page drafts.");
+    }
+    return {pages,documents:await loadWebsiteDocuments(website.id)};
+  }
+  async function loadPageDocument(templateKey,name,pageKey="home"){
+    const website=await ensureWebsite(templateKey,name);
+    await seedWebsitePages(website,templateKey);
+    const rows=await request("website_documents","?select=id,website_id,owner_id,page_key,schema_version,document,updated_at&website_id=eq."+$(website.id)+"&page_key=eq."+$(pageKey)+"&limit=1");
+    return {website,record:rows?.[0]||null,document:rows?.[0]?.document||null};
+  }
+  async function savePageDocument(website,pageKey,document){
+    if(!website?.id||!website?.owner_id)throw new Error("Neon website context is missing.");
+    const {user}=await authContext();
+    if(website.owner_id!==user.id)throw new Error("Website ownership check failed.");
+    if(!/^[a-z0-9][a-z0-9-]{0,79}$/.test(pageKey))throw new Error("Invalid page key.");
+    if(!document||document.schemaVersion!==1||!document.page||typeof document.page.title!=="string"||!Array.isArray(document.tree)||document.tree.length>100)throw new Error("The page document did not pass schema validation.");
+    const rows=await request("website_documents","?on_conflict=website_id,page_key&select=id,updated_at",{method:"POST",prefer:"resolution=merge-duplicates,return=representation",body:{website_id:website.id,owner_id:user.id,page_key,schema_version:1,document,updated_at:new Date().toISOString()}});
+    if(!rows?.[0]?.id)throw new Error("Neon did not confirm that the page was saved.");
+    return rows[0];
+  }
+  async function loadStorefrontData(siteSlug,{token=null,preview=false}={}){
+    const opts=token?{token}:preview?{}:{public:true};
+    const websites=await request("websites","?select=id,name,slug,template_key,status,brand,settings&slug=eq."+$(siteSlug)+"&limit=1",opts);
+    const website=websites?.[0];
+    if(!website)throw new Error("Storefront not found or not published.");
+    if(website.status!=="published"&&!preview)throw new Error("This storefront is not published yet.");
+    const [pages,documents,categories,products]=await Promise.all([
+      loadTemplatePages(website.template_key),
+      request("website_documents","?select=page_key,schema_version,document,updated_at&website_id=eq."+$(website.id),opts),
+      request("categories","?select=id,name,slug,parent_id,sort_order,is_active&website_id=eq."+$(website.id)+"&is_active=eq.true&order=sort_order.asc",opts),
+      request("products","?select=id,category_id,name,description,sku,price,compare_at_price,unit,stock,image_url,gallery,attributes,sort_order&website_id=eq."+$(website.id)+"&is_active=eq.true&order=sort_order.asc",opts)
+    ]);
+    return {website,pages,documents:documents||[],categories:categories||[],products:products||[]};
+  }
+  async function placeOrder(siteSlug,items,customer,shippingAddress,notes=""){
+    return await request("rpc/place_storefront_order","",{method:"POST",public:true,body:{p_website_slug:siteSlug,p_items:items,p_customer:customer,p_shipping_address:shippingAddress,p_notes:notes}});
+  }
+  async function trackOrder(siteSlug,orderNumber,phone){
+    return await request("rpc/track_storefront_order","",{method:"POST",public:true,body:{p_website_slug:siteSlug,p_order_number:orderNumber,p_phone:phone}});
+  }
+  async function getWebsiteStats(website){
+    if(!website?.id)throw new Error("Website context is missing.");
+    const [products,categories,docs]=await Promise.all([
+      request("products","?select=id&website_id=eq."+$(website.id)+"&is_active=eq.true&limit=500"),
+      request("categories","?select=id&website_id=eq."+$(website.id)+"&is_active=eq.true&limit=500"),
+      loadWebsiteDocuments(website.id)
+    ]);
+    return {products:(products||[]).length,categories:(categories||[]).length,pages:(docs||[]).length};
+  }
+  async function loadWebsiteOrders(website){
+    if(!website?.id||!website?.owner_id)throw new Error("Website context is missing.");
+    const {user}=await authContext();
+    if(website.owner_id!==user.id)throw new Error("Website ownership check failed.");
+    return await request("orders","?select=id,order_number,customer,shipping_address,subtotal,delivery_fee,discount,total,payment_method,payment_status,status,notes,created_at,order_items(id,product_snapshot,quantity,unit_price,line_total)&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&order=created_at.desc&limit=250");
+  }
+  async function updateOrderStatus(website,orderId,status){
+    const allowed=new Set(["pending","processing","shipped","delivered","cancelled"]);
+    if(!allowed.has(status))throw new Error("Unsupported order status.");
+    const {user}=await authContext();
+    if(!website?.id||website.owner_id!==user.id)throw new Error("Website ownership check failed.");
+    const result=await request("rpc/update_storefront_order_status","",{method:"POST",body:{p_website_id:website.id,p_order_id:orderId,p_status:status}});
+    if(!result?.id||result.id!==orderId)throw new Error("Neon did not confirm the order status update.");
+    return result;
+  }
+  async function createCustomPage(website,templateKey,title){
+    const clean=String(title||"").trim().slice(0,80);
+    if(clean.length<2)throw new Error("Page title must contain at least two characters.");
+    const slug=clean.toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,60);
+    if(!slug)throw new Error("Please choose a page title using letters or numbers.");
+    const pageKey="custom-"+slug;
+    const docs=await loadWebsiteDocuments(website.id);
+    if((docs||[]).some(row=>row.page_key===pageKey))throw new Error("A page with this address already exists.");
+    const page={page_key:pageKey,page_type:"content",title:clean,slug,page_spec:{sections:["page-hero","rich-content","footer"]}};
+    const document=defaultPageDocument(page,templateKey);
+    await savePageDocument(website,pageKey,document);
+    return page;
+  }
+  async function saveWebsiteProfile(website,input){
+    const user=await verifyWebsiteOwner(website);
+    const current=await request("websites","?select=brand,settings&id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&limit=1");
+    if(!current?.[0])throw new Error("Website settings could not be loaded.");
+    const oldBrand=current[0].brand||website.brand||{},oldSettings=current[0].settings||website.settings||{};
+    const phone=String(input?.phone||"").trim().slice(0,40),email=String(input?.email||"").trim().slice(0,160),address=String(input?.address||"").trim().slice(0,240),hours=String(input?.hours||"").trim().slice(0,160);
+    if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))throw new Error("Enter a valid support email address.");
+    const areas=[...new Set(String(input?.areas||"").split(/\r?\n/).map(x=>x.trim()).filter(Boolean))].slice(0,100);
+    const fee=Number(input?.default_fee);if(!Number.isFinite(fee)||fee<0)throw new Error("Delivery fee must be zero or greater.");
+    const note=String(input?.note||"").trim().slice(0,500);
+    const brand={...oldBrand,phone,email,address};
+    const settings={...oldSettings,contact:{...(oldSettings.contact||{}),phone,email,address,hours},delivery:{...(oldSettings.delivery||{}),areas,default_fee:fee,note}};
+    const rows=await request("websites","?id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&select=id,brand,settings,updated_at",{method:"PATCH",body:{brand,settings,updated_at:new Date().toISOString()}});
+    if(!rows?.[0])throw new Error("Store operations update was not confirmed.");return rows[0];
+  }
+  async function verifyWebsiteCatalog(website){
+    const user=await verifyWebsiteOwner(website);
+    const products=await request("products","?select=id,attributes&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&is_active=eq.true&limit=500");
+    if(!products?.length)throw new Error("Add real products before verifying the catalogue.");
+    const unverified=products.filter(p=>p.attributes?.demo===true||p.attributes?.inventory_verified!==true);
+    if(unverified.length)throw new Error(unverified.length+" active products are still marked as sample/demo or have not been verified. Verify or archive them first.");
+    const current=await request("websites","?select=settings&id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&limit=1");
+    const settings={...(current?.[0]?.settings||website.settings||{}),demo_catalog:false};
+    const rows=await request("websites","?id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&select=id,settings,updated_at",{method:"PATCH",body:{settings,updated_at:new Date().toISOString()}});
+    if(!rows?.[0])throw new Error("Catalogue verification was not confirmed.");return rows[0];
+  }
+  async function publishWebsite(website,brand,settings){
+    const {user}=await authContext();
+    if(!website?.id||website.owner_id!==user.id)throw new Error("Website ownership check failed.");
+    const [products,categories,current,documents]=await Promise.all([
+      request("products","?select=id,name,sku,price,stock,description,image_url,attributes&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&is_active=eq.true&limit=500"),
+      request("categories","?select=id&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&is_active=eq.true&limit=200"),
+      request("websites","?select=brand,settings&id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&limit=1"),
+      request("website_documents","?select=page_key&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&limit=100")
+    ]);
+    if(!products?.length||!categories?.length)throw new Error("Add at least one active category and one active product before publishing.");
+    const currentBrand=current?.[0]?.brand||website.brand||{},currentSettings=current?.[0]?.settings||website.settings||{};const siteBrand={...currentBrand,...(brand||{})};const inputSettings=settings||{};const siteSettings={...currentSettings,...inputSettings,contact:{...(currentSettings.contact||{}),...(inputSettings.contact||{})},delivery:{...(currentSettings.delivery||{}),...(inputSettings.delivery||{})}};
+    const unverified=products.filter(p=>p.attributes?.demo===true||p.attributes?.inventory_verified!==true);
+    if(unverified.length)throw new Error("Publishing blocked: "+unverified.length+" active products are still sample/demo or unverified. Verify real inventory or archive those products.");
+    if(siteSettings.demo_catalog!==false)throw new Error("Publishing blocked: verify the complete real catalogue first.");
+    const incomplete=products.filter(p=>!p.sku||!p.image_url||String(p.description||"").trim().length<20||!Number.isFinite(Number(p.price))||Number(p.price)<=0);
+    if(incomplete.length)throw new Error("Publishing blocked: "+incomplete.length+" active products need a SKU, HTTPS image, useful description and valid price.");
+    const delivery=siteSettings.delivery||{},areas=Array.isArray(delivery.areas)?delivery.areas.filter(x=>String(typeof x==="string"?x:(x?.name||x?.area||"")).trim()):[];
+    if(!areas.length)throw new Error("Publishing blocked: add the real delivery areas this store can serve.");
+    if(!Number.isFinite(Number(delivery.default_fee))||Number(delivery.default_fee)<0)throw new Error("Publishing blocked: configure a valid delivery fee.");
+    if(/demo configuration/i.test(String(delivery.note||"")))throw new Error("Publishing blocked: replace the demo delivery note with the real delivery policy.");
+    const contact=siteSettings.contact||{};
+    if(!(siteBrand.phone||contact.phone||siteBrand.email||contact.email))throw new Error("Publishing blocked: add a real customer-support phone number or email.");
+    if(!(siteBrand.address||contact.address))throw new Error("Publishing blocked: add the real business/store address.");
+    const requiredPages=["contact","delivery","returns","privacy","terms"],present=new Set((documents||[]).map(d=>d.page_key)),missing=requiredPages.filter(k=>!present.has(k));
+    if(missing.length)throw new Error("Publishing blocked: create these required customer-information pages: "+missing.join(", ")+".");
+    const result=await request("websites","?id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&select=id,status,updated_at",{method:"PATCH",prefer:"return=representation",body:{status:"published",brand:siteBrand,settings:siteSettings,updated_at:new Date().toISOString()}});
+    if(!result?.[0])throw new Error("Neon did not confirm the publish status.");return result[0];
+  }
+
+  async function verifyWebsiteOwner(website){
+    const {user}=await authContext();
+    if(!website?.id||website.owner_id!==user.id)throw new Error("Website ownership check failed.");
+    return user;
+  }
+  async function loadWebsiteCatalog(website){
+    const user=await verifyWebsiteOwner(website);
+    const [categories,products]=await Promise.all([
+      request("categories","?select=id,website_id,owner_id,name,slug,parent_id,sort_order,is_active,created_at&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&order=sort_order.asc"),
+      request("products","?select=id,website_id,owner_id,category_id,name,description,sku,price,compare_at_price,unit,stock,image_url,gallery,attributes,is_active,sort_order,created_at,updated_at&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&order=sort_order.asc")
+    ]);
+    return {categories:categories||[],products:products||[]};
+  }
+  function catalogSlug(value){
+    return String(value||"").trim().toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,70);
+  }
+  async function saveWebsiteCategory(website,input){
+    const user=await verifyWebsiteOwner(website),name=String(input?.name||"").trim().slice(0,100),slug=catalogSlug(input?.slug||name);
+    if(name.length<2||!slug)throw new Error("Enter a category name with at least two characters.");
+    const payload={website_id:website.id,owner_id:user.id,name,slug,sort_order:Math.max(0,Number(input.sort_order)||0),is_active:input.is_active!==false};
+    if(input.id){
+      const rows=await request("categories","?id=eq."+$(input.id)+"&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&select=id,name,slug,sort_order,is_active",{method:"PATCH",body:payload});
+      if(!rows?.[0])throw new Error("Category update was not confirmed.");
+      return rows[0];
+    }
+    const rows=await request("categories","?select=id,name,slug,sort_order,is_active",{method:"POST",body:payload});
+    if(!rows?.[0])throw new Error("Category creation was not confirmed.");
+    return rows[0];
+  }
+  async function saveWebsiteProduct(website,input){
+    const user=await verifyWebsiteOwner(website);
+    const name=String(input?.name||"").trim().slice(0,160),description=String(input?.description||"").trim().slice(0,5000);
+    const price=Number(input?.price),stock=Number(input?.stock),compare=input?.compare_at_price===""||input?.compare_at_price==null?null:Number(input.compare_at_price);
+    if(name.length<2)throw new Error("Product name must contain at least two characters.");
+    if(!Number.isFinite(price)||price<=0)throw new Error("Enter a product price greater than zero.");
+    if(!Number.isFinite(stock)||stock<0)throw new Error("Stock must be zero or greater.");
+    if(compare!==null&&(!Number.isFinite(compare)||compare<0))throw new Error("Compare-at price must be zero or greater.");
+    const categoryId=String(input?.category_id||"").trim()||null;
+    if(categoryId){const matches=await request("categories","?select=id&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&id=eq."+$(categoryId)+"&is_active=eq.true&limit=1");if(!matches?.length)throw new Error("Choose an active category from this website.");}
+    const imageUrl=String(input?.image_url||"").trim();
+    if(imageUrl&&!(imageUrl.startsWith("https://")||imageUrl.startsWith("http://")))throw new Error("Product image must use a valid https:// or http:// URL.");
+    const minQty=Math.max(1,Number(input?.minimum_order_quantity)||1),productId=String(input?.id||"").trim();
+    let existing=null;
+    if(productId){const found=await request("products","?select=id,attributes,gallery&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&id=eq."+$(productId)+"&limit=1");if(!found?.[0])throw new Error("The product to edit could not be found.");existing=found[0];}
+    const verified=input?.real_inventory_verified===true||input?.real_inventory_verified==="true"||input?.real_inventory_verified==="on";
+    const sku=String(input?.sku||"").trim().slice(0,80)||null;
+    if(verified&&(!sku||description.length<20||!imageUrl.startsWith("https://")))throw new Error("To verify real inventory, add a unique SKU, a useful description (at least 20 characters), and an HTTPS product image.");
+    const attributes={...(existing?.attributes||{}),minimum_order_quantity:minQty,brand:String(input?.brand||"").trim().slice(0,100),barcode:String(input?.barcode||"").trim().slice(0,80),pack_size:String(input?.pack_size||"").trim().slice(0,100),origin:String(input?.origin||"").trim().slice(0,120),grade:String(input?.grade||"").trim().slice(0,80),expiry_date:String(input?.expiry_date||"").trim().slice(0,20),farm_name:String(input?.farm_name||"").trim().slice(0,120)};
+    if(verified){attributes.demo=false;attributes.inventory_verified=true;attributes.verified_at=new Date().toISOString();}
+    else if(!productId){attributes.demo=true;attributes.inventory_verified=false;}
+    const payload={website_id:website.id,owner_id:user.id,category_id:categoryId,name,description,sku,price,compare_at_price:compare,unit:String(input?.unit||"piece").trim().slice(0,30)||"piece",stock,image_url:imageUrl||null,gallery:existing?.gallery||[],attributes,is_active:input?.is_active!==false,sort_order:Math.max(0,Number(input?.sort_order)||0),updated_at:new Date().toISOString()};
+    if(productId){const rows=await request("products","?id=eq."+$(productId)+"&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&select=id,name,sku,price,stock,is_active,attributes,updated_at",{method:"PATCH",body:payload});if(!rows?.[0])throw new Error("Product update was not confirmed.");return rows[0];}
+    const rows=await request("products","?select=id,name,sku,price,stock,is_active,attributes,created_at",{method:"POST",body:payload});if(!rows?.[0])throw new Error("Product creation was not confirmed.");return rows[0];
+  }
+  async function setWebsiteProductActive(website,productId,isActive){
+    const user=await verifyWebsiteOwner(website);
+    const rows=await request("products","?id=eq."+$(productId)+"&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&select=id,is_active",{method:"PATCH",body:{is_active:Boolean(isActive),updated_at:new Date().toISOString()}});
+    if(!rows?.[0])throw new Error("Product status update was not confirmed.");
+    return rows[0];
+  }
+  async function setWebsiteCategoryActive(website,categoryId,isActive){
+    const user=await verifyWebsiteOwner(website);
+    if(!isActive){
+      const products=await request("products","?select=id&website_id=eq."+$(website.id)+"&category_id=eq."+$(categoryId)+"&is_active=eq.true&limit=1");
+      if(products?.length)throw new Error("Move or archive the active products in this category before archiving it.");
+    }
+    const rows=await request("categories","?id=eq."+$(categoryId)+"&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&select=id,is_active",{method:"PATCH",body:{is_active:Boolean(isActive)}});
+    if(!rows?.[0])throw new Error("Category status update was not confirmed.");
+    return rows[0];
+  }
+
+  async function loadCentralCommerce(){
+    const {user}=await authContext();
+    const [websites,products,categories,orders,orderItems,suppliers,purchaseOrders,purchaseItems,inventoryMovements,deliveryZones,payments,supplierPayments,customers,customerLinks,returns,finance,priceTiers]=await Promise.all([
+      request("websites","?select=id,owner_id,name,slug,template_key,status,brand,settings,created_at,updated_at&order=created_at.asc"),
+      request("products","?select=id,website_id,owner_id,category_id,name,description,sku,price,compare_at_price,unit,stock,image_url,gallery,attributes,is_active,sort_order,created_at,updated_at&order=updated_at.desc&limit=3000"),
+      request("categories","?select=id,website_id,owner_id,name,slug,parent_id,sort_order,is_active&order=sort_order.asc&limit=2000"),
+      request("orders","?select=id,website_id,owner_id,order_number,customer,customer_id,shipping_address,subtotal,delivery_fee,discount,total,payment_method,payment_status,status,notes,created_at&order=created_at.desc&limit=2000"),
+      request("order_items","?select=id,order_id,product_id,product_snapshot,quantity,unit_price,line_total&limit=5000"),
+      request("suppliers","?select=*&order=created_at.desc&limit=1000"),
+      request("purchase_orders","?select=*&order=created_at.desc&limit=1000"),
+      request("purchase_order_items","?select=*&limit=5000"),
+      request("inventory_movements","?select=*&order=created_at.desc&limit=1500"),
+      request("delivery_zones","?select=*&order=created_at.desc&limit=1000"),
+      request("payment_transactions","?select=*&order=paid_at.desc&limit=2000"),
+      request("supplier_payments","?select=*&order=paid_at.desc&limit=2000"),
+      request("customer_profiles","?select=*&order=last_order_at.desc&limit=3000"),
+      request("customer_site_links","?select=*&limit=5000"),
+      request("return_requests","?select=*&order=created_at.desc&limit=1000"),
+      request("finance_entries","?select=*&order=occurred_at.desc&limit=3000"),
+      request("product_price_tiers","?select=*&order=minimum_quantity.asc&limit=3000")
+    ]);
+    const ids=new Set((websites||[]).map(w=>w.id)),keep=rows=>(rows||[]).filter(r=>!r.website_id||ids.has(r.website_id));
+    return {user:{id:user.id,email:user.email},websites:websites||[],products:keep(products),categories:keep(categories),orders:keep(orders),orderItems:orderItems||[],suppliers:suppliers||[],purchaseOrders:keep(purchaseOrders),purchaseItems:purchaseItems||[],inventoryMovements:keep(inventoryMovements),deliveryZones:keep(deliveryZones),payments:keep(payments),supplierPayments:keep(supplierPayments),customers:customers||[],customerLinks:customerLinks||[],returns:keep(returns),finance:keep(finance),priceTiers:keep(priceTiers)};
+  }
+  async function saveCentralSupplier(input){
+    const {user}=await authContext(),id=String(input?.id||"").trim(),siteId=String(input?.website_id||"").trim()||null;
+    if(siteId){const siteRows=await request("websites","?select=id&owner_id=eq."+$(user.id)+"&id=eq."+$(siteId)+"&limit=1");if(!siteRows?.length)throw new Error("Store ownership check failed.");}
+    const name=String(input?.name||"").trim().slice(0,140);if(name.length<2)throw new Error("Supplier name is required.");
+    const payload={owner_id:user.id,website_id:siteId,name,company_name:String(input?.company_name||"").trim().slice(0,160),phone:String(input?.phone||"").trim().slice(0,50),email:String(input?.email||"").trim().slice(0,160),address:String(input?.address||"").trim().slice(0,400),tax_id:String(input?.tax_id||"").trim().slice(0,80),notes:String(input?.notes||"").trim().slice(0,2000),is_active:input?.is_active!==false,updated_at:new Date().toISOString()};
+    const rows=id?await request("suppliers","?id=eq."+$(id)+"&owner_id=eq."+$(user.id)+"&select=*",{method:"PATCH",body:payload}):await request("suppliers","?select=*",{method:"POST",body:payload});
+    if(!rows?.[0])throw new Error("Supplier save was not confirmed.");return rows[0];
+  }
+  async function saveCentralCustomer(input){
+    const {user}=await authContext(),id=String(input?.id||"").trim();if(!id)throw new Error("Customer record is missing.");
+    const tier=String(input?.vip_tier||"standard");if(!["standard","silver","gold","platinum"].includes(tier))throw new Error("Invalid VIP tier.");
+    const rows=await request("customer_profiles","?id=eq."+$(id)+"&owner_id=eq."+$(user.id)+"&select=id,name,phone_normalized,blocked,vip_tier,notes",{method:"PATCH",body:{blocked:input?.blocked===true,vip_tier:tier,notes:String(input?.notes||"").trim().slice(0,2000),updated_at:new Date().toISOString()}});
+    if(!rows?.[0])throw new Error("Customer update was not confirmed.");return rows[0];
+  }
+  async function saveCentralDeliveryZone(website,input){
+    const user=await verifyWebsiteOwner(website),id=String(input?.id||"").trim(),name=String(input?.name||"").trim().slice(0,120);
+    if(name.length<2)throw new Error("Enter a delivery-area name.");
+    const fee=Number(input?.delivery_fee),minimum=Number(input?.minimum_order||0);
+    if(!Number.isFinite(fee)||fee<0||!Number.isFinite(minimum)||minimum<0)throw new Error("Delivery fee and minimum order must be valid non-negative amounts.");
+    const normalized=name.toLowerCase().replace(/\s+/g," ").trim();
+    const payload={owner_id:user.id,website_id:website.id,name,normalized_name:normalized,delivery_fee:fee,minimum_order:minimum,eta_label:String(input?.eta_label||"").trim().slice(0,100),is_active:input?.is_active!==false,updated_at:new Date().toISOString()};
+    const rows=id?await request("delivery_zones","?id=eq."+$(id)+"&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&select=*",{method:"PATCH",body:payload}):await request("delivery_zones","?select=*",{method:"POST",body:payload});
+    if(!rows?.[0])throw new Error("Delivery area save was not confirmed.");
+    const zones=await request("delivery_zones","?select=name,delivery_fee,minimum_order,eta_label&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&is_active=eq.true&order=name.asc");
+    const current=await request("websites","?select=settings&id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&limit=1"),old=current?.[0]?.settings||website.settings||{};
+    const average=(zones||[]).length?zones.reduce((n,z)=>n+Number(z.delivery_fee||0),0)/zones.length:Number(old.delivery?.default_fee||0);
+    const settings={...old,delivery:{...(old.delivery||{}),areas:(zones||[]).map(z=>z.name),default_fee:Number(average.toFixed(2)),zones:(zones||[]).map(z=>({name:z.name,delivery_fee:Number(z.delivery_fee),minimum_order:Number(z.minimum_order),eta_label:z.eta_label}))}};
+    await request("websites","?id=eq."+$(website.id)+"&owner_id=eq."+$(user.id),{method:"PATCH",body:{settings,updated_at:new Date().toISOString()}});
+    return rows[0];
+  }
+  async function setCentralZoneActive(website,zoneId,active){
+    const user=await verifyWebsiteOwner(website);
+    const rows=await request("delivery_zones","?id=eq."+$(zoneId)+"&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&select=*",{method:"PATCH",body:{is_active:Boolean(active),updated_at:new Date().toISOString()}});
+    if(!rows?.[0])throw new Error("Delivery zone update was not confirmed.");
+    const zones=await request("delivery_zones","?select=name,delivery_fee,minimum_order,eta_label&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&is_active=eq.true&order=name.asc");
+    const current=await request("websites","?select=settings&id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&limit=1"),old=current?.[0]?.settings||website.settings||{};
+    const settings={...old,delivery:{...(old.delivery||{}),areas:(zones||[]).map(z=>z.name),zones:(zones||[]).map(z=>({name:z.name,delivery_fee:Number(z.delivery_fee),minimum_order:Number(z.minimum_order),eta_label:z.eta_label}))}};
+    await request("websites","?id=eq."+$(website.id)+"&owner_id=eq."+$(user.id),{method:"PATCH",body:{settings,updated_at:new Date().toISOString()}});
+    return rows[0];
+  }
+  async function saveCentralStoreProfile(website,input){
+    return await saveWebsiteProfile(website,input);
+  }
+  async function createCentralFinanceEntry(input){
+    const {user}=await authContext(),siteId=String(input?.website_id||"").trim(),amount=Number(input?.amount),type=String(input?.entry_type||"expense");
+    const siteRows=await request("websites","?select=id&owner_id=eq."+$(user.id)+"&id=eq."+$(siteId)+"&limit=1");
+    if(!siteRows?.length)throw new Error("Choose a valid store.");
+    if(!["income","expense"].includes(type)||!Number.isFinite(amount)||amount<=0)throw new Error("Select income/expense and enter a positive amount.");
+    const rows=await request("finance_entries","?select=*",{method:"POST",body:{owner_id:user.id,website_id:siteId,entry_type:type,category:String(input?.category||"Other").trim().slice(0,80),amount,description:String(input?.description||"").trim().slice(0,500),occurred_at:input?.occurred_at||new Date().toISOString()}});
+    if(!rows?.[0])throw new Error("Finance entry was not confirmed.");return rows[0];
+  }
+  async function createCentralReturn(input){
+    const {user}=await authContext(),orderId=String(input?.order_id||"").trim();
+    const order=await request("orders","?select=id,website_id,owner_id,customer&owner_id=eq."+$(user.id)+"&id=eq."+$(orderId)+"&limit=1");
+    if(!order?.[0])throw new Error("Order not found.");
+    const rows=await request("return_requests","?select=*",{method:"POST",body:{owner_id:user.id,website_id:order[0].website_id,order_id:orderId,order_item_id:input?.order_item_id||null,customer_name:String(order[0].customer?.name||""),customer_phone:String(order[0].customer?.phone||""),reason:String(input?.reason||"").trim().slice(0,1000),notes:String(input?.notes||"").trim().slice(0,2000)}});
+    if(!rows?.[0])throw new Error("Return request was not created.");return rows[0];
+  }
+  async function updateCentralReturn(returnId,status,notes=""){
+    const {user}=await authContext();if(!["requested","approved","rejected","received","refunded","closed"].includes(status))throw new Error("Invalid return status.");
+    const rows=await request("return_requests","?id=eq."+$(returnId)+"&owner_id=eq."+$(user.id)+"&select=*",{method:"PATCH",body:{status,notes:String(notes||"").slice(0,2000),updated_at:new Date().toISOString()}});
+    if(!rows?.[0])throw new Error("Return status update was not confirmed.");return rows[0];
+  }
+  async function centralAdjustInventory(website,productId,delta,reason,type="adjustment"){
+    await verifyWebsiteOwner(website);
+    const result=await request("rpc/central_adjust_inventory","",{method:"POST",body:{p_website_id:website.id,p_product_id:productId,p_delta:Number(delta),p_reason:String(reason||""),p_movement_type:type}});
+    if(!result?.product_id)throw new Error("Stock adjustment was not confirmed.");return result;
+  }
+  async function centralCreatePurchaseOrder(website,supplierId,items,expectedAt=null,notes=""){
+    await verifyWebsiteOwner(website);
+    const result=await request("rpc/central_create_purchase_order","",{method:"POST",body:{p_website_id:website.id,p_supplier_id:supplierId,p_items:items,p_expected_at:expectedAt||null,p_notes:String(notes||"")}});
+    if(!result?.id)throw new Error("Purchase order was not created.");return result;
+  }
+  async function centralReceivePurchaseOrder(purchaseOrderId,items){
+    const result=await request("rpc/central_receive_purchase_order","",{method:"POST",body:{p_purchase_order_id:purchaseOrderId,p_items:items}});
+    if(!result?.purchase_order_id)throw new Error("Purchase receive was not confirmed.");return result;
+  }
+  async function centralRecordOrderPayment(orderId,amount,method,reference="",notes=""){
+    const result=await request("rpc/central_record_order_payment","",{method:"POST",body:{p_order_id:orderId,p_amount:Number(amount),p_method:method||"cod",p_reference:String(reference||""),p_notes:String(notes||"")}});
+    if(!result?.payment_id)throw new Error("Order payment was not confirmed.");return result;
+  }
+  async function centralRecordSupplierPayment(poId,amount,method,reference="",notes=""){
+    const result=await request("rpc/central_record_supplier_payment","",{method:"POST",body:{p_purchase_order_id:poId,p_amount:Number(amount),p_method:method||"cash",p_reference:String(reference||""),p_notes:String(notes||"")}});
+    if(!result?.payment_id)throw new Error("Supplier payment was not confirmed.");return result;
+  }
+  async function centralSavePriceTier(website,input){
+    const user=await verifyWebsiteOwner(website),productId=String(input?.product_id||"").trim(),qty=Number(input?.minimum_quantity),price=Number(input?.unit_price),id=String(input?.id||"").trim();
+    if(!productId||!Number.isFinite(qty)||qty<=0||!Number.isFinite(price)||price<=0)throw new Error("Choose a product and enter valid quantity and price.");
+    const payload={owner_id:user.id,website_id:website.id,product_id:productId,minimum_quantity:qty,unit_price:price,label:String(input?.label||"").trim().slice(0,80),is_active:input?.is_active!==false,updated_at:new Date().toISOString()};
+    const rows=id?await request("product_price_tiers","?id=eq."+$(id)+"&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&select=*",{method:"PATCH",body:payload}):await request("product_price_tiers","?select=*",{method:"POST",body:payload});
+    if(!rows?.[0])throw new Error("Wholesale price tier save was not confirmed.");return rows[0];
+  }
+
+  window.WPNeonBuilderApi=Object.freeze({apiBase:API_BASE,loadTemplateCatalog,loadTemplatePages,ensureWebsite,loadWebsiteDocuments,seedWebsitePages,loadPageDocument,savePageDocument,loadDocument:loadPageDocument,saveDocument:(website,document,pageKey="home")=>savePageDocument(website,pageKey,document),loadStorefrontData,placeOrder,trackOrder,getWebsiteStats,loadWebsiteOrders,updateOrderStatus,loadWebsiteCatalog,saveWebsiteCategory,saveWebsiteProduct,setWebsiteProductActive,setWebsiteCategoryActive,saveWebsiteProfile,verifyWebsiteCatalog,loadCentralCommerce,saveCentralSupplier,saveCentralCustomer,saveCentralDeliveryZone,setCentralZoneActive,saveCentralStoreProfile,createCentralFinanceEntry,createCentralReturn,updateCentralReturn,centralAdjustInventory,centralCreatePurchaseOrder,centralReceivePurchaseOrder,centralRecordOrderPayment,centralRecordSupplierPayment,centralSavePriceTier,createCustomPage,publishWebsite,defaultPageDocument});
+})();
