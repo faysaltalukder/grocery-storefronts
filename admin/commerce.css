@@ -183,3 +183,14 @@
 .oc-quote-response .wide{grid-column:1/-1}
 .oc-quote-response textarea{min-height:72px;resize:vertical}
 @media(max-width:760px){.oc-quote-contact{grid-template-columns:repeat(2,minmax(0,1fr))}.oc-quote-response{grid-template-columns:1fr}.oc-quote-response .wide{grid-column:auto}.oc-quote-card{padding:15px}.oc-quote-card-head{flex-direction:column}.oc-quote-card-head>div:last-child{justify-items:start}}
+
+
+/* Return inspection and refund controls */
+.oc-refund-details{min-width:230px;max-width:340px;padding:8px 10px;border:1px solid var(--oc-border,#d9dfe8);border-radius:10px;background:var(--oc-surface,#fff)}
+.oc-refund-details summary{cursor:pointer;font-weight:700;color:var(--oc-primary,#334155);font-size:12px;list-style-position:inside}
+.oc-refund-details[open] summary{margin-bottom:10px}
+.oc-refund-details form{display:grid;grid-template-columns:1fr;gap:9px;margin-top:8px}
+.oc-refund-details .oc-field{min-width:0}
+.oc-refund-details .oc-form-actions{margin-top:2px}
+.oc-refund-details .oc-btn{width:100%}
+@media(max-width:700px){.oc-refund-details{max-width:100%;min-width:190px}.oc-refund-details summary{white-space:normal}}

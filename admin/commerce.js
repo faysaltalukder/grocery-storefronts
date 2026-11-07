@@ -89,6 +89,12 @@ function lowStockProducts(){
 function collectedForOrder(orderId){
  return (state.data.payments||[]).filter(p=>p.order_id===orderId&&p.transaction_type==="collection"&&p.status==="confirmed").reduce((n,p)=>n+Number(p.amount||0),0);
 }
+function refundedForOrder(orderId){
+ return (state.data.payments||[]).filter(p=>p.order_id===orderId&&p.transaction_type==="refund"&&p.status==="confirmed").reduce((n,p)=>n+Number(p.amount||0),0);
+}
+function refundableForOrder(orderId){
+ return Math.max(0,collectedForOrder(orderId)-refundedForOrder(orderId));
+}
 function supplierPaid(poId){
  return (state.data.supplierPayments||[]).filter(p=>p.purchase_order_id===poId).reduce((n,p)=>n+Number(p.amount||0),0);
 }
@@ -283,11 +289,32 @@ function financePage(){
  panel("Finance ledger",table(["Date","Store","Type","Category","Description","Amount"],rows,850));
 }
 function returnsPage(){
- const orders=scoped(state.data.orders),rows=scoped(state.data.returns).map(r=>'<tr><td><strong>'+esc(orders.find(o=>o.id===r.order_id)?.order_number||r.order_id.slice(0,8))+'</strong><small>'+date(r.created_at)+'</small></td><td>'+esc(siteName(r.website_id))+'</td><td>'+esc(r.customer_name||"Customer")+'<small>'+esc(r.customer_phone||"")+'</small></td><td>'+esc(r.reason)+'</td><td>'+badge(r.status)+'</td><td>'+btn("Approve","return-status",r.id)+' '+btn("Reject","return-reject",r.id)+'</td></tr>');
+ const orders=scoped(state.data.orders);
+ const rows=scoped(state.data.returns).map(r=>{
+  const order=orders.find(o=>o.id===r.order_id);
+  const refundable=refundableForOrder(r.order_id);
+  let actions="—";
+  if(r.status==="requested"){
+   actions=btn("Approve","return-status",r.id)+" "+btn("Reject","return-reject",r.id);
+  }else if(r.status==="approved"){
+   actions=btn("Mark received","return-received",r.id);
+  }else if(r.status==="received"&&refundable>0){
+   actions='<details class="oc-refund-details"><summary>Record refund · '+money(refundable)+' available</summary>'+
+    '<form class="oc-form-grid" data-return-refund data-return-id="'+esc(r.id)+'">'+
+    '<label class="oc-field">Refund amount (৳)<input class="oc-input" name="amount" type="number" min="0.01" max="'+refundable.toFixed(2)+'" step="0.01" required></label>'+
+    '<label class="oc-field">Refund method<select class="oc-select" name="method"><option value="cash">Cash</option><option value="bank">Bank</option><option value="mobile_wallet">Mobile wallet</option><option value="manual">Manual</option></select></label>'+
+    '<label class="oc-field">Reference<input class="oc-input" name="reference" maxlength="120" placeholder="Optional transaction reference"></label>'+
+    '<label class="oc-field">Notes<input class="oc-input" name="notes" maxlength="500" placeholder="Optional refund notes"></label>'+
+    '<div class="oc-form-actions wide"><button class="oc-btn primary" type="submit">Confirm refund</button></div></form></details>';
+  }else if(r.status==="received"){
+   actions='<span class="oc-help">No confirmed collection is available to refund.</span>';
+  }
+  return '<tr><td><strong>'+esc(order?.order_number||r.order_id.slice(0,8))+'</strong><small>'+date(r.created_at)+'</small></td><td>'+esc(siteName(r.website_id))+'</td><td>'+esc(r.customer_name||"Customer")+'<small>'+esc(r.customer_phone||"")+'</small></td><td>'+esc(r.reason)+'</td><td>'+badge(r.status)+(Number(r.refund_amount||0)>0?'<small>Refunded '+money(r.refund_amount)+'</small>':"")+'</td><td>'+actions+'</td></tr>';
+ });
  const form='<form id="ocReturnForm" class="oc-form-grid"><label class="oc-field wide">Order<select class="oc-select" name="order_id" required><option value="">Choose order</option>'+orders.map(o=>'<option value="'+o.id+'">'+esc(o.order_number)+' · '+esc(siteName(o.website_id))+' · '+esc(o.customer?.name||"")+'</option>').join("")+'</select></label><label class="oc-field wide">Reason<textarea class="oc-textarea" name="reason" required></textarea></label><label class="oc-field wide">Internal notes<input class="oc-input" name="notes"></label><div class="oc-form-actions wide"><button class="oc-btn primary" type="submit">Create return request</button></div></form>';
- return pageHead("AFTER-SALES","Returns & customer claims","Create, review and resolve return requests. Approved refunds must be recorded as payment refunds after the returned goods have been inspected.")+
- '<div class="oc-grid-2"><div>'+panel("Create a return request",form)+'</div><div>'+panel("Return policy controls",'<div class="oc-alert">Approving a return does not automatically issue money or restock an item. Inspect the goods, record any approved refund and add a stock return movement separately.</div>')+'</div></div>'+
- panel("Return register",table(["Order","Store","Customer","Reason","Status","Actions"],rows,900));
+ return pageHead("AFTER-SALES","Returns & customer claims","Inspect returned goods, then record an owner-authorized refund. Refunds are written to payment transactions and the finance ledger atomically.")+
+ '<div class="oc-grid-2"><div>'+panel("Create a return request",form)+'</div><div>'+panel("Return and refund controls",'<div class="oc-alert">Workflow: requested → approved → received → refunded. A refund can be recorded once, only after the goods are marked received and a confirmed customer collection exists. The refund is capped at the remaining collected amount.</div>')+'</div></div>'+
+ panel("Return register",table(["Order","Store","Customer","Reason","Status","Actions"],rows,1050));
 }
 function quotesPage(){
  const rows=scoped(state.data.quoteRequests||[]).slice().sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
@@ -383,6 +410,20 @@ function bindPage(){
  const profile=$("#ocStoreProfileForm");if(profile)profile.addEventListener("submit",async e=>{e.preventDefault();const x=formObj(e.currentTarget),w=site(x.website_id),zoneNames=(state.data.deliveryZones||[]).filter(z=>z.website_id===w.id&&z.is_active).map(z=>z.name);try{busy(true);await api().saveCentralStoreProfile(w,{...x,areas:zoneNames.length?zoneNames.join("\n"):(w.settings?.delivery?.areas||[]).join("\n")});await refresh();notice("Store contact and delivery policy settings saved.","success");}catch(err){notice(err.message||"Store settings could not be saved.","error");}finally{busy(false);}});
  const finance=$("#ocFinanceForm");if(finance)finance.addEventListener("submit",async e=>{e.preventDefault();const x=formObj(e.currentTarget);try{busy(true);await api().createCentralFinanceEntry(x);await refresh();notice("Finance entry added.","success");}catch(err){notice(err.message||"Finance entry failed.","error");}finally{busy(false);}});
  const ret=$("#ocReturnForm");if(ret)ret.addEventListener("submit",async e=>{e.preventDefault();const x=formObj(e.currentTarget);try{busy(true);await api().createCentralReturn(x);await refresh();notice("Return request created.","success");}catch(err){notice(err.message||"Return request failed.","error");}finally{busy(false);}});
+ const refundForms=$("[data-return-refund]");
+ refundForms.forEach(form=>form.addEventListener("submit",async e=>{
+  e.preventDefault();
+  const x=formObj(form),returnId=form.dataset.returnId,amount=Number(x.amount);
+  const row=state.data.returns.find(r=>r.id===returnId),available=refundableForOrder(row?.order_id);
+  if(!Number.isFinite(amount)||amount<=0||amount>available){notice("Refund amount must be positive and cannot exceed "+money(available)+".","error");return;}
+  try{
+   busy(true);
+   const result=await api().centralProcessReturnRefund(returnId,amount,x.method,x.reference,x.notes);
+   await refresh();
+   notice("Refund "+money(result.refund_amount)+" recorded. Order payment status: "+result.payment_status+".","success");
+  }catch(err){notice(err.message||"Refund could not be recorded.","error");}
+  finally{busy(false);}
+ }));
  const tier=$("#ocTierForm");if(tier)tier.addEventListener("submit",async e=>{e.preventDefault();const x=formObj(e.currentTarget),w=site(x.website_id);try{busy(true);await api().centralSavePriceTier(w,x);await refresh();notice("Wholesale price tier saved.","success");}catch(err){notice(err.message||"Tier save failed.","error");}finally{busy(false);}});
  $$("[data-customer-tier]").forEach(el=>el.addEventListener("change",()=>{const id=el.dataset.customerTier;state.pendingCustomerTiers=state.pendingCustomerTiers||{};state.pendingCustomerTiers[id]=el.value;}));
 }
@@ -409,7 +450,7 @@ function globalAction(action,id){
  if(action==="close-po"){state.selectedPO=null;render();return;}
  if(action==="toggle-zone"){const zone=state.data.deliveryZones.find(z=>z.id===id),w=site(zone?.website_id);if(w)api().setCentralZoneActive(w,id,!zone.is_active).then(refresh).then(()=>notice("Delivery zone state updated.","success")).catch(e=>notice(e.message,"error"));return;}
  if(action==="save-customer"){const row=state.data.customers.find(c=>c.id===id),tier=$('[data-customer-tier="'+id+'"]')?.value||state.pendingCustomerTiers?.[id]||row.vip_tier||"standard",blocked=$('[data-customer-block="'+id+'"]')?.checked||false;api().saveCentralCustomer({...row,vip_tier:tier,blocked}).then(refresh).then(()=>notice("Customer profile saved.","success")).catch(e=>notice(e.message,"error"));return;}
- if(action==="return-status"||action==="return-reject"){const status=action==="return-status"?"approved":"rejected";api().updateCentralReturn(id,status).then(refresh).then(()=>notice("Return request updated.","success")).catch(e=>notice(e.message,"error"));return;}
+ if(action==="return-status"||action==="return-reject"||action==="return-received"){const status=action==="return-status"?"approved":action==="return-received"?"received":"rejected";api().updateCentralReturn(id,status).then(refresh).then(()=>notice("Return request updated.","success")).catch(e=>notice(e.message,"error"));return;}
  if(action==="export-products"){const rows=scoped(state.data.products).map(p=>[siteName(p.website_id),p.name,p.sku,p.price,p.stock,p.unit,p.is_active,p.attributes?.demo===true?"demo":p.attributes?.inventory_verified?"verified":"unverified",p.attributes?.barcode,p.attributes?.pack_size]);downloadCsv("central-products.csv",["store","name","sku","price","stock","unit","active","inventory_status","barcode","pack_size"],rows);return;}
  if(action==="export-orders"){const rows=scoped(state.data.orders).map(o=>[o.order_number,siteName(o.website_id),o.customer?.name,o.customer?.phone,o.subtotal,o.delivery_fee,o.total,o.payment_method,o.payment_status,o.status,o.created_at]);downloadCsv("central-orders.csv",["order_number","store","customer","phone","subtotal","delivery_fee","total","payment_method","payment_status","status","created_at"],rows);return;}
 }
