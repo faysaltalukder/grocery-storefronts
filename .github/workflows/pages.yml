@@ -43,6 +43,8 @@ jobs:
             ! grep -qi "supabase" "$site/index.html"
           done
           echo "All four storefront entry points and shared runtime files passed validation."
+      - name: Validate WordPress Studio runtime bundle
+        run: node .github/scripts/validate-studio-bundle.mjs
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
