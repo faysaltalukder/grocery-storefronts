@@ -5,13 +5,75 @@
   const normalizeEmail = value => String(value ?? "").trim().toLowerCase();
   const esc = value => String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
   const mountShell = async (app, client) => {
-    if (!app || app.querySelector(".wp-admin-shell")) return;
-    const header = document.createElement("header");
-    header.className = "wp-admin-shell";
-    header.innerHTML = '<a class="wp-admin-brand" href="./index.html"><span class="wp-admin-mark">W</span><span><strong>WordPress Studio</strong><small>Independent Grocery Builder</small></span></a><nav aria-label="WordPress workspace"><a href="./wordpress-templates.html?category=ecommerce-grocery&template=1">Templates</a><a href="./website-pages.html?template=general-supermarket">Pages</a><a href="./website-orders.html?template=general-supermarket">Orders</a></nav><button type="button" class="wp-admin-signout">Sign out</button>';
-    app.prepend(header);
-    header.querySelector(".wp-admin-signout").addEventListener("click", async () => {
-      const button = header.querySelector(".wp-admin-signout");
+    if (!app || app.querySelector(".wp-studio-layout")) return;
+    const content = app.querySelector("#pageContent");
+    if (!content) return;
+    const path = window.location.pathname.split("/").pop() || "index.html";
+    const groups = [
+      { group: "WORKSPACE", items: [
+        ["index.html", "⌂", "Overview"],
+        ["wordpress-templates.html?category=ecommerce-grocery&template=1", "▦", "Templates", "wordpress-templates.html"],
+        ["website-builder.html?template=general-supermarket", "✎", "Website editor", "website-builder.html"],
+        ["website-pages.html?template=general-supermarket", "▤", "Pages", "website-pages.html"]
+      ]},
+      { group: "COMMERCE", items: [
+        ["website-orders.html?template=general-supermarket", "▣", "Orders", "website-orders.html"]
+      ]},
+      { group: "PUBLISHING", items: [
+        ["wordpress-live.html", "◉", "Live preview"]
+      ]}
+    ];
+    const layout = document.createElement("div");
+    layout.className = "wp-studio-layout";
+    const sidebar = document.createElement("aside");
+    sidebar.className = "wp-studio-sidebar";
+    sidebar.innerHTML = '<a class="wp-studio-brand" href="./index.html"><span class="wp-studio-brand-mark">W</span><span><strong>WordPress Studio</strong><small>Independent workspace</small></span></a><div class="wp-studio-nav"></div><div class="wp-studio-sidebar-foot"><strong>Neon connected</strong><span>Private owner workspace</span></div>';
+    const nav = sidebar.querySelector(".wp-studio-nav");
+    groups.forEach(group => {
+      const section = document.createElement("section");
+      section.className = "wp-studio-nav-group";
+      const label = document.createElement("p");
+      label.className = "wp-studio-nav-label";
+      label.textContent = group.group;
+      section.append(label);
+      group.items.forEach(([href, icon, title, activePath]) => {
+        const a = document.createElement("a");
+        a.className = "wp-studio-nav-link";
+        a.href = "./" + href;
+        a.innerHTML = '<span class="wp-studio-nav-icon" aria-hidden="true">' + icon + '</span><span>' + title + '</span>';
+        const target = activePath || href.split("?")[0];
+        if (path === target) { a.classList.add("active"); a.setAttribute("aria-current", "page"); }
+        section.append(a);
+      });
+      nav.append(section);
+    });
+    const frame = document.createElement("div");
+    frame.className = "wp-studio-frame";
+    const topbar = document.createElement("header");
+    topbar.className = "wp-studio-topbar";
+    topbar.innerHTML = '<button class="wp-studio-menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false">☰</button><div class="wp-studio-breadcrumb"><span>WordPress Studio</span><b>/</b><strong></strong></div><div class="wp-studio-top-spacer"></div><span class="wp-studio-secure-label">● Secure Neon workspace</span><button type="button" class="wp-studio-signout">Sign out</button>';
+    topbar.querySelector(".wp-studio-breadcrumb strong").textContent = sidebar.querySelector(".wp-studio-nav-link.active span:last-child")?.textContent || "Overview";
+    const main = document.createElement("div");
+    main.className = "wp-studio-content";
+    content.classList.add("admin-main");
+    main.append(content);
+    frame.append(topbar, main);
+    layout.append(sidebar, frame);
+    app.append(layout);
+    const toggle = topbar.querySelector(".wp-studio-menu-toggle");
+    toggle.addEventListener("click", () => {
+      const open = layout.classList.toggle("sidebar-open");
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
+    });
+    layout.addEventListener("click", event => {
+      if (event.target === layout && layout.classList.contains("sidebar-open")) {
+        layout.classList.remove("sidebar-open");
+        toggle.setAttribute("aria-expanded", "false");
+      }
+    });
+    topbar.querySelector(".wp-studio-signout").addEventListener("click", async () => {
+      const button = topbar.querySelector(".wp-studio-signout");
       button.disabled = true;
       try { await client.auth.signOut(); location.replace("./index.html"); }
       catch (error) { button.disabled = false; alert(error?.message || "Could not sign out."); }
