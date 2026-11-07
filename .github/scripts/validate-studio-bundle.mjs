@@ -15,7 +15,7 @@ const orderRpc = readFileSync(new URL("../backups/place_storefront_order.after.s
 if (!api.includes("inventory_verified") || !api.includes("Publishing blocked")) throw new Error("Real-inventory publishing guard is missing.");
 const commerce = bundle["admin/commerce.js"];
 if (!api.includes("loadCentralCommerce") || !api.includes("centralAdjustInventory") || !api.includes("centralCreatePurchaseOrder") || !api.includes("centralRecordOrderPayment")) throw new Error("Central commerce Neon API methods are missing.");
-for (const feature of ["Products & inventory", "Orders & fulfilment", "Customers", "Suppliers", "Purchasing", "Delivery & stores", "Finance & payments", "Returns", "Wholesale pricing", "Reports"]) if (!commerce.includes(feature)) throw new Error("Central commerce section is missing: " + feature);
+for (const feature of ["Products & inventory", "Orders & fulfilment", "Customers", "Suppliers", "Purchasing", "Delivery & stores", "Finance & payments", "Returns", "Wholesale pricing", "Reports"]) if (!bundle["admin/commerce.html"].includes(feature)) throw new Error("Central commerce navigation is missing: " + feature);
 if (!commerce.includes("ocCategoryForm") || !commerce.includes("Recent stock movements") || !commerce.includes("loadCentralCommerce")) throw new Error("Central product/category and inventory operations are incomplete.");
 if (!bundle["admin/commerce.html"].includes("WPAuthReady") && !bundle["admin/commerce.js"].includes("WPAuthReady")) throw new Error("Central commerce owner authentication is missing.");
 if (!catalog.includes("importProductsCsv") || !catalog.includes("exportProductsCsv") || !catalog.includes("hfStoreOperationsForm")) throw new Error("Catalogue CSV or operations workflow is missing.");
