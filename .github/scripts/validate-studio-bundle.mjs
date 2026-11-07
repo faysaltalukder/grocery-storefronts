@@ -18,6 +18,8 @@ if (!api.includes("Resolve all of these items first") || !api.includes("const bl
 const commerce = bundle["admin/commerce.js"];
 if (!api.includes("loadCentralCommerce") || !api.includes("centralAdjustInventory") || !api.includes("centralCreatePurchaseOrder") || !api.includes("centralRecordOrderPayment")) throw new Error("Central commerce Neon API methods are missing.");
 if (!api.includes("documents,deliveryZones") || !api.includes("deliveryZones||[]).filter(z=>z.is_active)")) throw new Error("Publishing preflight does not validate real delivery-zone records.");
+if (api.includes('if(!zones.length)blockers.push("Add at least one real delivery zone')) throw new Error("Publishing must not require area-specific delivery zones for a reusable template.");
+if (!api.includes("defaultFee") || !api.includes("defaultMinimum")) throw new Error("Publishing must validate the optional store-wide delivery defaults.");
 if (!api.includes("Product details cannot change stock") || !api.includes("centralAdjustInventory")) throw new Error("Product edits can bypass audited stock movements.");
 for (const feature of ["Products & inventory", "Orders & fulfilment", "Customers", "Suppliers", "Purchasing", "Delivery & stores", "Finance & payments", "Returns", "Wholesale pricing", "Reports"]) if (!bundle["admin/commerce.html"].includes(feature)) throw new Error("Central commerce navigation is missing: " + feature);
 if (!commerce.includes("ocCategoryForm") || !commerce.includes("Recent stock movements") || !commerce.includes("loadCentralCommerce")) throw new Error("Central product/category and inventory operations are incomplete.");
