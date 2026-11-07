@@ -12,7 +12,7 @@ assert.ok(storefront.includes("async function submitQuote("),"Wholesale quote fo
 assert.ok(storefront.includes("function reorderTrackedOrder("),"Order reorder must exist");
 assert.ok(storefront.includes("data-reorder-tracked"),"Reorder control must be rendered");
 assert.ok(storefront.includes("deliveryZoneForArea"),"Checkout must use configured delivery zones");
-assert.ok(css.includes("sf-quick-order"),"Wholesale quick order must be styled");
+assert.ok(css.includes("sf-bulk-qty"),"Wholesale quick order must be styled");
 for(const site of ["general-supermarket","fresh-produce","express-grocery","wholesale-bulk"]){
  const html=fs.readFileSync(site+"/index.html","utf8");
  assert.ok(html.includes("@neon/neon-js"),site+" must use the independent Neon client");
