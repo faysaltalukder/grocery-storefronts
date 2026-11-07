@@ -162,3 +162,5 @@ body[data-template="wholesale-bulk"]{--sf-primary:#345f88;--sf-ink:#263746;--sf-
  .sf-card-wish{right:9px;top:9px;width:32px;height:32px}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+@media(max-width:720px){.sf-mobile-cart{bottom:calc(76px + env(safe-area-inset-bottom));z-index:89}}
