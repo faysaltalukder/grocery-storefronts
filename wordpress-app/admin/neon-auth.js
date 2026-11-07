@@ -18,6 +18,7 @@
       ]},
       { group: "TEMPLATE LIBRARY", categories: templateCategories },
       { group: "COMMERCE", items: [
+        ["website-catalog.html?template=general-supermarket", "▦", "Products & Categories", "website-catalog.html"],
         ["website-orders.html?template=general-supermarket", "▣", "Orders", "website-orders.html"]
       ]},
       { group: "PUBLISHING", items: [
