@@ -17,6 +17,7 @@ assert.ok(storefront.includes("deliveryZoneForArea"),"Checkout must use configur
 assert.ok(storefront.includes("case\"about\":case\"contact\":case\"faq\":case\"delivery\":return contentPage(key);case\"returns\":return returnsPage();"),"About/contact/FAQ/delivery must route to their own content pages");
 assert.ok(storefront.includes("function quantityStep(p)"),"Fresh produce must support variable-weight quantity steps");
 assert.ok(storefront.includes("function canOrderProduct(p)")&&storefront.includes("inventory_verified"),"Unverified or demo inventory must be visibly non-orderable in the customer experience");
+assert.ok(storefront.includes('location.pathname.endsWith("/storefront.html")'),"Central Studio preview product and checkout links must stay on storefront.html, not route to the dashboard.");
 assert.ok(storefront.includes("function searchSuggestions(query)")&&storefront.includes("sf-search-suggestions"),"Header search must provide live product suggestions");
 assert.ok(storefront.includes("function mobileDock()")&&storefront.includes("sf-mobile-dock"),"All storefronts must provide mobile-first quick navigation");
 assert.ok(storefront.includes("Catalogue preview")&&storefront.includes("noindex,nofollow"),"Unverified catalogues and unpublished storefronts must be clearly marked and noindexed");
