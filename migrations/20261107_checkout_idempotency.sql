@@ -65,7 +65,7 @@ BEGIN
     RAISE EXCEPTION 'This storefront is not published' USING ERRCODE='P0002';
   END IF;
 
-  v_hash:=md5(concat_ws(E'\\n',COALESCE(p_items::text,''),COALESCE(p_customer::text,''),COALESCE(p_shipping_address::text,''),COALESCE(p_notes,'')));
+  v_hash:=md5(concat_ws(E'\n',COALESCE(p_items::text,''),COALESCE(p_customer::text,''),COALESCE(p_shipping_address::text,''),COALESCE(p_notes,'')));
   PERFORM pg_advisory_xact_lock(hashtextextended(v_website.id::text||':'||v_key,0));
 
   SELECT request_hash,response
