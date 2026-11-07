@@ -71,6 +71,7 @@ const tenantMigration=fs.readFileSync("migrations/20261107_multi_tenant_owner_sc
 const idempotencyMigration=fs.readFileSync("migrations/20261107_checkout_idempotency.sql","utf8");
 assert.ok(tenantMigration.includes("AS RESTRICTIVE")&&tenantMigration.includes("auth.uid()"),"Tenant scope migration must constrain authenticated access to the signed-in owner");
 assert.ok(idempotencyMigration.includes("place_storefront_order_idempotent")&&idempotencyMigration.includes("storefront_checkout_rate_limits"),"Checkout migration must include idempotency and server-side attempt limiting");
+assert.ok(idempotencyMigration.includes("REVOKE ALL ON FUNCTION builder.place_storefront_order("),"Legacy direct order RPC must be private so checkout cannot bypass idempotency and rate limits");
 assert.ok(!bundle["admin/neon-auth.js"].includes("AUTHORIZED_EMAIL")&&!bundle["admin/neon-client.js"].includes("OWNER_EMAIL"),"Production auth bundle must support independent merchant accounts");
 assert.ok(bundle["admin/neon-auth.js"].includes("signUp.email"),"Workspace must provide merchant account creation");
 assert.ok(!bundle["admin/neon-preview-auth.js"].includes("halalfoodbd.official@gmail.com"),"Private preview must accept any authenticated merchant owner");

@@ -120,6 +120,12 @@ BEGIN
 END;
 $function$;
 
+-- The legacy RPC remains an internal implementation detail. Only the wrapper is public,
+-- otherwise callers could bypass idempotency and checkout throttling.
+REVOKE ALL ON FUNCTION builder.place_storefront_order(text,jsonb,jsonb,jsonb,text) FROM PUBLIC;
+REVOKE ALL ON FUNCTION builder.place_storefront_order(text,jsonb,jsonb,jsonb,text) FROM anonymous;
+REVOKE ALL ON FUNCTION builder.place_storefront_order(text,jsonb,jsonb,jsonb,text) FROM authenticated;
+
 REVOKE ALL ON FUNCTION builder.place_storefront_order_idempotent(text,jsonb,jsonb,jsonb,text,text) FROM PUBLIC;
 REVOKE ALL ON FUNCTION builder.place_storefront_order_idempotent(text,jsonb,jsonb,jsonb,text,text) FROM anonymous;
 REVOKE ALL ON FUNCTION builder.place_storefront_order_idempotent(text,jsonb,jsonb,jsonb,text,text) FROM authenticated;
