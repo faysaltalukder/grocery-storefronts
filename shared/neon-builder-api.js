@@ -1,7 +1,7 @@
-/* Halal Food multi-page storefront API.
+/* Independent WordPress storefront API.
  * GitHub owns renderer code. Neon owns catalog, pages, tenant content and orders.
- * Admin writes use the current Supabase Auth JWT; public reads are restricted by
- * Neon RLS to published websites. No database credentials are shipped to browsers.
+ * Authentication is provided by this standalone Neon client; no Halal Food
+ * Supabase session, key, schema, or runtime is used by this application.
  */
 (() => {
   "use strict";
@@ -11,6 +11,14 @@
   async function getClient(){
     if(!window.HFNeonClientReady)throw new Error("The independent Neon client did not load.");
     return await window.HFNeonClientReady;
+  }
+  async function authContext(){
+    const client=await getClient();
+    const {data,error}=await client.auth.getSession();
+    if(error)throw new Error("Neon sign-in could not be verified: "+String(error.message||"Authentication error"));
+    const session=data?.session,user=session?.user;
+    if(!user?.id)throw new Error("Sign in to the independent WordPress workspace before managing this website.");
+    return {client,session,user};
   }
   function applyFilters(builder,params){
     for(const [key,raw] of params.entries()){
@@ -162,13 +170,15 @@
       const {data,error}=await client.auth.getSession();
       if(error||!data?.session?.user?.id)throw new Error("Sign in to the independent WordPress workspace to preview this draft.");
     }
-    const [pages,documents,categories,products]=await Promise.all([
+    const [pages,documents,categories,products,deliveryZones,priceTiers]=await Promise.all([
       loadTemplatePages(website.template_key,opts),
       request("website_documents","?select=page_key,schema_version,document,updated_at&website_id=eq."+$(website.id),opts),
       request("categories","?select=id,name,slug,parent_id,sort_order,is_active&website_id=eq."+$(website.id)+"&is_active=eq.true&order=sort_order.asc",opts),
-      request("products","?select=id,category_id,name,description,sku,price,compare_at_price,unit,stock,image_url,gallery,attributes,sort_order&website_id=eq."+$(website.id)+"&is_active=eq.true&order=sort_order.asc",opts)
+      request("products","?select=id,category_id,name,description,sku,price,compare_at_price,unit,stock,image_url,gallery,attributes,sort_order&website_id=eq."+$(website.id)+"&is_active=eq.true&order=sort_order.asc",opts),
+      request("delivery_zones","?select=id,name,normalized_name,delivery_fee,minimum_order,eta_label,is_active&website_id=eq."+$(website.id)+"&is_active=eq.true&order=name.asc",opts).catch(()=>[]),
+      request("product_price_tiers","?select=product_id,minimum_quantity,unit_price,label,is_active&website_id=eq."+$(website.id)+"&is_active=eq.true&order=minimum_quantity.asc",opts).catch(()=>[])
     ]);
-    return {website,pages,documents:documents||[],categories:categories||[],products:products||[],previewOnly:false};
+    return {website,pages,documents:documents||[],categories:categories||[],products:products||[],deliveryZones:deliveryZones||[],priceTiers:priceTiers||[],previewOnly:false};
   }
   async function placeOrder(siteSlug,items,customer,shippingAddress,notes=""){
     return await request("rpc/place_storefront_order","",{method:"POST",public:true,body:{p_website_slug:siteSlug,p_items:items,p_customer:customer,p_shipping_address:shippingAddress,p_notes:notes}});
@@ -213,18 +223,55 @@
     await savePageDocument(website,pageKey,document);
     return page;
   }
+  async function getPublishPreflight(website,brandOverride=null,settingsOverride=null){
+    const {user}=await authContext();
+    if(!website?.id||website.owner_id!==user.id)throw new Error("Website ownership check failed.");
+    const brand=brandOverride||website.brand||{},settings=settingsOverride||website.settings||{};
+    const [products,categories,zones,pages,documents]=await Promise.all([
+      request("products","?select=id,name,price,stock,attributes&website_id=eq."+$(website.id)+"&is_active=eq.true&limit=1000"),
+      request("categories","?select=id&website_id=eq."+$(website.id)+"&is_active=eq.true&limit=1000"),
+      request("delivery_zones","?select=id,name,delivery_fee,minimum_order&website_id=eq."+$(website.id)+"&is_active=eq.true&limit=500").catch(()=>[]),
+      loadTemplatePages(website.template_key,{public:false}),
+      loadWebsiteDocuments(website.id)
+    ]);
+    const rows=products||[],zoneRows=zones||[],docRows=documents||[];
+    const areas=Array.isArray(settings.delivery?.areas)?settings.delivery.areas:[];
+    const payment=settings.payment||settings.payments||{};
+    const methods=Array.isArray(payment.methods)?payment.methods:[];
+    const codEnabled=payment.cod_enabled===true||settings.payment_methods?.includes?.("cod")===true||methods.some(m=>(typeof m==="string"?m:m?.code)==="cod"&&(typeof m==="string"||m?.enabled===true));
+    const docMap=new Map(docRows.map(d=>[d.page_key,d.document||{}]));
+    const hasLegalPage=key=>{
+      const d=docMap.get(key),c=d?.content||{};
+      return !!d&&(String(c.description||"").trim().length>=30||(Array.isArray(c.blocks)&&c.blocks.length>0)||(Array.isArray(c.sections)&&c.sections.length>0));
+    };
+    const checks=[
+      {key:"demo_catalog",label:"Demo catalogue is disabled",passed:settings.demo_catalog===false,detail:"Set settings.demo_catalog to false after replacing sample catalogue data."},
+      {key:"real_products",label:"Real products only",passed:rows.length>0&&rows.every(p=>p.attributes?.demo!==true),detail:"Add at least one active real product and remove or archive every demo product."},
+      {key:"inventory_verified",label:"Inventory is verified",passed:rows.length>0&&rows.every(p=>p.attributes?.inventory_verified===true),detail:"Verify stock for every active product (attributes.inventory_verified = true)."},
+      {key:"price_stock",label:"Prices and stock are valid",passed:rows.length>0&&rows.every(p=>Number(p.price)>0&&Number(p.stock)>=0),detail:"Every active product needs a price above zero and a non-negative stock value."},
+      {key:"categories",label:"At least one active category",passed:(categories||[]).length>0,detail:"Create at least one active product category."},
+      {key:"delivery",label:"Delivery coverage is configured",passed:zoneRows.length>0||areas.length>0,detail:"Create an active delivery zone or configure delivery.areas with real service locations."},
+      {key:"cod",label:"Cash on delivery is explicitly enabled",passed:codEnabled,detail:"Enable COD in the website payment settings. Online gateways remain unavailable until separately integrated and verified."},
+      {key:"store_profile",label:"Store profile and contact details are complete",passed:!!String(brand.name||website.name||"").trim()&&!!String(brand.address||"").trim()&&!!(String(brand.phone||"").trim()||String(brand.email||"").trim()),detail:"Add a store name, full business address, and at least one customer contact method."},
+      {key:"privacy",label:"Privacy policy page is prepared",passed:hasLegalPage("privacy"),detail:"Complete the Privacy Policy page with the store's actual data-handling practices."},
+      {key:"terms",label:"Terms and conditions page is prepared",passed:hasLegalPage("terms"),detail:"Complete the Terms & Conditions page with the store's actual purchase and service terms."},
+      {key:"required_pages",label:"Required template pages are present",passed:(pages||[]).filter(p=>p.is_required).every(p=>docMap.has(p.page_key)),detail:"Create or restore every required page document for this template."}
+    ];
+    return {website_id:website.id,template_key:website.template_key,ready:checks.every(c=>c.passed),checks,blockers:checks.filter(c=>!c.passed),counts:{products:rows.length,categories:(categories||[]).length,delivery_zones:zoneRows.length,documents:docRows.length}};
+  }
   async function publishWebsite(website,brand,settings){
     const {user}=await authContext();
     if(!website?.id||website.owner_id!==user.id)throw new Error("Website ownership check failed.");
-    const [products,categories]=await Promise.all([
-      request("products","?select=id,attributes&website_id=eq."+$(website.id)+"&is_active=eq.true&limit=500"),
-      request("categories","?select=id&website_id=eq."+$(website.id)+"&is_active=eq.true&limit=1")
-    ]);
-    if(!products?.length||!categories?.length)throw new Error("Add at least one active category and one active product before publishing.");
-    if(products.some(product=>product.attributes?.demo===true))throw new Error("This website still contains DEMO catalogue products. Replace or remove every sample product and confirm real prices and stock before publishing.");
+    const preflight=await getPublishPreflight(website,brand,settings);
+    if(!preflight.ready){
+      const details=preflight.blockers.map(item=>"• "+item.label+": "+item.detail).join("\\n");
+      const error=new Error("Website is not ready to publish. Complete these checks first:\\n"+details);
+      error.preflight=preflight;
+      throw error;
+    }
     const result=await request("websites","?id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&select=id,status,updated_at",{method:"PATCH",prefer:"return=representation",body:{status:"published",brand:brand||website.brand||{},settings:settings||website.settings||{},updated_at:new Date().toISOString()}});
     if(!result?.[0])throw new Error("Neon did not confirm the publish status.");
-    return result[0];
+    return {...result[0],preflight};
   }
-  window.HFNeonBuilderApi=Object.freeze({apiBase:API_BASE,loadTemplateCatalog,loadTemplatePages,ensureWebsite,loadWebsiteDocuments,seedWebsitePages,loadPageDocument,savePageDocument,loadDocument:loadPageDocument,saveDocument:(website,document,pageKey="home")=>savePageDocument(website,pageKey,document),loadStorefrontData,placeOrder,trackOrder,getWebsiteStats,loadWebsiteOrders,updateOrderStatus,createCustomPage,publishWebsite,defaultPageDocument});
+  window.HFNeonBuilderApi=Object.freeze({apiBase:API_BASE,loadTemplateCatalog,loadTemplatePages,ensureWebsite,loadWebsiteDocuments,seedWebsitePages,loadPageDocument,savePageDocument,loadDocument:loadPageDocument,saveDocument:(website,document,pageKey="home")=>savePageDocument(website,pageKey,document),loadStorefrontData,placeOrder,trackOrder,getWebsiteStats,loadWebsiteOrders,updateOrderStatus,createCustomPage,getPublishPreflight,publishWebsite,defaultPageDocument});
 })();
