@@ -60,7 +60,7 @@ assert.ok(commerceBundle["admin/commerce.js"].includes("function quotesPage()")&
 assert.ok(commerceBundle["admin/commerce.html"].includes('data-tab="quotes"'),"Quote management must be reachable from Central Commerce navigation");
 assert.ok(commerceBundle["admin/commerce.js"].includes("data-return-refund")&&commerceBundle["admin/commerce.js"].includes("return-received"),"Refund controls must be present in the production Studio bundle.");
 assert.ok(commerceBundle["admin/neon-builder-api.js"].includes("centralProcessReturnRefund"),"Refund API must be present in the production Studio bundle.");
-assert.ok(commerceBundle["admin/commerce.html"].includes("20261107-refund-management-v1"),"Production Studio bundle must use the refund workflow cache version.");
+assert.ok(commerceBundle["admin/commerce.html"].includes("20261108-central-order-ops-v1"),"Production Studio bundle must use the current central order desk cache version.");
 assert.ok(commerceBundle["admin/commerce.js"].includes("function isGroceryScope()"),"Production bundle must expose the order desk from the all-grocery scope");
 assert.ok(commerceBundle["admin/neon-builder-api.js"].includes("category_slug,status,brand,settings"),"Production bundle must load the business category for central navigation");
 assert.ok(commerceBundle["storefront.js"].includes("DEMO TEST ORDER · NOT FOR FULFILMENT"),"Production storefront tracking must identify demo orders");
@@ -96,7 +96,7 @@ assert.ok(!bundle["admin/neon-auth.js"].includes("AUTHORIZED_EMAIL")&&!bundle["a
 assert.ok(bundle["admin/neon-auth.js"].includes("signUp.email"),"Workspace must provide merchant account creation");
 assert.ok(!bundle["admin/neon-preview-auth.js"].includes("halalfoodbd.official@gmail.com"),"Private preview must accept any authenticated merchant owner");
 assert.ok(bundle["admin/wordpress-templates.js"].includes("updateBrowserPreviewLinks")&&!bundle["admin/wordpress-templates.js"].includes('encodeURIComponent("hf-"+t.key)'),"Template preview must resolve the signed-in merchant's own store slug");
-assert.ok(storefront.includes("window.WPNeonClientReady"),"Private preview must reuse the independent WordPress Neon session");
+assert.ok(storefront.includes("const storefrontApi=()=>window.HFNeonBuilderApi||window.WPNeonBuilderApi;"),"Private preview must use the independent WordPress Neon API client when running inside Studio");
 assert.ok(tenantMigration.includes("ALTER POLICY owner_identity_guard"),"Legacy single-owner restrictive policies must be neutralized only after replacement tenant guards exist");
 assert.doesNotThrow(()=>new Function(api),"Shared storefront API must parse");
 assert.doesNotThrow(()=>new Function(adminApi),"Admin API must parse");
