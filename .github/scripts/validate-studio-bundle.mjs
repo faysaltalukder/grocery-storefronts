@@ -13,6 +13,7 @@ const catalog = bundle["admin/website-catalog.js"];
 const storefront = bundle["storefront.js"];
 const orderRpc = readFileSync(new URL("../backups/place_storefront_order.after.sql", import.meta.url), "utf8");
 if (!api.includes("inventory_verified") || !api.includes("Publishing blocked")) throw new Error("Real-inventory publishing guard is missing.");
+if (!api.includes("Resolve all of these items first") || !api.includes("const blockers=[]")) throw new Error("Publish readiness does not report all launch blockers together.");
 const commerce = bundle["admin/commerce.js"];
 if (!api.includes("loadCentralCommerce") || !api.includes("centralAdjustInventory") || !api.includes("centralCreatePurchaseOrder") || !api.includes("centralRecordOrderPayment")) throw new Error("Central commerce Neon API methods are missing.");
 if (!api.includes("documents,deliveryZones") || !api.includes("deliveryZones||[]).filter(z=>z.is_active)")) throw new Error("Publishing preflight does not validate real delivery-zone records.");
