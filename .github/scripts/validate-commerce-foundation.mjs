@@ -22,7 +22,9 @@ assert.ok(storefront.includes("quickOrderSheet(12)"),"Wholesale home must expose
 assert.ok(css.includes("sf-bulk-qty"),"Wholesale quick order must be styled");
 assert.ok(css.includes("sf-supermarket-promos")&&css.includes("sf-farm-story")&&css.includes("sf-express-promise")&&css.includes("sf-b2b-benefits"),"All four template experiences need their own visual modules");
 assert.ok(adminApi.includes("async function submitQuoteRequest(")&&adminApi.includes("submitQuoteRequest,"),"Private preview API must expose wholesale quote submission");
-assert.ok(adminApi.includes("async function updateCentralQuote(")&&adminApi.includes("quoteRequests:quoteRequests||[]"),"Central commerce must load and update wholesale quote requests");
+assert.ok(adminApi.includes("async function updateCentralQuote(")&&adminApi.includes("quoteRequests:quoteRequests||[]")&&adminApi.includes("rpc/respond_to_storefront_quote_request"),"Central commerce must load and update wholesale quote requests through the owner-safe RPC");
+const quoteMigration=fs.readFileSync("migrations/20261107_quote_response_rpc.sql","utf8");
+assert.ok(quoteMigration.includes("SECURITY DEFINER")&&quoteMigration.includes("auth.uid()")&&quoteMigration.includes("q.owner_id = v_user_id")&&quoteMigration.includes("TO authenticated")&&quoteMigration.includes("FROM anonymous"),"Quote response RPC must enforce authenticated owner-only access");
 const commerceBundle=JSON.parse(fs.readFileSync(".github/backups/studio-production-bundle.json","utf8"));
 assert.ok(commerceBundle["admin/commerce.js"].includes("function quotesPage()")&&commerceBundle["admin/commerce.js"].includes("data-quote-update"),"Quote management UI must be deployed with the Studio bundle");
 assert.ok(commerceBundle["admin/commerce.html"].includes('data-tab="quotes"'),"Quote management must be reachable from Central Commerce navigation");
