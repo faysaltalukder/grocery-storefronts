@@ -154,9 +154,19 @@
     return rows[0];
   }
   async function loadStorefrontData(siteSlug,{token=null,preview=false}={}){
-    const opts={public:!preview};
-    const websites=await request("websites","?select=id,name,slug,template_key,status,brand,settings&slug=eq."+$(siteSlug)+"&limit=1",opts);
-    const website=websites?.[0];
+    let opts={public:true};
+    let websites=await request("websites","?select=id,name,slug,template_key,status,brand,settings&slug=eq."+$(siteSlug)+"&limit=1",opts);
+    let website=websites?.[0];
+    const publicDemo=!!website&&website.status==="published"&&website.settings?.demo_catalog===true;
+    if(preview&&!publicDemo){
+      opts=token?{token}:{public:false};
+      websites=await request("websites","?select=id,name,slug,template_key,status,brand,settings&slug=eq."+$(siteSlug)+"&limit=1",opts);
+      website=websites?.[0];
+      if(!website)throw new Error("Storefront not found or not available for preview.");
+      const client=await getClient();
+      const {data,error}=await client.auth.getSession();
+      if(error||!data?.session?.user?.id)throw new Error("Sign in to the independent WordPress workspace to preview this draft.");
+    }
     if(!website||(!preview&&website.status!=="published")){
       const templateKey=String(siteSlug||"").replace(/^hf-/,"");
       if(!ALLOWED_TEMPLATES.has(templateKey))throw new Error("This storefront address is not linked to a supported template.");
@@ -165,11 +175,6 @@
         website:{id:null,owner_id:null,name:"Template preview",slug:siteSlug,template_key:templateKey,status:"preview",brand:{},settings:{template_preview:true}},
         pages,documents:[],categories:[],products:[],deliveryZones:[],priceTiers:[],previewOnly:true
       };
-    }
-    if(preview){
-      const client=await getClient();
-      const {data,error}=await client.auth.getSession();
-      if(error||!data?.session?.user?.id)throw new Error("Sign in to the independent WordPress workspace to preview this draft.");
     }
     const [pages,documents,categories,products,deliveryZones,priceTiers]=await Promise.all([
       loadTemplatePages(website.template_key,opts),
