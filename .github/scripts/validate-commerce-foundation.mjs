@@ -73,4 +73,10 @@ assert.ok(tenantMigration.includes("AS RESTRICTIVE")&&tenantMigration.includes("
 assert.ok(idempotencyMigration.includes("place_storefront_order_idempotent")&&idempotencyMigration.includes("storefront_checkout_rate_limits"),"Checkout migration must include idempotency and server-side attempt limiting");
 assert.ok(!bundle["admin/neon-auth.js"].includes("AUTHORIZED_EMAIL")&&!bundle["admin/neon-client.js"].includes("OWNER_EMAIL"),"Production auth bundle must support independent merchant accounts");
 assert.ok(bundle["admin/neon-auth.js"].includes("signUp.email"),"Workspace must provide merchant account creation");
+assert.ok(tenantMigration.includes("ALTER POLICY owner_identity_guard"),"Legacy single-owner restrictive policies must be neutralized only after replacement tenant guards exist");
+assert.doesNotThrow(()=>new Function(api),"Shared storefront API must parse");
+assert.doesNotThrow(()=>new Function(adminApi),"Admin API must parse");
+assert.doesNotThrow(()=>new Function(storefront),"Shared storefront runtime must parse");
+assert.doesNotThrow(()=>new Function(bundle["admin/neon-auth.js"]),"Merchant auth and signup runtime must parse");
+assert.doesNotThrow(()=>new Function(bundle["admin/neon-client.js"]),"Merchant Neon client runtime must parse");
 console.log("Grocery commerce integration and preview regression checks passed.");
