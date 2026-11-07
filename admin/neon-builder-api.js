@@ -451,9 +451,31 @@
     if(!rows?.[0])throw new Error("Return request was not created.");return rows[0];
   }
   async function updateCentralReturn(returnId,status,notes=""){
-    const {user}=await authContext();if(!["requested","approved","rejected","received","refunded","closed"].includes(status))throw new Error("Invalid return status.");
+    const {user}=await authContext();
+    const allowed={
+      requested:["approved","rejected"],
+      approved:["received","rejected"],
+      received:["closed"],
+      refunded:["closed"],
+      rejected:["closed"],
+      closed:[]
+    };
+    const current=await request("return_requests","?select=id,status,refund_amount,owner_id&id=eq."+$(returnId)+"&owner_id=eq."+$(user.id)+"&limit=1");
+    if(!current?.[0])throw new Error("Return request not found.");
+    if(!(allowed[current[0].status]||[]).includes(status))throw new Error("This return cannot move from "+current[0].status+" to "+status+".");
     const rows=await request("return_requests","?id=eq."+$(returnId)+"&owner_id=eq."+$(user.id)+"&select=*",{method:"PATCH",body:{status,notes:String(notes||"").slice(0,2000),updated_at:new Date().toISOString()}});
     if(!rows?.[0])throw new Error("Return status update was not confirmed.");return rows[0];
+  }
+  async function centralProcessReturnRefund(returnId,amount,method="manual",reference="",notes=""){
+    const {user}=await authContext(),value=Number(amount);
+    if(!Number.isFinite(value)||value<=0)throw new Error("Enter a valid refund amount greater than zero.");
+    const result=await request("rpc/central_process_return_refund","",{method:"POST",body:{
+      p_return_id:returnId,p_amount:value,p_method:method||"manual",
+      p_reference:String(reference||"").slice(0,120),p_notes:String(notes||"").slice(0,500)
+    }});
+    if(!result?.payment_id||result.return_status!=="refunded")throw new Error("Neon did not confirm the refund transaction.");
+    if(result.return_id!==returnId)throw new Error("Refund ownership could not be confirmed.");
+    return result;
   }
   async function updateCentralQuote(quoteId,status,quotedAmount=0,validUntil=null,responseNotes=""){
     const {user}=await authContext();
@@ -497,5 +519,5 @@
     if(!rows?.[0])throw new Error("Wholesale price tier save was not confirmed.");return rows[0];
   }
 
-  window.WPNeonBuilderApi=Object.freeze({apiBase:API_BASE,loadTemplateCatalog,loadTemplatePages,ensureWebsite,loadWebsiteDocuments,seedWebsitePages,loadPageDocument,savePageDocument,loadDocument:loadPageDocument,saveDocument:(website,document,pageKey="home")=>savePageDocument(website,pageKey,document),loadStorefrontData,placeOrder,trackOrder,submitReturnRequest,submitQuoteRequest,getWebsiteStats,loadWebsiteOrders,updateOrderStatus,loadWebsiteCatalog,saveWebsiteCategory,saveWebsiteProduct,setWebsiteProductActive,setWebsiteCategoryActive,saveWebsiteProfile,verifyWebsiteCatalog,loadCentralCommerce,saveCentralSupplier,saveCentralCustomer,saveCentralDeliveryZone,setCentralZoneActive,saveCentralStoreProfile,createCentralFinanceEntry,createCentralReturn,updateCentralReturn,centralAdjustInventory,centralCreatePurchaseOrder,centralReceivePurchaseOrder,centralRecordOrderPayment,centralRecordSupplierPayment,centralSavePriceTier,updateCentralQuote,createCustomPage,publishWebsite,defaultPageDocument});
+  window.WPNeonBuilderApi=Object.freeze({apiBase:API_BASE,loadTemplateCatalog,loadTemplatePages,ensureWebsite,loadWebsiteDocuments,seedWebsitePages,loadPageDocument,savePageDocument,loadDocument:loadPageDocument,saveDocument:(website,document,pageKey="home")=>savePageDocument(website,pageKey,document),loadStorefrontData,placeOrder,trackOrder,submitReturnRequest,submitQuoteRequest,getWebsiteStats,loadWebsiteOrders,updateOrderStatus,loadWebsiteCatalog,saveWebsiteCategory,saveWebsiteProduct,setWebsiteProductActive,setWebsiteCategoryActive,saveWebsiteProfile,verifyWebsiteCatalog,loadCentralCommerce,saveCentralSupplier,saveCentralCustomer,saveCentralDeliveryZone,setCentralZoneActive,saveCentralStoreProfile,createCentralFinanceEntry,createCentralReturn,updateCentralReturn,centralProcessReturnRefund,centralAdjustInventory,centralCreatePurchaseOrder,centralReceivePurchaseOrder,centralRecordOrderPayment,centralRecordSupplierPayment,centralSavePriceTier,updateCentralQuote,createCustomPage,publishWebsite,defaultPageDocument});
 })();
