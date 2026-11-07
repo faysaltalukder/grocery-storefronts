@@ -102,7 +102,7 @@
     const topbar = document.createElement("header");
     topbar.className = "wp-studio-topbar";
     topbar.innerHTML = '<button class="wp-studio-menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false">☰</button><div class="wp-studio-breadcrumb"><span>WordPress Studio</span><b>/</b><strong></strong></div><div class="wp-studio-top-spacer"></div><span class="wp-studio-secure-label">● Secure Neon workspace</span><button type="button" class="wp-studio-signout">Sign out</button>';
-    topbar.querySelector(".wp-studio-breadcrumb strong").textContent = sidebar.querySelector(".wp-studio-nav-link.active span:last-child")?.textContent || "Overview";
+    topbar.querySelector(".wp-studio-breadcrumb strong").textContent = sidebar.querySelector(".wp-studio-nav-link.active span:last-child")?.textContent || sidebar.querySelector(".wp-studio-category-link.active")?.textContent || (path === "wordpress-templates.html" ? "Templates" : "Overview");
     const main = document.createElement("div");
     main.className = "wp-studio-content";
     content.classList.add("admin-main");
