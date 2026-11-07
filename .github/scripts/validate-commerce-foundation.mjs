@@ -50,9 +50,7 @@ assert.equal(bundle["storefront.js"],storefront,"ShipStatic preview storefront J
 assert.equal(bundle["storefront.css"],css,"ShipStatic preview CSS must match the tested shared styles");
 assert.equal(bundle["admin/neon-builder-api.js"],adminApi,"ShipStatic preview API must match the tested Neon API");
 const templateScript=bundle["admin/wordpress-templates.js"];
-const target=templateScript.indexOf('$("wpTemplateBrowserBottom").href="../storefront.html?site="+encodeURIComponent("hf-"+t.key)+"&preview=1";');
-const top=templateScript.indexOf('$("wpTemplateBrowserTop").href=$("wpTemplateBrowserBottom").href;',target);
-assert.ok(target>=0&&top>target,"The top preview button must receive the selected template URL, not the previous template URL");
+assert.ok(templateScript.includes("async function updateBrowserPreviewLinks(templateKey)") && templateScript.includes('const href="../storefront.html?site="+encodeURIComponent(website.slug)+"&preview=1"') && templateScript.includes('links.forEach(link=>{link.href=href;link.dataset.previewReady="true";})'),"Preview buttons must resolve the signed-in merchant storefront slug before opening preview.");
 assert.ok(bundle["storefront.html"].includes("storefront.js?v=20261108-preview-route-v1"),"Preview HTML must bust stale storefront JS cache");
 assert.ok(bundle["admin/wordpress-templates.html"].includes("wordpress-templates.js?v=20261107-commerce-ux-v3"),"Template library must bust stale preview-link JS cache");
 for(const site of ["general-supermarket","fresh-produce","express-grocery","wholesale-bulk"]){
