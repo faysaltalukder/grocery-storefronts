@@ -271,7 +271,7 @@
     const supportPhone=String(siteBrand.phone||contact.phone||"").trim(),supportEmail=String(siteBrand.email||contact.email||"").trim(),phoneDigits=supportPhone.replace(/[^0-9]/g,"").length;
     if(!supportPhone&&!supportEmail)throw new Error("Publishing blocked: add a real customer-support phone number or email.");
     if(supportPhone&&(phoneDigits<7||phoneDigits>20))throw new Error("Publishing blocked: enter a valid customer-support phone number.");
-    if(supportEmail&&!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(supportEmail))throw new Error("Publishing blocked: enter a valid customer-support email address.");
+    if(supportEmail&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(supportEmail))throw new Error("Publishing blocked: enter a valid customer-support email address.");
     if(!(siteBrand.address||contact.address))throw new Error("Publishing blocked: add the real business/store address.");
     const requiredPages=["contact","delivery","returns","privacy","terms"],present=new Set((documents||[]).map(d=>d.page_key)),missing=requiredPages.filter(k=>!present.has(k));
     if(missing.length)throw new Error("Publishing blocked: create these required customer-information pages: "+missing.join(", ")+".");
