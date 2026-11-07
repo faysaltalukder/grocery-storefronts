@@ -9,13 +9,14 @@
     const content = app.querySelector("#pageContent");
     if (!content) return;
     const path = window.location.pathname.split("/").pop() || "index.html";
+    const templateCategories = [["ecommerce-grocery","E-commerce & Grocery"],["clothing-fashion","Clothing & Fashion"],["medicine-pharmacy","Medicine & Pharmacy"],["hospital-healthcare","Hospital & Healthcare"],["real-estate-property","Real Estate & Property"],["restaurant-food","Restaurant & Food"],["education-training","Education & Training"],["travel-tourism","Travel & Tourism"],["hotel-accommodation","Hotel & Accommodation"],["beauty-salon","Beauty & Salon"],["fitness-gym","Fitness & Gym"],["automotive-services","Automotive & Vehicle Services"],["professional-services","Professional & Business Services"],["construction-interior","Construction & Interior"],["events-weddings","Event & Wedding Services"],["portfolio-agency","Portfolio & Creative Agency"],["news-media","News & Media"],["nonprofit-organization","Nonprofit & Organization"],["logistics-delivery","Logistics & Delivery"],["legal-accounting","Legal & Accounting"]];
     const groups = [
       { group: "WORKSPACE", items: [
         ["index.html", "⌂", "Overview"],
-        ["wordpress-templates.html?category=ecommerce-grocery&template=1", "▦", "Templates", "wordpress-templates.html"],
         ["website-builder.html?template=general-supermarket", "✎", "Website editor", "website-builder.html"],
         ["website-pages.html?template=general-supermarket", "▤", "Pages", "website-pages.html"]
       ]},
+      { group: "TEMPLATE LIBRARY", categories: templateCategories },
       { group: "COMMERCE", items: [
         ["website-orders.html?template=general-supermarket", "▣", "Orders", "website-orders.html"]
       ]},
@@ -23,6 +24,7 @@
         ["wordpress-live.html", "◉", "Live preview"]
       ]}
     ];
+    const activeCategory = new URLSearchParams(window.location.search).get("category") || "ecommerce-grocery";
     const layout = document.createElement("div");
     layout.className = "wp-studio-layout";
     const sidebar = document.createElement("aside");
@@ -36,7 +38,7 @@
       label.className = "wp-studio-nav-label";
       label.textContent = group.group;
       section.append(label);
-      group.items.forEach(([href, icon, title, activePath]) => {
+      if (group.items) group.items.forEach(([href, icon, title, activePath]) => {
         const a = document.createElement("a");
         a.className = "wp-studio-nav-link";
         a.href = "./" + href;
@@ -44,6 +46,54 @@
         const target = activePath || href.split("?")[0];
         if (path === target) { a.classList.add("active"); a.setAttribute("aria-current", "page"); }
         section.append(a);
+      });
+      if (group.categories) group.categories.forEach(([slug, title]) => {
+        const wrap = document.createElement("div");
+        wrap.className = "wp-studio-category" + (slug === activeCategory ? " is-expanded" : "");
+        const row = document.createElement("div");
+        row.className = "wp-studio-category-row";
+        const categoryLink = document.createElement("a");
+        categoryLink.className = "wp-studio-category-link" + (slug === activeCategory ? " active" : "");
+        categoryLink.href = "./wordpress-templates.html?category=" + encodeURIComponent(slug);
+        categoryLink.textContent = title;
+        const toggleCategory = document.createElement("button");
+        toggleCategory.type = "button";
+        toggleCategory.className = "wp-studio-category-toggle";
+        toggleCategory.setAttribute("aria-label", "Toggle " + title + " templates");
+        toggleCategory.setAttribute("aria-expanded", String(slug === activeCategory));
+        toggleCategory.innerHTML = '<span aria-hidden="true">⌄</span>';
+        row.append(categoryLink, toggleCategory);
+        const submenu = document.createElement("div");
+        submenu.className = "wp-studio-template-links";
+        submenu.hidden = slug !== activeCategory;
+        for (let number = 1; number <= 4; number++) {
+          const templateLink = document.createElement("a");
+          templateLink.href = "./wordpress-templates.html?category=" + encodeURIComponent(slug) + "&template=" + number;
+          templateLink.textContent = "Template " + number;
+          templateLink.className = "wp-studio-template-link";
+          if (slug === activeCategory && Number(new URLSearchParams(window.location.search).get("template") || 1) === number && path === "wordpress-templates.html") {
+            templateLink.classList.add("active");
+            templateLink.setAttribute("aria-current", "page");
+          }
+          submenu.append(templateLink);
+        }
+        toggleCategory.addEventListener("click", () => {
+          const expanded = !wrap.classList.contains("is-expanded");
+          nav.querySelectorAll(".wp-studio-category").forEach(other => {
+            other.classList.remove("is-expanded");
+            const button = other.querySelector(".wp-studio-category-toggle");
+            const links = other.querySelector(".wp-studio-template-links");
+            if (button) button.setAttribute("aria-expanded", "false");
+            if (links) links.hidden = true;
+          });
+          if (expanded) {
+            wrap.classList.add("is-expanded");
+            submenu.hidden = false;
+            toggleCategory.setAttribute("aria-expanded", "true");
+          }
+        });
+        wrap.append(row, submenu);
+        section.append(wrap);
       });
       nav.append(section);
     });
