@@ -27,3 +27,29 @@ body[data-template="wholesale-bulk"] .sf-product-info h3{font-family:"IBM Plex S
 @media(max-width:720px){.sf-header-inner{grid-template-columns:auto 1fr auto;padding:11px 16px;gap:9px}.sf-brand-mark{width:36px;height:36px}.sf-brand-copy strong{font-size:16px}.sf-brand-copy small{font-size:8px}.sf-header-inner>.sf-search{grid-column:1/-1;grid-row:2;max-width:none;order:3;height:40px}.sf-header-actions{gap:5px}.sf-icon-btn{display:none}.sf-cart-btn{padding:0 11px;min-height:38px;font-size:11px}.sf-menu-btn{display:inline-flex;align-items:center;justify-content:center;padding:0 11px;min-height:38px}.sf-nav{display:none;padding:8px 16px 12px;flex-wrap:wrap;overflow:visible}.sf-nav.is-open{display:flex}.sf-nav a{padding:8px 11px;background:var(--sf-surface);border:1px solid var(--sf-line)}.sf-main{padding:20px 16px 92px}.sf-page-head{display:block;margin:5px 0 20px}.sf-page-head .sf-btn{margin-top:14px}.sf-hero,.sf-hero[data-layout]{grid-template-columns:1fr;min-height:0;border-radius:22px}.sf-hero-copy{padding:30px 24px}.sf-hero h1{font-size:clamp(34px,10vw,48px)}.sf-hero-media{min-height:220px;max-height:260px}.sf-hero-badge{right:12px;bottom:12px}.sf-section{margin-top:34px}.sf-category-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.sf-category-tile{min-height:92px;padding:13px}.sf-product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.sf-product-info{padding:11px}.sf-product-info h3{font-size:12px}.sf-product-bottom{gap:5px}.sf-price{font-size:13px}.sf-add{width:32px;height:32px}.sf-toolbar{align-items:flex-start;flex-direction:column}.sf-product-detail,.sf-cart-layout,.sf-checkout-layout{grid-template-columns:1fr}.sf-gallery-main{max-height:440px}.sf-product-copy{padding:0}.sf-cart-list,.sf-summary,.sf-form-card{padding:15px}.sf-cart-row{grid-template-columns:66px minmax(0,1fr);gap:11px}.sf-cart-row>div:last-child{grid-column:2}.sf-cart-row img{width:66px;height:66px}.sf-form-grid{grid-template-columns:1fr}.sf-field.full{grid-column:auto}.sf-footer-inner{grid-template-columns:1fr 1fr;padding:30px 18px 20px;gap:22px}.sf-footer-inner>div:first-child{grid-column:1/-1}.sf-footer-inner>div:last-child{grid-column:auto}.sf-footer-bottom{padding:14px 18px}.sf-mobile-cart{display:flex;position:fixed;left:12px;right:12px;bottom:12px;z-index:30;align-items:center;justify-content:space-between;padding:10px 12px 10px 16px;border-radius:16px;background:var(--sf-ink);color:#fff;box-shadow:0 12px 32px rgba(0,0,0,.2)}.sf-mobile-cart span{font-size:11px;color:rgba(255,255,255,.7)}.sf-mobile-cart strong{font-size:13px}.sf-mobile-cart .sf-btn{min-height:38px;background:var(--sf-accent);color:#252525}.sf-timeline{grid-template-columns:repeat(2,1fr)}.sf-preview-bar{font-size:10px}.sf-page-head h1{font-size:36px}}
 @media(max-width:420px){.sf-brand-copy small{display:none}.sf-brand-copy strong{font-size:15px}.sf-header-inner{gap:7px}.sf-cart-btn{padding:0 8px}.sf-product-grid{gap:8px}.sf-product-info{padding:9px}.sf-product-info h3{font-size:11px}.sf-price{font-size:12px}.sf-section-head h2{font-size:24px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* Editorial content and blog system */
+.sf-rich-content{display:grid;gap:22px;line-height:1.75}
+.sf-rich-block{padding:0 0 20px;border-bottom:1px solid var(--sf-line)}
+.sf-rich-block:last-child{padding-bottom:0;border-bottom:0}
+.sf-rich-block h2{margin:0 0 10px;font-family:var(--sf-display);font-size:clamp(21px,2.4vw,30px);letter-spacing:-.025em}
+.sf-rich-block p{max-width:850px;margin:8px 0;color:var(--sf-muted);line-height:1.8}
+.sf-rich-block ul{margin:10px 0;padding-left:22px;color:var(--sf-muted);line-height:1.9}
+.sf-rich-cta{padding-top:10px}
+.sf-blog-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.sf-blog-card{overflow:hidden;border:1px solid var(--sf-line);border-radius:var(--sf-radius);background:var(--sf-surface);box-shadow:0 12px 30px rgba(28,38,32,.045)}
+.sf-blog-card>a:first-child{display:block;overflow:hidden;background:var(--sf-paper)}
+.sf-blog-card img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;transition:transform .35s ease}
+.sf-blog-card:hover img{transform:scale(1.035)}
+.sf-blog-card-body{padding:20px}
+.sf-blog-card h2{margin:9px 0;font-family:var(--sf-display);font-size:clamp(20px,2.3vw,28px);line-height:1.14;letter-spacing:-.025em}
+.sf-blog-card h2 a{color:var(--sf-ink);text-decoration:none}
+.sf-blog-card p{color:var(--sf-muted);font-size:13px;line-height:1.75}
+.sf-blog-meta{color:var(--sf-primary);font-size:10px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
+.sf-text-link{display:inline-flex;margin-top:7px;color:var(--sf-primary);font-size:12px;font-weight:900;text-decoration:none}
+.sf-blog-article{max-width:860px;margin:26px auto 0;padding:clamp(18px,4vw,44px);border:1px solid var(--sf-line);border-radius:var(--sf-radius);background:var(--sf-surface)}
+.sf-blog-cover{display:block;width:100%;max-height:480px;aspect-ratio:16/9;object-fit:cover;border-radius:calc(var(--sf-radius) * .7);margin-bottom:24px}
+.sf-blog-article>p{color:var(--sf-muted);font-size:16px;line-height:1.95;margin:18px 0}
+.sf-blog-end{display:flex;gap:10px;flex-wrap:wrap;padding-top:20px;margin-top:24px;border-top:1px solid var(--sf-line)}
+.sf-category-tile small{display:block;margin-top:7px;color:var(--sf-muted);font-size:11px;line-height:1.5}
+@media(max-width:720px){.sf-blog-grid{grid-template-columns:1fr;gap:14px}.sf-blog-card-body{padding:16px}.sf-blog-article{padding:17px}.sf-blog-article>p{font-size:14px}}
