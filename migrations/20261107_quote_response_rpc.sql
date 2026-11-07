@@ -57,5 +57,5 @@ END;
 $function$;
 
 REVOKE ALL ON FUNCTION builder.respond_to_storefront_quote_request(uuid,text,numeric,date,text) FROM PUBLIC;
-REVOKE ALL ON FUNCTION builder.respond_to_storefront_quote_request(uuid,text,numeric,date,text) FROM anon;
+REVOKE ALL ON FUNCTION builder.respond_to_storefront_quote_request(uuid,text,numeric,date,text) FROM anonymous;
 GRANT EXECUTE ON FUNCTION builder.respond_to_storefront_quote_request(uuid,text,numeric,date,text) TO authenticated;
