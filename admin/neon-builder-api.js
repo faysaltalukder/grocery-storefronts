@@ -461,7 +461,7 @@
     const amount=Number(quotedAmount||0);
     if(!Number.isFinite(amount)||amount<0)throw new Error("Enter a valid quotation amount.");
     if(status==="quoted"&&amount<=0)throw new Error("A quotation amount is required before marking a request as quoted.");
-    if(validUntil&&!/^\\d{4}-\\d{2}-\\d{2}$/.test(String(validUntil)))throw new Error("Enter a valid quotation expiry date.");
+    if(validUntil&&!/\d{4}-\d{2}-\d{2}$/.test(String(validUntil)))throw new Error("Enter a valid quotation expiry date.");
     const rows=await request("quote_requests","?id=eq."+$(quoteId)+"&owner_id=eq."+$(user.id)+"&select=*",{method:"PATCH",body:{status,quoted_amount:amount,valid_until:validUntil||null,response_notes:String(responseNotes||"").slice(0,2000),updated_at:new Date().toISOString()}});
     if(!rows?.[0])throw new Error("Quotation update was not confirmed.");
     return rows[0];
