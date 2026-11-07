@@ -57,7 +57,7 @@ for(const site of ["general-supermarket","fresh-produce","express-grocery","whol
  const html=fs.readFileSync(site+"/index.html","utf8");
  assert.ok(html.includes("@neon/neon-js"),site+" must use the independent Neon client");
  assert.ok(!html.toLowerCase().includes("supabase"),site+" must not use Supabase");
- assert.ok(html.includes("20261107-commerce-ux-v3"),site+" must use the current customer storefront asset cache version");
+ assert.ok(html.includes("20261108-preview-route-v1"),site+" must use the current customer storefront asset cache version");
 }
 assert.ok(!api.toLowerCase().includes("supabase"),"Shared API must remain independent of Supabase");
 assert.ok(!storefront.toLowerCase().includes("supabase"),"Shared storefront must remain independent of Supabase");
