@@ -196,6 +196,7 @@ BEGIN
 END;
 $function$
 
+;
 
 COMMENT ON FUNCTION builder.place_storefront_order(text,jsonb,jsonb,jsonb,text)
 IS 'Public storefront checkout with atomic inventory reservation; optional delivery zones and store-wide default fee/minimum.';
