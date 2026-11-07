@@ -35,6 +35,7 @@ jobs:
           test -s shared/neon-builder-api.js
           node --check shared/storefront.js
           node --check shared/neon-builder-api.js
+          node .github/scripts/validate-commerce-foundation.mjs
           ! grep -qi "supabase" shared/neon-builder-api.js
           ! grep -qi "supabase" shared/storefront.js
           ! grep -qi "HALAL_STORE_CONFIG" shared/storefront.js
