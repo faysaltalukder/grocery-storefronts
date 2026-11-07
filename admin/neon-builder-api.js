@@ -252,11 +252,12 @@
   async function publishWebsite(website,brand,settings){
     const {user}=await authContext();
     if(!website?.id||website.owner_id!==user.id)throw new Error("Website ownership check failed.");
-    const [products,categories,current,documents]=await Promise.all([
+    const [products,categories,current,documents,deliveryZones]=await Promise.all([
       request("products","?select=id,name,sku,price,stock,description,image_url,attributes&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&is_active=eq.true&limit=500"),
       request("categories","?select=id&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&is_active=eq.true&limit=200"),
       request("websites","?select=brand,settings&id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&limit=1"),
-      request("website_documents","?select=page_key&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&limit=100")
+      request("website_documents","?select=page_key&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&limit=100"),
+      request("delivery_zones","?select=id,name,delivery_fee,minimum_order,is_active&website_id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&is_active=eq.true&limit=200")
     ]);
     if(!products?.length||!categories?.length)throw new Error("Add at least one active category and one active product before publishing.");
     const currentBrand=current?.[0]?.brand||website.brand||{},currentSettings=current?.[0]?.settings||website.settings||{};const siteBrand={...currentBrand,...(brand||{})};const inputSettings=settings||{};const siteSettings={...currentSettings,...inputSettings,contact:{...(currentSettings.contact||{}),...(inputSettings.contact||{})},delivery:{...(currentSettings.delivery||{}),...(inputSettings.delivery||{})}};
@@ -265,9 +266,10 @@
     if(siteSettings.demo_catalog!==false)throw new Error("Publishing blocked: verify the complete real catalogue first.");
     const incomplete=products.filter(p=>!p.sku||!String(p.image_url||"").startsWith("https://")||String(p.description||"").trim().length<20||!Number.isFinite(Number(p.price))||Number(p.price)<=0||!Number.isFinite(Number(p.stock))||Number(p.stock)<0);
     if(incomplete.length)throw new Error("Publishing blocked: "+incomplete.length+" active products need a SKU, HTTPS image, useful description and valid price.");
-    const delivery=siteSettings.delivery||{},areas=Array.isArray(delivery.areas)?delivery.areas.filter(x=>String(typeof x==="string"?x:(x?.name||x?.area||"")).trim()):[];
-    if(!areas.length)throw new Error("Publishing blocked: add the real delivery areas this store can serve.");
-    if(!Number.isFinite(Number(delivery.default_fee))||Number(delivery.default_fee)<0)throw new Error("Publishing blocked: configure a valid delivery fee.");
+    const delivery=siteSettings.delivery||{},zones=(deliveryZones||[]).filter(z=>z.is_active);
+    if(!zones.length)throw new Error("Publishing blocked: add at least one real delivery zone with its area name, delivery fee and minimum order.");
+    const invalidZone=zones.find(z=>!String(z.name||"").trim()||!Number.isFinite(Number(z.delivery_fee))||Number(z.delivery_fee)<0||!Number.isFinite(Number(z.minimum_order))||Number(z.minimum_order)<0);
+    if(invalidZone)throw new Error("Publishing blocked: complete the delivery fee and minimum order for every active delivery zone.");
     if(/demo configuration/i.test(String(delivery.note||"")))throw new Error("Publishing blocked: replace the demo delivery note with the real delivery policy.");
     const contact=siteSettings.contact||{};
     const supportPhone=String(siteBrand.phone||contact.phone||"").trim(),supportEmail=String(siteBrand.email||contact.email||"").trim(),phoneDigits=supportPhone.replace(/[^0-9]/g,"").length;
