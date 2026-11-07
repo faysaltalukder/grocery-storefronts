@@ -22,6 +22,10 @@ assert.ok(storefront.includes("quickOrderSheet(12)"),"Wholesale home must expose
 assert.ok(css.includes("sf-bulk-qty"),"Wholesale quick order must be styled");
 assert.ok(css.includes("sf-supermarket-promos")&&css.includes("sf-farm-story")&&css.includes("sf-express-promise")&&css.includes("sf-b2b-benefits"),"All four template experiences need their own visual modules");
 assert.ok(adminApi.includes("async function submitQuoteRequest(")&&adminApi.includes("submitQuoteRequest,"),"Private preview API must expose wholesale quote submission");
+assert.ok(adminApi.includes("async function updateCentralQuote(")&&adminApi.includes("quoteRequests:quoteRequests||[]"),"Central commerce must load and update wholesale quote requests");
+const commerceBundle=JSON.parse(fs.readFileSync(".github/backups/studio-production-bundle.json","utf8"));
+assert.ok(commerceBundle["admin/commerce.js"].includes("function quotesPage()")&&commerceBundle["admin/commerce.js"].includes("data-quote-update"),"Quote management UI must be deployed with the Studio bundle");
+assert.ok(commerceBundle["admin/commerce.html"].includes('data-tab="quotes"'),"Quote management must be reachable from Central Commerce navigation");
 assert.equal(bundle["storefront.js"],storefront,"ShipStatic preview storefront JS must match the tested shared runtime");
 assert.equal(bundle["storefront.css"],css,"ShipStatic preview CSS must match the tested shared styles");
 assert.equal(bundle["admin/neon-builder-api.js"],adminApi,"ShipStatic preview API must match the tested Neon API");
