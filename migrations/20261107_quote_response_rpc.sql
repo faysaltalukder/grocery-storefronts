@@ -22,14 +22,17 @@ BEGIN
     RAISE EXCEPTION 'Authentication is required to respond to a quotation.';
   END IF;
 
-  IF p_status NOT IN ('requested','reviewing','quoted','approved','rejected','closed') THEN
+  IF p_status IS NULL OR p_status NOT IN ('requested','reviewing','quoted','approved','rejected','closed') THEN
     RAISE EXCEPTION 'Invalid quotation status.';
   END IF;
-  IF v_amount < 0 THEN
+  IF v_amount::text IN ('NaN','Infinity','-Infinity') OR v_amount < 0 THEN
     RAISE EXCEPTION 'Quotation amount cannot be negative.';
   END IF;
   IF p_status = 'quoted' AND v_amount <= 0 THEN
     RAISE EXCEPTION 'A positive quotation amount is required before marking a request as quoted.';
+  END IF;
+  IF p_valid_until IS NOT NULL AND p_valid_until < CURRENT_DATE THEN
+    RAISE EXCEPTION 'Quotation expiry date cannot be in the past.';
   END IF;
   IF length(COALESCE(p_response_notes,'')) > 2000 THEN
     RAISE EXCEPTION 'Quotation response notes are too long.';
