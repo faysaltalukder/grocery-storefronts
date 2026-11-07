@@ -53,3 +53,15 @@ body[data-template="wholesale-bulk"] .sf-product-info h3{font-family:"IBM Plex S
 .sf-blog-end{display:flex;gap:10px;flex-wrap:wrap;padding-top:20px;margin-top:24px;border-top:1px solid var(--sf-line)}
 .sf-category-tile small{display:block;margin-top:7px;color:var(--sf-muted);font-size:11px;line-height:1.5}
 @media(max-width:720px){.sf-blog-grid{grid-template-columns:1fr;gap:14px}.sf-blog-card-body{padding:16px}.sf-blog-article{padding:17px}.sf-blog-article>p{font-size:14px}}
+
+/* Commerce-core refinements: accessible filters, operational product facts and bulk ordering. */
+.sf-filter-controls{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.sf-product-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 18px;margin:18px 0;padding:16px 18px;border:1px solid var(--sf-line);border-radius:14px;background:var(--sf-surface);list-style:none}
+.sf-product-facts li{font-size:12px;color:var(--sf-muted);line-height:1.6}
+.sf-product-facts strong{color:var(--sf-ink)}
+.sf-help{color:var(--sf-muted);font-size:12px;line-height:1.7}
+.sf-bulk-qty{width:94px;min-height:38px;padding:7px 9px;border:1px solid var(--sf-line);border-radius:9px;background:var(--sf-surface);color:var(--sf-ink)}
+.sf-bulk-qty:disabled{opacity:.45}
+.sf-table td small{color:var(--sf-muted);font-size:10px}
+.sf-table tr[hidden]{display:none}
+@media(max-width:720px){.sf-filter-controls{width:100%}.sf-filter-controls select{flex:1;min-width:0}.sf-product-facts{grid-template-columns:1fr}.sf-bulk-qty{width:78px}}
