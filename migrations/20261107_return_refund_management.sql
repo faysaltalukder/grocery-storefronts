@@ -184,7 +184,7 @@ BEGIN
   UPDATE builder.return_requests
   SET status='refunded',
       refund_amount=p_amount,
-      notes=left(concat_ws(E'\\n',NULLIF(notes,''),NULLIF(trim(COALESCE(p_notes,'')),'')),2000),
+      notes=left(concat_ws(E'\n',NULLIF(notes,''),NULLIF(trim(COALESCE(p_notes,'')),'')),2000),
       updated_at=now()
   WHERE id=v_return.id;
 
