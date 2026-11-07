@@ -192,3 +192,16 @@
 @media(prefers-reduced-motion:reduce){.hf-fresh-card img{transition:none}}
 
 .hf-wpt-bottom-actions{display:flex;align-items:center;justify-content:flex-end;gap:9px;flex-wrap:wrap}.hf-wpt-preview-actions{flex-wrap:wrap}@media(max-width:720px){.hf-wpt-bottom-actions{width:100%;display:grid;grid-template-columns:1fr}.hf-wpt-preview-actions{align-items:stretch;flex-wrap:wrap}.hf-wpt-preview-actions .hf-wpt-use-button{flex:1;text-align:center}}
+
+/* Selected template: open the complete storefront in a separate browser tab. */
+.hf-wpt-browser-button{
+  background:linear-gradient(135deg,#c98242 0%,#a95f2e 100%);
+  border-color:#a95f2e;
+  color:#fff!important;
+  box-shadow:0 7px 18px rgba(169,95,46,.18);
+}
+.hf-wpt-browser-button:hover{
+  background:linear-gradient(135deg,#b96f35 0%,#914b25 100%);
+  border-color:#914b25;
+  transform:translateY(-1px);
+}
