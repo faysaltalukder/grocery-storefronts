@@ -170,13 +170,15 @@
     const website=websites?.[0];
     if(!website)throw new Error("Storefront not found or not published.");
     if(website.status!=="published"&&!preview)throw new Error("This storefront is not published yet.");
-    const [pages,documents,categories,products]=await Promise.all([
+    const [pages,documents,categories,products,deliveryZones,priceTiers]=await Promise.all([
       loadTemplatePages(website.template_key),
       request("website_documents","?select=page_key,schema_version,document,updated_at&website_id=eq."+$(website.id),opts),
       request("categories","?select=id,name,slug,parent_id,sort_order,is_active&website_id=eq."+$(website.id)+"&is_active=eq.true&order=sort_order.asc",opts),
-      request("products","?select=id,category_id,name,description,sku,price,compare_at_price,unit,stock,image_url,gallery,attributes,sort_order&website_id=eq."+$(website.id)+"&is_active=eq.true&order=sort_order.asc",opts)
+      request("products","?select=id,category_id,name,description,sku,price,compare_at_price,unit,stock,image_url,gallery,attributes,sort_order&website_id=eq."+$(website.id)+"&is_active=eq.true&order=sort_order.asc",opts),
+      request("delivery_zones","?select=id,name,normalized_name,delivery_fee,minimum_order,eta_label&website_id=eq."+$(website.id)+"&is_active=eq.true&order=name.asc",opts),
+      request("product_price_tiers","?select=id,product_id,minimum_quantity,unit_price,label&website_id=eq."+$(website.id)+"&is_active=eq.true&order=minimum_quantity.asc",opts)
     ]);
-    return {website,pages,documents:documents||[],categories:categories||[],products:products||[]};
+    return {website,pages,documents:documents||[],categories:categories||[],products:products||[],deliveryZones:deliveryZones||[],priceTiers:priceTiers||[]};
   }
   async function placeOrder(siteSlug,items,customer,shippingAddress,notes=""){
     return await request("rpc/place_storefront_order","",{method:"POST",public:true,body:{p_website_slug:siteSlug,p_items:items,p_customer:customer,p_shipping_address:shippingAddress,p_notes:notes}});
