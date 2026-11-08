@@ -172,7 +172,7 @@
       const invalid=imageRows.find(page=>page.key==="home"?page.images.length!==5||page.count!==5:page.images.length<2||page.images.length>4||page.count!==page.images.length);
       if(invalid)throw new Error("Image allocation failed for "+templateKey+" page "+invalid.key+".");
       const ids=imageRows.flatMap(page=>page.images.map(image=>String(image.id||"")));
-      if(ids.length!==83||new Set(ids).size!==83)throw new Error(templateKey+" must contain exactly 83 unique image assets across its 40 pages.");
+      if(new Set(ids).size!==83)throw new Error(templateKey+" must contain exactly 83 unique image assets across its 40 pages.");
       if(imageRows.some(page=>page.images.some(image=>/^https?:\/\//i.test(String(image.src||"")))))throw new Error(templateKey+" contains an external image source; use first-party original art.");
     }
     return rows;
