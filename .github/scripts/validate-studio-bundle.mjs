@@ -51,7 +51,7 @@ if (!educationTemplates || !educationCss || !educationStorefrontCss) throw new E
 for (const key of educationKeys) {
   if (!educationTemplates.includes(key) || !api.includes(key) || !storefront.includes(key)) throw new Error("Education template is missing from the preview, API or storefront runtime: " + key);
 }
-if (!api.includes("EDUCATION_PAGE_SETS") || !api.includes("EDUCATION_META") || !api.includes("expected exactly 40 designed pages") || !api.includes("ids.length!==83")) throw new Error("Education page catalog or image allocation guard is missing.");
+if (!api.includes("EDUCATION_PAGE_SETS") || !api.includes("EDUCATION_META") || !api.includes("expected exactly 40 designed pages") || !api.includes("new Set(ids).size!==83")) throw new Error("Education page catalog or image allocation guard is missing.");
 if (!educationTemplates.includes("education(t){") || !educationCss.includes(".hf-edu-preview") || !educationStorefrontCss.includes(".sf-edu-hero")) throw new Error("Education template preview or visual system is missing.");
 if (!storefront.includes("function educationHome()") || !storefront.includes("function educationEnquiryPage()") || !storefront.includes("function educationEditorialPage(") || !storefront.includes("function submitEducationEnquiry(")) throw new Error("Education storefront pages or enquiry journey are incomplete.");
 
