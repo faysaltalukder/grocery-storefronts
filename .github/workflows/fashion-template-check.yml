@@ -1,0 +1,43 @@
+name: Validate Fashion Template Bundle
+
+on:
+  push:
+    branches: [feature/fashion-template-suite-20261108]
+    paths:
+      - "wordpress-app/.shipstatic-deploy-bundle.json"
+      - "wordpress-app/.fashion-validation-trigger"
+      - ".github/workflows/fashion-template-check.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bundle-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Extract and syntax-check production bundle
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          const bundle = JSON.parse(fs.readFileSync('wordpress-app/.shipstatic-deploy-bundle.json','utf8'));
+          const required = ['admin/wordpress-templates.js','admin/neon-builder-api.js','storefront.js','storefront.css','admin/wordpress-templates.css'];
+          for (const file of required) if (!bundle[file]) throw new Error('Missing bundle file: '+file);
+          for (const [path, content] of Object.entries(bundle)) {
+            if (path.endsWith('.js')) {
+              const target = '/tmp/' + path.replace(/[^a-zA-Z0-9_.-]/g,'_');
+              fs.writeFileSync(target, content);
+              require('child_process').execFileSync(process.execPath, ['--check', target], {stdio:'inherit'});
+            }
+          }
+          const templates = bundle['admin/wordpress-templates.js'];
+          for (const key of ['modern-fashion-brand','boutique-ethnic-wear','streetwear-sneaker-store','fashion-retailer']) {
+            if (!templates.includes(key)) throw new Error('Template preview missing: '+key);
+          }
+          console.log('Bundle syntax and four Fashion template registrations passed.');
+          NODE
