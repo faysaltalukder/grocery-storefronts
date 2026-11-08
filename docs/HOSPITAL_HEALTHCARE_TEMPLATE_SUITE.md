@@ -89,7 +89,7 @@ All four hero illustrations are original, local SVG assets in `assets/`. They co
 
 The implementation is committed on branch `feature/hospital-healthcare-templates`. A staging deployment was created at:
 
-`https://shaped-nova-t57fes7.shipstatic.com`
+`https://sharded-robot-my7tk6g.shipstatic.com`
 
 The staging deployment is not the production custom domain. Production promotion must happen only after the final browser review of the admin category, all four previews and mobile layouts.
 
@@ -117,22 +117,24 @@ All four templates have been re-art-directed against MASTER WEBSITE ENGINEERING 
 
 ### Image implementation
 
-- Six distinct Pexels photographs per template; 24 unique photo IDs in total.
-- One image is used as the hero and five as the template's image story/gallery.
+- 60 distinct Pexels photographs per template; 240 unique photo IDs in total.
+- The 60 images are distributed across the homepage hero and three galleries, service directory, care-team/provider page, patient-information page and appointment-request page.
 - No photo ID is repeated between templates.
-- Both the admin preview renderer and live healthcare homepage renderer use the same template-specific six-photo sets.
+- The admin preview renderer exposes each template's full 60-photo set; the live storefront distributes all 60 images across the relevant page types.
 - Images have descriptive alt text, visible source/creator credits, responsive crops and lazy loading for gallery images.
 - Stock-image disclosure clarifies that the photos do not represent actual providers, facilities, staff or patients.
 - All sources and licensing notes are recorded in the Hospital & Healthcare Asset Register.
 
 ### QA status
 
+- The 240-photo manifest contains original Pexels source pages, CDN URLs, alt text, creator/listing credit and intended page placement. Remote CDN hosting is currently used; local mirroring is not yet complete.
+
 - [x] Four distinct palettes and art directions defined.
-- [x] Six photo records per template and 24 unique IDs checked in code.
+- [x] 60 photo records per template and 240 globally unique IDs checked in code.
 - [x] Admin preview renderer updated.
 - [x] Live healthcare homepage renderer updated.
 - [x] Responsive CSS added for mobile.
-- [ ] Browser verification of every image request and visual layout.
+- [ ] Browser verification of every image request and visual layout (not yet confirmed; Firecrawl could load the admin page but did not expose the dynamic gallery image requests).
 - [ ] Full mobile screenshot review and visual score.
 - [ ] Production promotion; staging review is required first.
 
