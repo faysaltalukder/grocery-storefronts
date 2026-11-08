@@ -55,7 +55,7 @@ The master standard's visual requirements are release requirements for every ind
 For every website template, enforce the page-level image budget—not just the site-wide asset count:
 - Homepage: maximum **5 meaningful images total** across the full rendered page.
 - Every non-homepage page: minimum **2** and maximum **4 meaningful images** across the full rendered page.
-- Each website must have at least **60 distinct meaningful image assets** overall. The per-page minimum is stricter when it requires more; a 40-page site will normally need at least 79 unique images.
+- Each website must have at least **60 distinct meaningful image assets** overall. The per-page minimum is stricter when it requires more; a 40-page site will normally need at least 83 unique images.
 - Images must be unique to that website and must not be reused across other websites/templates or repeated across pages as a shortcut.
 - Host/use images as assets of the current website through its approved local asset or first-party CDN pipeline.
 - Never attach an outbound link to an image. If clickable, an image must navigate to a valid internal page on the same website and preserve its website identity. If no useful internal destination exists, keep it non-clickable.
