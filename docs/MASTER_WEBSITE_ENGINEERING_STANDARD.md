@@ -3,7 +3,7 @@
 **Canonical file:** `docs/MASTER_WEBSITE_ENGINEERING_STANDARD.md`  
 **Applies to:** Every industry, business model, website, and template in WordPress Studio  
 **Status:** Active project standard  
-**Version:** 2.0
+**Version:** 2.1
 
 > This is the universal source of truth for designing, building, completing, testing, and releasing any website template in this repository. It is intentionally industry-neutral. Industry-specific requirements must be discovered and added as an implementation profile; they must never narrow or replace this standard.
 
@@ -112,7 +112,7 @@ Do not create features just to inflate scope. Every page and interaction must se
 
 ## 5. Complete website and page architecture
 
-A full business website should normally contain approximately **30–40 meaningful pages or page types**, adjusted to the complexity of the business. The count is a planning benchmark, not a reason to create empty, repetitive, or artificially split pages. Dynamic detail pages may use one reusable template populated by distinct records.
+A complete template website must contain **at least 40 meaningful pages or page types** unless the user explicitly approves a different scope. The count is a minimum planning requirement, not a reason to create empty, repetitive, or artificially split pages. Every page must serve a real customer, business, trust, support, legal, editorial, or operational purpose. Dynamic detail pages may use one reusable template populated by distinct records, but the distinct page types and useful content must still be documented.
 
 A typical architecture may include:
 1. Home / primary landing
@@ -286,6 +286,43 @@ Visual assets are required content, not optional decoration. The agent must inde
 - Use genuinely varied images and subjects. Do not repeat the same four hero illustrations throughout a 30–40 page website or fill every card with the same stock photograph.
 - For business models where 60 meaningful assets would be artificial or misleading, document the reason and provide an equivalent visual-content plan (for example, original diagrams, maps, product renders or data visualizations). Never invent real people, facilities, products, clinical outcomes or evidence to hit a count.
 
+### Mandatory image distribution, page limits, and internal navigation
+
+These allocation rules are mandatory for **every individual website template**. They refine the site-wide visual-asset target; they do not replace the requirement for at least 60 distinct meaningful assets.
+
+**Per-page image limits**
+- **Homepage:** use no more than **5 meaningful image assets in total**. This is a hard maximum across the entire homepage, including hero, banners, cards, galleries, background/content imagery and promotional sections. Do not evade the limit by moving images into sliders, carousels, tabs, hidden sections, or lazy-loaded blocks.
+- **Every non-homepage page:** use at least **2 and no more than 4 meaningful image assets** on that page. The limit applies to the complete rendered page, including its hero, cards, galleries, related-content blocks and footer imagery. Do not count icons, logos, tiny UI glyphs or decorative textures as qualifying images.
+- Keep the homepage visually strong through composition, typography, whitespace, layout, and purposeful use of up to five images—not by adding more imagery.
+- Treat the limits as per-URL/page limits. Shared header/footer logos and icons do not count as meaningful image assets; do not duplicate substantial photography in shared components to bypass the limits.
+
+**Site-wide quantity and uniqueness**
+- Deliver at least **60 distinct, meaningful image assets per website** as an absolute site-wide floor. The per-page minimum takes precedence when it requires more assets: for a 40-page website, the page rules normally require at least 79 distinct images (up to 5 on the homepage plus at least 2 on each of the other 39 pages); larger websites require at least 2 unique images for every additional non-homepage page.
+- Each image must be selected or created specifically for the identity, industry, business model, audience, and content of that individual website. Do not reuse the same image asset across different websites/templates as a shortcut. A different crop, filename, filter, or compression of the same source does not make it unique.
+- Within one website, avoid reusing the same source image on multiple pages. Select distinct subjects, scenes, compositions, and visual roles that genuinely support each page.
+- Maintain a per-website asset register mapping each unique image to its page, section, purpose, source/creator, verified license, attribution (if required), local asset path, and date checked.
+- The image distribution must be balanced across the complete site. Never concentrate most of the image budget on the homepage or a small number of landing pages while leaving inner pages empty or text-heavy.
+
+**Image ownership, links, and navigation**
+- Images must be integrated as assets of the current website, using its own approved local asset storage or its configured first-party asset/CDN pipeline. Do not use an unrelated website's image URL, third-party page URL, or a remote hotlink as the displayed image source.
+- No image may send visitors to an external website. Do not wrap images in outbound links, external affiliate links, stock-provider links, or third-party destination URLs.
+- When an image is interactive/clickable, its destination must be a valid **internal route on the same website** (for example, the relevant service, product, department, article, location, or detail page). Keep the visitor within the current website origin. Do not use external domains, new-tab external destinations, or links to another template/site.
+- If there is no useful internal destination, render the image as non-clickable rather than inventing a route. Never make a clickable image appear to navigate internally when it actually leaves the site.
+- Verify internal image destinations resolve correctly, preserve the current website identity/tenant, and do not lead to another website's content.
+
+**Art direction and image quality**
+- Choose high-resolution, sharp, contextually accurate images with deliberate subject matter, lighting, focal point, crop, aspect ratio, color treatment, and negative space. The visual result must feel lively, dynamic, artistic, premium, and coherent with the template's independently defined visual identity.
+- Select images to explain the page and strengthen trust or conversion—not merely to fill a quota. Use authentic, rights-cleared imagery; do not fabricate real customers, staff, clinicians, facilities, products, clinical outcomes, or business evidence.
+- Use a considered mix of hero/feature, product/service, people (only when authorized), facilities/locations, editorial, process, and contextual imagery as appropriate to the business. Avoid repetitive stock-photo grids, album-like image dumps, and monotonous image strips.
+- Use intentional responsive crops and aspect ratios; maintain image clarity on mobile and desktop. Optimize files without making them blurry or visually degraded.
+
+**Required enforcement and verification**
+- Before implementation, create a page-by-page image allocation map listing each page, its planned image count (homepage 0–5; every other page 2–4), the unique asset IDs, and each image's intended placement and internal destination if clickable.
+- After implementation, automatically or manually count rendered meaningful images per page URL. Confirm the homepage has at most 5 and every non-homepage page has 2–4. Also verify at least 60 unique assets site-wide and that the stricter per-page allocation is satisfied.
+- Audit uniqueness both within the website and against other websites/templates in the repository. Detect same-file duplicates and repeated source images, not just duplicate filenames.
+- Crawl every image link and confirm that all clickable image destinations remain on the current website origin and resolve to valid internal pages. Fail the visual/release gate for any outbound image link.
+- Inspect every page at desktop and mobile widths for broken images, poor crops, repeated subjects, overflow, layout shifts, loading failures, and image-related performance regressions. Record actual counts and test evidence in the asset register/QA report.
+
 ### Asset research and rights
 Potential sources include Unsplash, Pexels, Pixabay, Wikimedia Commons, Google Fonts, Lucide, Material Symbols, and reputable open-source libraries. These are discovery starting points, not blanket permission to use every asset.
 
@@ -458,7 +495,7 @@ Do not mark complete if any of the following remain:
 - Major missing/empty pages that are represented as finished
 - Unlicensed, watermarked, misleading, or inappropriate assets
 - A template that fails the independent visual gate, lacks its own visual identity, or uses a generic/recolored clone of another template
-- Major missing image coverage, broken image assets, or an undocumented shortfall against the 60-asset target without a justified equivalent plan
+- Any homepage with more than 5 meaningful images; any non-homepage page with fewer than 2 or more than 4 meaningful images; fewer than 60 distinct meaningful site-wide assets; reused/non-unique website imagery; outbound image links; broken image assets; or an undocumented shortfall against the applicable page-level/site-wide targets
 - Serious data loss risk or unverified destructive migration
 - Critical console/runtime errors affecting user journeys
 
@@ -482,7 +519,8 @@ Test at minimum:
 - SEO metadata, broken links, console errors, and performance
 - Visual review of every template at desktop and mobile widths, including homepage and representative inner/detail pages
 - Side-by-side comparison of all four templates to verify distinct palettes, typography, hero art direction, layouts, imagery and component styling
-- Asset audit: count meaningful assets, inspect source/licensing register, verify image URLs/load success, detect duplicates, review alt text, responsive sizing and mobile payloads
+- Asset audit: count meaningful assets per page and site-wide; enforce homepage ≤5 and every inner page 2–4; inspect source/licensing register; verify first-party asset hosting and image load success; detect duplicate/reused images; review alt text, responsive sizing and mobile payloads
+- Crawl all clickable images and verify every destination is a valid internal route on the same website origin, with no outbound image links
 - Confirm color tokens are actually consumed by rendered components and no template silently falls back to a generic shared skin
 - Existing templates and shared runtime for regressions
 
@@ -505,7 +543,9 @@ A template is complete only when all applicable items are true:
 - [ ] The template is meaningfully distinct from the other templates in its industry in business model and visual identity.
 - [ ] Its Visual Identity Brief is documented and its palette, typography, layout grammar, imagery and motion are applied in the rendered website.
 - [ ] The template passes the independent visual gate (at least 20/25) and side-by-side differentiation review.
-- [ ] The site meets the 60-asset visual target or has a documented business-specific equivalent visual-content plan.
+- [ ] The site has at least 40 meaningful pages/page types (unless an approved scope exception exists) and meets the 60-asset site-wide floor.
+- [ ] The homepage contains no more than 5 meaningful images, and every non-homepage page contains 2–4 meaningful images; the stricter per-page allocation is satisfied even when it requires more than 60 total assets.
+- [ ] Every image is unique to its website; no image is reused across other websites/templates, and every clickable image navigates only to a valid internal page on the same website origin.
 - [ ] Page architecture is complete and contains no filler pages.
 - [ ] Copy and editorial content are useful, original, and sufficiently complete.
 - [ ] Product/service/listing catalog is populated with distinct, relevant records.
