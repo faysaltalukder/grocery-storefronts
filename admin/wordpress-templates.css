@@ -478,3 +478,62 @@
 @media(max-width:650px){.hf-property-preview header nav{display:none}.hf-property-preview-hero{grid-template-columns:1fr;padding:22px 3%}.hf-property-preview-hero>img{height:190px}.hf-property-preview-discover>div{grid-template-columns:repeat(2,minmax(0,1fr))}.hf-property-preview-card img{height:110px}.hf-property-preview footer{display:block}}
 
 .hf-restaurant-preview{--rp-ink:#292126;--rp-accent:#7a2938;--rp-paper:#f7f1ea;background:var(--rp-paper);color:var(--rp-ink);min-height:680px}.hf-restaurant-preview--morrow-cafe-bakery{--rp-ink:#30251f;--rp-accent:#b85e3d;--rp-paper:#f8f2e9}.hf-restaurant-preview--emberline-cloud-kitchen{--rp-ink:#172a40;--rp-accent:#ef654d;--rp-paper:#f4f6f7}.hf-restaurant-preview--gathered-table-catering{--rp-ink:#29313b;--rp-accent:#a94f58;--rp-paper:#f6f0ea}.hf-restaurant-preview-topline{padding:9px 18px;background:var(--rp-ink);color:#fff;font-size:9px;letter-spacing:.15em}.hf-restaurant-preview header{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:20px 4%;border-bottom:1px solid rgba(0,0,0,.12)}.hf-restaurant-preview header strong{font-family:Georgia,serif;font-size:20px;letter-spacing:.08em}.hf-restaurant-preview header nav{display:flex;gap:15px;flex-wrap:wrap;font-size:10px}.hf-restaurant-preview header b{color:var(--rp-accent);font-size:10px}.hf-restaurant-preview-hero{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center;padding:36px 5%}.hf-restaurant-preview-hero small,.hf-restaurant-preview-discover>small{color:var(--rp-accent);font-size:9px;font-weight:800;letter-spacing:.15em}.hf-restaurant-preview-hero h2{font-family:Georgia,serif;font-size:clamp(28px,4vw,52px);line-height:1.05;font-weight:500;margin:14px 0}.hf-restaurant-preview--emberline-cloud-kitchen .hf-restaurant-preview-hero h2{font-family:inherit;font-weight:850}.hf-restaurant-preview-hero p{font-size:12px;line-height:1.7;color:#687078}.hf-restaurant-preview-hero span{display:inline-block;margin-top:12px;padding:11px 14px;background:var(--rp-accent);color:#fff;font-size:10px;font-weight:800}.hf-restaurant-preview-hero img{width:100%;height:270px;object-fit:cover}.hf-restaurant-preview-stats{display:flex;gap:18px;margin-top:24px}.hf-restaurant-preview-stats b{font-size:15px}.hf-restaurant-preview-stats small{display:block;font-size:8px}.hf-restaurant-preview-discover{padding:24px 5% 36px}.hf-restaurant-preview-discover h3{font-family:Georgia,serif;font-size:26px;font-weight:500}.hf-restaurant-preview-discover>div{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.hf-restaurant-preview-card{background:#fff;padding-bottom:14px}.hf-restaurant-preview-card img{width:100%;height:115px;object-fit:cover}.hf-restaurant-preview-card small,.hf-restaurant-preview-card h3,.hf-restaurant-preview-card p{margin-left:12px;margin-right:12px}.hf-restaurant-preview-card small{display:block;margin-top:10px;color:var(--rp-accent);font-size:8px}.hf-restaurant-preview-card h3{font-size:14px;margin-top:6px;margin-bottom:4px}.hf-restaurant-preview-card p{font-size:10px;line-height:1.5;color:#687078}.hf-restaurant-preview footer{display:flex;justify-content:space-between;gap:14px;padding:18px 5%;border-top:1px solid rgba(0,0,0,.12);font-size:9px;color:#687078}@media(max-width:680px){.hf-restaurant-preview-hero{grid-template-columns:1fr}.hf-restaurant-preview header nav{display:none}.hf-restaurant-preview-discover>div{grid-template-columns:1fr 1fr}.hf-restaurant-preview footer{display:block}}
+
+/* Education & Training — four independently art-directed previews */
+.hf-edu-preview{--edu-ink:#20344a;--edu-paper:#f8f5ec;--edu-accent:#d4a63b;background:var(--edu-paper);color:var(--edu-ink);font-family:"DM Sans",Inter,sans-serif;overflow:hidden}
+.hf-edu-preview--veridian-university{--edu-ink:#24243a;--edu-paper:#f5f2f7;--edu-accent:#6c4c8c;font-family:"Manrope",Inter,sans-serif}
+.hf-edu-preview--forge-skills-institute{--edu-ink:#202329;--edu-paper:#f4f2ed;--edu-accent:#f06a3a;font-family:"Space Grotesk",Inter,sans-serif}
+.hf-edu-preview--brightpath-tutoring{--edu-ink:#343047;--edu-paper:#fbf5f0;--edu-accent:#d66c75;font-family:"Manrope",Inter,sans-serif}
+.hf-edu-topline{padding:10px 5%;background:var(--edu-ink);color:#fff;font-size:9px;letter-spacing:.15em;display:flex;justify-content:space-between}
+.hf-edu-topline span{opacity:.72;letter-spacing:.04em}
+.hf-edu-header{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:22px 5%;border-bottom:1px solid color-mix(in srgb,var(--edu-ink) 12%,transparent)}
+.hf-edu-brand{font-weight:900;letter-spacing:.09em;color:var(--edu-ink);text-decoration:none;font-size:16px}
+.hf-edu-brand span{font-weight:500;letter-spacing:.02em}
+.hf-edu-header nav{display:flex;gap:18px;flex-wrap:wrap}
+.hf-edu-header nav a{font-size:11px;color:var(--edu-ink);text-decoration:none}
+.hf-edu-header>button,.hf-edu-hero-copy button,.hf-edu-cta button{border:0;border-radius:3px;padding:13px 18px;background:var(--edu-ink);color:white;font-weight:700;font-size:11px;cursor:pointer}
+.hf-edu-hero{display:grid;grid-template-columns:1fr .92fr;min-height:410px;padding:54px 6%;gap:36px;align-items:center}
+.hf-edu-hero-copy>small,.hf-edu-feature small,.hf-edu-courses small,.hf-edu-cta small{font-size:9px;font-weight:800;letter-spacing:.17em;color:var(--edu-accent)}
+.hf-edu-hero h2{font-family:"Cormorant Garamond",Georgia,serif;font-size:clamp(38px,5vw,68px);line-height:.98;letter-spacing:-.035em;max-width:570px;margin:18px 0}
+.hf-edu-preview--veridian-university .hf-edu-hero h2{font-family:"Playfair Display",Georgia,serif;font-size:clamp(36px,4.5vw,60px)}
+.hf-edu-preview--forge-skills-institute .hf-edu-hero h2{font-family:"Space Grotesk",sans-serif;font-weight:700;letter-spacing:-.065em}
+.hf-edu-preview--brightpath-tutoring .hf-edu-hero h2{font-family:"Cormorant Garamond",Georgia,serif}
+.hf-edu-hero-copy>p{font-size:13px;line-height:1.8;max-width:480px;opacity:.8}
+.hf-edu-hero-copy>div:nth-of-type(1){display:flex;align-items:center;gap:20px;margin-top:24px}
+.hf-edu-hero-copy>div:nth-of-type(1) a{font-size:11px;color:var(--edu-ink);font-weight:700}
+.hf-edu-proof{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.hf-edu-proof span{font-size:9px;opacity:.75}
+.hf-edu-hero-art{position:relative}
+.hf-edu-hero-art img{width:100%;display:block;aspect-ratio:1.25;object-fit:cover;border-radius:2px}
+.hf-edu-hero-art>span{position:absolute;bottom:12px;left:14px;background:var(--edu-paper);padding:7px 10px;font-size:8px;letter-spacing:.13em}
+.hf-edu-stats{display:grid;grid-template-columns:repeat(3,1fr);background:var(--edu-ink);color:white;padding:28px 7%;gap:20px}
+.hf-edu-stats>div{display:flex;align-items:center;gap:14px;border-right:1px solid #ffffff30}
+.hf-edu-stats>div:last-child{border:0}
+.hf-edu-stats b{font:600 25px Georgia;color:var(--edu-accent)}
+.hf-edu-stats span{font-size:11px;opacity:.8}
+.hf-edu-feature{display:grid;grid-template-columns:1fr .75fr;gap:40px;align-items:center;padding:70px 8%}
+.hf-edu-feature h3,.hf-edu-courses h3,.hf-edu-cta h3{font:600 clamp(28px,3.5vw,44px)/1.1 "Cormorant Garamond",Georgia,serif;margin:12px 0}
+.hf-edu-feature p{font-size:13px;line-height:1.8;max-width:540px;opacity:.78}
+.hf-edu-feature img{width:100%;aspect-ratio:1.3;object-fit:cover}
+.hf-edu-courses{padding:58px 7%;background:color-mix(in srgb,var(--edu-accent) 8%,var(--edu-paper))}
+.hf-edu-course-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}
+.hf-edu-course-grid article{padding:20px;background:white;border:1px solid color-mix(in srgb,var(--edu-ink) 10%,transparent);min-height:180px}
+.hf-edu-course-grid article>span{font-size:10px;color:var(--edu-accent);font-weight:800}
+.hf-edu-course-grid h4{font:600 19px Georgia;margin:18px 0 8px}
+.hf-edu-course-grid p{font-size:11px;line-height:1.65;opacity:.75}
+.hf-edu-course-grid a{font-size:10px;font-weight:800;color:var(--edu-ink)}
+.hf-edu-cta{display:flex;justify-content:space-between;align-items:center;gap:25px;padding:54px 7%;background:var(--edu-accent);color:var(--edu-ink)}
+.hf-edu-cta small{color:var(--edu-ink)}
+.hf-edu-cta h3{margin:10px 0}
+.hf-edu-cta p{font-size:12px;max-width:540px;line-height:1.7}
+.hf-edu-cta button{background:var(--edu-ink);white-space:nowrap}
+.hf-edu-footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:25px 6%;background:var(--edu-ink);color:white;font-size:10px}
+.hf-edu-footer span{opacity:.7}
+.hf-edu-preview--forge-skills-institute .hf-edu-hero{background:var(--edu-ink);color:white}
+.hf-edu-preview--forge-skills-institute .hf-edu-hero-copy>div:nth-of-type(1) a{color:white}
+.hf-edu-preview--forge-skills-institute .hf-edu-hero-art img{filter:saturate(.75) contrast(1.08)}
+.hf-edu-preview--veridian-university .hf-edu-stats{background:#302c48}
+.hf-edu-preview--brightpath-tutoring .hf-edu-course-grid article{border-radius:14px;box-shadow:0 10px 30px #3430470c}
+.hf-edu-preview--brightpath-tutoring .hf-edu-hero-art img{border-radius:30px 30px 30px 4px}
+@media(max-width:760px){.hf-edu-header{align-items:flex-start;flex-wrap:wrap}.hf-edu-header nav{order:3;width:100%;gap:12px}.hf-edu-header>button{margin-left:auto}.hf-edu-hero,.hf-edu-feature{grid-template-columns:1fr;padding:34px 6%;gap:22px}.hf-edu-hero h2{font-size:42px}.hf-edu-stats{padding:20px 6%;gap:8px}.hf-edu-stats>div{display:block;padding-right:8px}.hf-edu-stats b{display:block;font-size:21px}.hf-edu-stats span{font-size:9px}.hf-edu-course-grid{grid-template-columns:repeat(2,1fr)}.hf-edu-cta{align-items:flex-start;flex-direction:column}.hf-edu-topline span{display:none}}
+@media(max-width:420px){.hf-edu-course-grid{grid-template-columns:1fr}.hf-edu-hero-copy>div:nth-of-type(1){align-items:flex-start;flex-direction:column;gap:12px}}
