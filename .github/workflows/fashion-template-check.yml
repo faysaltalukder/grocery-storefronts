@@ -5,6 +5,7 @@ on:
     branches: [feature/fashion-template-suite-20261108]
     paths:
       - "wordpress-app/.shipstatic-deploy-bundle.json"
+      - "wordpress-app/.fashion-validation-trigger"
       - ".github/workflows/fashion-template-check.yml"
   workflow_dispatch:
 
