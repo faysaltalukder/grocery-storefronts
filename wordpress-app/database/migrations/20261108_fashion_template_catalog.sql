@@ -1,2 +1,6 @@
 -- Fashion template suite: additive template registry and page definitions are applied separately through the Neon transaction.
 -- This migration note intentionally contains no DDL; the existing builder schema supports template_catalog, template_designs and template_pages.
+-- Applied additively to Neon branch br-muddy-lake-a1tcb0n1 on 2026-11-08.
+-- Upserts: four template_catalog rows, four template_designs rows, and 144 template_pages rows.
+-- The exact design and page payloads are persisted in builder.template_designs and builder.template_pages.
+-- This file is an application record, not a DDL migration; it intentionally does not alter existing commerce tables.
