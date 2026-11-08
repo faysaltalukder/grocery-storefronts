@@ -6,7 +6,7 @@ Engineering baseline: `docs/MASTER_WEBSITE_ENGINEERING_STANDARD.md`
 
 ## Outcome
 
-The Hospital & Healthcare category now has four independent business-specific template definitions, four active version-1 design records and 36 reusable page definitions per template (144 pages total). The old Grocery preview fallback is no longer used for this category. Existing Grocery catalog entries and Grocery category data were not deleted or modified.
+The Hospital & Healthcare category now has four independent business-specific template definitions, four active version-1 design records and 40 active page definitions per template (160 pages total). The old Grocery preview fallback is no longer used for this category. Existing Grocery catalog entries and Grocery category data were not deleted or modified.
 
 ## Four template directions
 
@@ -24,16 +24,16 @@ The four directions do not share a grocery layout or simply recolour one common 
 **Binding requirement for every future agent / ChatGPT session working on this category. Read and obey before editing.** The previous image treatment made the sites look like photo albums. That is a structural design failure and must not be repeated. Do not stop after writing a plan: implement the page records, content, image distribution, fixes and tests.
 
 ### Required page count and navigation
-- Expand **each template to 45 distinct, individually navigable pages** (acceptable range 40–50; default target 45). The existing 36 definitions are only the current baseline and do not satisfy this target.
+- **Each template must contain exactly 40 distinct, individually navigable pages.** The active records in `builder.template_pages` are the source of truth; sitemap/menu links alone do not count.
 - Create/update the actual `builder.template_pages` records, not just a sitemap, menu mockup, hard-coded links or a list in the UI.
 - Every page needs a unique stable key/slug, title, template/site identity, page-specific content, navigation metadata and a working route/render.
 - Verify all pages through navigation and direct URL load/refresh. No dead links, duplicate filler pages, placeholder-only pages or links that all lead to one generic destination.
 - Adapt the page architecture to each business model; do not force the same page titles or content across all four templates.
 
 ### Strict image-distribution rules
-- Homepage: **maximum 5–6 meaningful images** per template. Selectively use images in the hero, key service/department feature and one or two supporting sections. Keep the homepage content-led.
-- Every non-homepage page: **at least 2–3 contextually relevant images**, naturally integrated with its specific content.
-- Maintain **at least 60 distinct, meaningful visual assets per complete website**, as required by the master standard. Distribute assets across the complete 45-page experience. Duplicate files, repeated crops and decorative icons do not count as distinct assets.
+- Homepage: **maximum 5 meaningful images** per template. Current implementation uses exactly 5: one hero plus four contextual service-feature images.
+- Every non-homepage page: **3–4 contextually relevant images**, naturally integrated with its specific content. Current implementation uses exactly 3 per page.
+- Maintain **at least 60 distinct, meaningful visual assets per complete website**, as required by the master standard. All 60 registered assets are now assigned across the 40-page experience. Duplicate files, repeated crops and decorative icons do not count as distinct assets.
 - Never dump the image collection into the homepage, one gallery, one carousel wall or one undifferentiated media section. **Do not turn any of the four websites into a photo album.**
 - Every image must support a clear content purpose and be accompanied by a relevant heading, caption or nearby explanatory copy. Use balanced image-and-copy layouts; do not cover photos with long text overlays.
 - Use varied, deliberate layouts: alternating image-and-copy sections, service/detail features, facility/process explanations, provider or test information layouts and small contextual image groups only where useful. Avoid endless galleries, repetitive oversized image cards and image-only sections.
@@ -43,17 +43,17 @@ The four directions do not share a grocery layout or simply recolour one common 
 ### Page content standard
 Each page must be a useful destination, not an image container. Include a page-specific H1 and introduction, useful sections and subheadings, contextual images with meaningful alt text and nearby explanation, relevant internal links, a suitable CTA where appropriate, and unique SEO title/meta description where supported. Avoid filler, keyword stuffing, fabricated facts, repeated generic paragraphs and medical advice.
 
-### Suggested 45-page architecture per template
+### Suggested 40-page architecture per template
 | Page group | Target |
 |---|---:|
 | Home, About, Mission, Leadership, Locations | 5 |
-| Departments / Specialties / Tests / Care Categories | 10 |
-| Individual service, department, test or care detail pages | 10 |
-| Doctors / Specialists / Team or provider directory and profiles | 6 |
-| Patient journey, preparation, admission, technology or support guides | 5 |
+| Departments / Specialties / Tests / Care Categories | 9 |
+| Individual service, department, test or care detail pages | 9 |
+| Doctors / Specialists / Team or provider directory and profiles | 5 |
+| Patient journey, preparation, admission, technology or support guides | 4 |
 | Appointment / consultation request, fees or packages, insurance/payment information | 4 |
-| Health resources / articles / FAQs / Contact / Policies | 5 |
-| **Total** | **45** |
+| Health resources / articles / FAQs / Contact / Policies | 4 |
+| **Total** | **40** |
 
 Adapt intelligently: MedCore prioritises departments, facilities, admission and patient guidance; VitalLab prioritises test catalogue, preparation, sample collection, screening packages and report support; CarePoint prioritises specialties, verified consultants, schedules and consultation information; MediConnect prioritises digital-care categories, consultation steps, technology readiness, privacy and support. Do not invent live report portals, patient accounts or real-time consultation features.
 
@@ -67,7 +67,7 @@ Adapt intelligently: MedCore prioritises departments, facilities, admission and 
 - Test on desktop and mobile, including direct page loads, refreshes and slow-network conditions. Fix all known broken images and report the remaining broken-image count.
 
 ### Required completion evidence — all four templates
-Report and verify per template: (1) 40–50 real page definitions, target 45, and working routes; (2) homepage has no more than 5–6 images; (3) every other page has at least 2–3 relevant images; (4) 60+ distinct meaningful assets registered and distributed; (5) no photo-album layouts and images are supported by copy; (6) image URLs/paths load or have tested fallbacks; (7) navigation, breadcrumbs, CTAs and direct URLs work; (8) desktop/tablet/mobile review; (9) accessibility, SEO, performance and regression checks; (10) changed files, database changes, commit/branch and deployment evidence.
+Report and verify per template: (1) exactly 40 active page definitions and working routes; (2) homepage has no more than 5 images; (3) every other page has 3–4 relevant images (currently 3); (4) 60+ distinct meaningful assets registered and distributed; (5) no photo-album layouts and images are supported by copy; (6) image URLs/paths load or have tested fallbacks; (7) navigation, breadcrumbs, CTAs and direct URLs work; (8) desktop/tablet/mobile review; (9) accessibility, SEO, performance and regression checks; (10) changed files, database changes, commit/branch and deployment evidence.
 
 Do not mark complete if any template fails these checks. Do not replace implementation with another plan or ask the user to repeat these requirements. Never claim a test or deployment passed unless it was actually run and verified.
 
@@ -75,7 +75,7 @@ Do not mark complete if any template fails these checks. Do not replace implemen
 
 - The template catalogue is registered in `builder.template_catalog`.
 - Versioned design records are stored in `builder.template_designs`.
-- Page definitions for each template are stored in `builder.template_pages`; expand the currently registered 36 definitions to the required 45 per template.
+- Page definitions for each template are stored in `builder.template_pages`; keep exactly 40 active definitions per template.
 - The static application remains one reusable engine; template-specific renderer branches and configuration drive the four experiences.
 - Website content, page documents and business data remain scoped to each generated website.
 - Admin template previews use the category-specific healthcare renderer.
@@ -84,7 +84,7 @@ Do not mark complete if any template fails these checks. Do not replace implemen
 
 ## Page architecture
 
-The currently registered baseline is 36 page definitions per template. These cover the appropriate subset of the following; they must be audited and expanded to 45 pages per template:
+Each template now has exactly 40 active page definitions. They cover the appropriate subset of the following and must remain at exactly 40:
 - Home and organisation information
 - Service, department, specialty, test or care-category directory
 - Service/detail and provider/detail page types
@@ -127,7 +127,7 @@ All four hero illustrations are original, local SVG assets in `assets/`. They co
 |---|---|
 | Four catalogue rows in the Hospital & Healthcare category | Verified in Neon |
 | Four active design version-1 records | Verified in Neon |
-| 36 existing page definitions per template | Verified in Neon; below the new 45-page target |
+| 40 active page definitions per template | Verified in Neon; 160 total across four templates |
 | Eight patient-information resources per template | Registered in design specs and Health Library page specs |
 | Category-specific admin renderer mapping | Implemented in source bundle |
 | Live storefront healthcare renderer | Implemented in source bundle |
@@ -135,7 +135,7 @@ All four hero illustrations are original, local SVG assets in `assets/`. They co
 | Appointment request admin classification | Implemented in central request desk |
 | Intake default state | Disabled pending provider and data-residency verification |
 | Existing Grocery category data | Preserved; no Grocery template rows deleted |
-| 45-page expansion, distributed imagery and broken-image audit | Pending implementation and verification |\n| Production domain promotion | Requires final visual review and release approval |
+| 40-page expansion and page-level image assignments | Verified in Neon: 5 homepage images, 3 on each of 39 non-home pages, none over 5 |\n| Production domain promotion | Requires final visual review and release approval |
 
 ## Deployment
 
@@ -162,20 +162,21 @@ All four templates have been re-art-directed against MASTER WEBSITE ENGINEERING 
 
 | Template | Visual identity | Palette | Composition |
 |---|---|---|---|
-| MedCore | Warm architectural editorial | Warm ivory, botanical green, terracotta | Asymmetric hospital hero, architectural crop, calm editorial gallery |
+| MedCore | Warm architectural editorial | Warm ivory, botanical green, terracotta | Asymmetric hospital hero, architectural crop, five-image editorial hero and feature layout |
 | VitalLab | Dark precision-science | Midnight blue, slate, electric lime | Dark scientific interface, lab image hero, high-contrast data-led accents |
-| CarePoint | Human-centered specialist editorial | Warm blush, muted coral, deep plum | Portrait-arch hero, personal consultation imagery, softer editorial rhythm |
-| MediConnect | Digital healthcare product | Midnight violet, lavender, lilac | Dark technology-led hero, connected-care overlay, remote-consultation imagery |
+| CarePoint | Human-centered specialist editorial | Warm blush, muted coral, deep plum | Portrait-arch hero, personal consultation imagery with contextual page-level image/copy, softer editorial rhythm |
+| MediConnect | Digital healthcare product | Midnight violet, lavender, lilac | Dark technology-led hero, connected-care overlay, remote-consultation imagery with contextual page-level image/copy |
 
 ### Image implementation
 
-- 60 distinct Pexels photographs per template; 240 unique photo IDs in total.
-- The 60 images are distributed across the homepage hero and three galleries, service directory, care-team/provider page, patient-information page and appointment-request page.
-- No photo ID is repeated between templates.
-- The admin preview renderer exposes each template's full 60-photo set; the live storefront distributes all 60 images across the relevant page types.
-- Images have descriptive alt text, visible source/creator credits, responsive crops and lazy loading for gallery images.
+- 60 distinct Pexels photographs per template; 240 unique photo IDs in total, with all 60 assets per template assigned at least once.
+- Homepage: 1 hero + 4 contextual service-feature images (5 maximum).
+- Every other page: 3 images presented as alternating image-and-copy stories; no photo-only galleries or image walls.
+- Neon stores exact page-level assignments in `page_spec.media.imageAssetIds`; the asset register records exact page-key placements.
+- The admin preview uses one hero plus four contextual image-and-copy features; the live storefront uses three contextual images on non-home pages.
+- Images have descriptive alt text, visible source/creator credits, responsive sizing, lazy loading and designed fallbacks for failed remote images.
 - Stock-image disclosure clarifies that the photos do not represent actual providers, facilities, staff or patients.
-- All sources and licensing notes are recorded in the Hospital & Healthcare Asset Register.
+- No photo ID is repeated across templates or twice on the same page.
 
 ### QA status
 
@@ -193,7 +194,7 @@ All four templates have been re-art-directed against MASTER WEBSITE ENGINEERING 
 
 ## Visual asset expansion — 60 images per website
 
-The healthcare collection now contains **60 distinct Pexels photographs per template (240 unique image IDs across all four)**. Images are allocated to the homepage hero, three distinct homepage gallery sections, service directory, provider/care-team page, patient-information content and appointment-request page. The admin template preview exposes all 60 images for each selected template. Image records include original Pexels photo page, creator/listing credit, descriptive alt text, CDN URL and intended page placement in `docs/HOSPITAL_HEALTHCARE_ASSET_REGISTER.md`.
+The healthcare collection contains **60 distinct Pexels photographs per template (240 unique image IDs across all four)**. All 60 assets per template are assigned to the 40 active page definitions in Neon. Each homepage renders five images maximum; each of the other 39 pages renders three images with contextual copy. Image records include original Pexels photo page, creator/listing credit, descriptive alt text, CDN URL and exact page-key placements in `docs/HOSPITAL_HEALTHCARE_ASSET_REGISTER.md`.
 
 The image CDN is remote-hosted at present rather than mirrored into the repository. Non-hero images are lazy-loaded. Browser-level image request, responsive crop and mobile payload verification remain required before production promotion.
 
@@ -205,9 +206,20 @@ The 240-image asset set was rebuilt using individual Pexels photo-page records o
 
 ### Staging verification note — 2026-11-08
 
-- Latest staging deployment: https://radiant-trail-s3x3aqc.shipstatic.com (39 files; deployment status success).
-- All four healthcare admin template previews rendered on staging; each contained 60 Pexels image elements with 60 unique IDs.
-- The admin scraper showed Neon OFFLINE / sample-preview state; the public storefront preview returned `TypeError: Failed to fetch` in the crawler environment. Neither result is treated as a verified live Neon-backed storefront render.
-- JavaScript syntax checks passed for both the live storefront and admin template renderer. Code-level assertions passed for 60 assets per template, 240 globally unique IDs, individual Pexels photo-page sources, complete alt/source metadata and page-level gallery allocation.
-- Staging HTML now loads its CSS and JavaScript from relative deployment-local asset paths, avoiding accidental loading of production bundle assets.
-- Production domain and production promotion remain untouched. Full CDN network, mobile crop, visual score and end-to-end Neon-backed storefront QA are still release gates.
+- Previous staging deployment: https://radiant-trail-s3x3aqc.shipstatic.com (39 files; success), created before the 40-page/image-cap correction; its prior 60-image-gallery verification is superseded.
+- Updated source bundle passed JavaScript syntax checks for the live storefront, admin renderer and Neon builder API.
+- Neon confirms 40 active page definitions per template (160 total), with exactly 5 homepage image IDs and 3 image IDs on each of the 39 non-home pages; no page exceeds 5.
+- All 60 distinct assets per template (240 unique IDs globally) are assigned at least once, and the asset register records exact page-key placements.
+- Updated renderer provides an all-pages navigation menu, sitemap destinations, page-level image/copy stories, failed-image fallbacks and below-the-fold lazy loading.
+- A fresh staging deployment and browser-level CDN/mobile review are still required. Production domain and production promotion remain untouched.
+
+
+## 40-page and strict image-cap implementation update — 2026-11-08
+
+- Database backup before changes: `.github/backups/healthcare-pages-pre-40page-layout-20261108.json` (144 prior page rows + 4 design records).
+- Page catalog migration: `docs/migrations/20261108_hospital_healthcare_40_pages.sql`.
+- Final balanced image assignment migration: `docs/migrations/20261108_hospital_healthcare_40_page_image_distribution.sql`.
+- Verified Neon state: 40 active pages per template; 160 total. Each homepage has exactly 5 image IDs; each of the 39 non-home pages has exactly 3; zero pages exceed 5.
+- All 60 distinct image assets per template are used at least once (240 globally unique photo IDs). Assignments are stored in `page_spec.media.imageAssetIds`.
+- Renderer source commit: `007bfd8b13fcd0da0ca794f09d668678eb492110`. Subsequent bundle and documentation commits contain the fixes and evidence.
+- Remote Pexels request success and visual browser QA remain pending. A fallback is implemented but does not prove every CDN URL responds successfully.
