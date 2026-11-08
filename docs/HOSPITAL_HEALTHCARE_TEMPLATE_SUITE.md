@@ -19,11 +19,63 @@ The Hospital & Healthcare category now has four independent business-specific te
 
 The four directions do not share a grocery layout or simply recolour one common page. Each has its own palette, hero composition, service discovery model and patient journey.
 
+## Mandatory corrective implementation brief — page architecture and image distribution
+
+**Binding requirement for every future agent / ChatGPT session working on this category. Read and obey before editing.** The previous image treatment made the sites look like photo albums. That is a structural design failure and must not be repeated. Do not stop after writing a plan: implement the page records, content, image distribution, fixes and tests.
+
+### Required page count and navigation
+- Expand **each template to 45 distinct, individually navigable pages** (acceptable range 40–50; default target 45). The existing 36 definitions are only the current baseline and do not satisfy this target.
+- Create/update the actual `builder.template_pages` records, not just a sitemap, menu mockup, hard-coded links or a list in the UI.
+- Every page needs a unique stable key/slug, title, template/site identity, page-specific content, navigation metadata and a working route/render.
+- Verify all pages through navigation and direct URL load/refresh. No dead links, duplicate filler pages, placeholder-only pages or links that all lead to one generic destination.
+- Adapt the page architecture to each business model; do not force the same page titles or content across all four templates.
+
+### Strict image-distribution rules
+- Homepage: **maximum 5–6 meaningful images** per template. Selectively use images in the hero, key service/department feature and one or two supporting sections. Keep the homepage content-led.
+- Every non-homepage page: **at least 2–3 contextually relevant images**, naturally integrated with its specific content.
+- Maintain **at least 60 distinct, meaningful visual assets per complete website**, as required by the master standard. Distribute assets across the complete 45-page experience. Duplicate files, repeated crops and decorative icons do not count as distinct assets.
+- Never dump the image collection into the homepage, one gallery, one carousel wall or one undifferentiated media section. **Do not turn any of the four websites into a photo album.**
+- Every image must support a clear content purpose and be accompanied by a relevant heading, caption or nearby explanatory copy. Use balanced image-and-copy layouts; do not cover photos with long text overlays.
+- Use varied, deliberate layouts: alternating image-and-copy sections, service/detail features, facility/process explanations, provider or test information layouts and small contextual image groups only where useful. Avoid endless galleries, repetitive oversized image cards and image-only sections.
+- Use authentic, appropriately licensed assets. Do not imply stock/illustrative people are actual staff or patients, and do not invent facilities, equipment, credentials or clinical outcomes.
+- Track page-level image assignments in a structured content/asset map so distribution can be audited and updated independently.
+
+### Page content standard
+Each page must be a useful destination, not an image container. Include a page-specific H1 and introduction, useful sections and subheadings, contextual images with meaningful alt text and nearby explanation, relevant internal links, a suitable CTA where appropriate, and unique SEO title/meta description where supported. Avoid filler, keyword stuffing, fabricated facts, repeated generic paragraphs and medical advice.
+
+### Suggested 45-page architecture per template
+| Page group | Target |
+|---|---:|
+| Home, About, Mission, Leadership, Locations | 5 |
+| Departments / Specialties / Tests / Care Categories | 10 |
+| Individual service, department, test or care detail pages | 10 |
+| Doctors / Specialists / Team or provider directory and profiles | 6 |
+| Patient journey, preparation, admission, technology or support guides | 5 |
+| Appointment / consultation request, fees or packages, insurance/payment information | 4 |
+| Health resources / articles / FAQs / Contact / Policies | 5 |
+| **Total** | **45** |
+
+Adapt intelligently: MedCore prioritises departments, facilities, admission and patient guidance; VitalLab prioritises test catalogue, preparation, sample collection, screening packages and report support; CarePoint prioritises specialties, verified consultants, schedules and consultation information; MediConnect prioritises digital-care categories, consultation steps, technology readiness, privacy and support. Do not invent live report portals, patient accounts or real-time consultation features.
+
+### Image loading and reliability audit
+- Audit every image URL and local asset path used by all four templates and all pages.
+- Verify files exist and respond successfully; check case-sensitive paths, incorrect relative paths, stale external URLs, redirects and unsupported formats.
+- Prefer reliable local assets or verified stable sources. Extend the asset register with source, creator, license, attribution, date checked, local path and exact page/section placement.
+- Add a design-consistent fallback for failed images. A failed image must not break layout.
+- Set dimensions/aspect ratios to prevent layout shifts; use responsive sizing and modern formats where supported.
+- Lazy-load below-the-fold images, but do not lazy-load the primary above-the-fold/LCP image. Do not load the entire site's image library on the homepage.
+- Test on desktop and mobile, including direct page loads, refreshes and slow-network conditions. Fix all known broken images and report the remaining broken-image count.
+
+### Required completion evidence — all four templates
+Report and verify per template: (1) 40–50 real page definitions, target 45, and working routes; (2) homepage has no more than 5–6 images; (3) every other page has at least 2–3 relevant images; (4) 60+ distinct meaningful assets registered and distributed; (5) no photo-album layouts and images are supported by copy; (6) image URLs/paths load or have tested fallbacks; (7) navigation, breadcrumbs, CTAs and direct URLs work; (8) desktop/tablet/mobile review; (9) accessibility, SEO, performance and regression checks; (10) changed files, database changes, commit/branch and deployment evidence.
+
+Do not mark complete if any template fails these checks. Do not replace implementation with another plan or ask the user to repeat these requirements. Never claim a test or deployment passed unless it was actually run and verified.
+
 ## Shared engineering architecture
 
 - The template catalogue is registered in `builder.template_catalog`.
 - Versioned design records are stored in `builder.template_designs`.
-- The 36 page definitions for each template are stored in `builder.template_pages`.
+- Page definitions for each template are stored in `builder.template_pages`; expand the currently registered 36 definitions to the required 45 per template.
 - The static application remains one reusable engine; template-specific renderer branches and configuration drive the four experiences.
 - Website content, page documents and business data remain scoped to each generated website.
 - Admin template previews use the category-specific healthcare renderer.
@@ -32,7 +84,7 @@ The four directions do not share a grocery layout or simply recolour one common 
 
 ## Page architecture
 
-Each template has 36 page definitions. They cover the appropriate subset of:
+The currently registered baseline is 36 page definitions per template. These cover the appropriate subset of the following; they must be audited and expanded to 45 pages per template:
 - Home and organisation information
 - Service, department, specialty, test or care-category directory
 - Service/detail and provider/detail page types
@@ -75,7 +127,7 @@ All four hero illustrations are original, local SVG assets in `assets/`. They co
 |---|---|
 | Four catalogue rows in the Hospital & Healthcare category | Verified in Neon |
 | Four active design version-1 records | Verified in Neon |
-| 36 page definitions per template | Verified in Neon |
+| 36 existing page definitions per template | Verified in Neon; below the new 45-page target |
 | Eight patient-information resources per template | Registered in design specs and Health Library page specs |
 | Category-specific admin renderer mapping | Implemented in source bundle |
 | Live storefront healthcare renderer | Implemented in source bundle |
@@ -83,7 +135,7 @@ All four hero illustrations are original, local SVG assets in `assets/`. They co
 | Appointment request admin classification | Implemented in central request desk |
 | Intake default state | Disabled pending provider and data-residency verification |
 | Existing Grocery category data | Preserved; no Grocery template rows deleted |
-| Production domain promotion | Requires final visual review and release approval |
+| 45-page expansion, distributed imagery and broken-image audit | Pending implementation and verification |\n| Production domain promotion | Requires final visual review and release approval |
 
 ## Deployment
 
