@@ -105,3 +105,14 @@ The staging deployment is not the production custom domain. Production promotion
 - Institute for Healthcare Improvement, Telemedicine: Ensuring Safe, Equitable, Person-Centered Virtual Care: https://www.ihi.org/library/white-papers/telemedicine-ensuring-safe-equitable-person-centered-virtual-care
 
 These references inform design and risk boundaries; they do not replace legal, clinical or regulatory review by the provider.
+
+
+## Image reliability and click-through correction — 2026-11-08
+
+- The four healthcare templates contain 60 distinct Pexels photo IDs each (240 across the suite), distributed as five homepage placements and four placements on each inner page.
+- A source audit found malformed CDN paths where the same `pexels-photo-{id}` segment was repeated. The storefront renderer now normalizes that legacy URL shape at render time, so existing Neon page records are corrected without rewriting or deleting page data.
+- If a third-party photo still fails to load, the renderer uses the matching template's repository-hosted SVG fallback instead of leaving a broken-image icon.
+- Homepage hero imagery is eager-loaded and links to the relevant internal service page. Homepage service images remain part of their internal service cards. Inner-page editorial images link to the internal appointment page (or Contact from the appointment page).
+- No image is wrapped in a Pexels/Unsplash or other external hyperlink. The visible click-through is always an internal website route.
+- The Pexels CDN remains the image delivery source for licensed stock photography. The Pexels licence allows commercial website use, but bulk/systematic downloading or redistribution is restricted by its terms unless permission is granted; therefore the 240-photo set is not copied wholesale into the repository. This is distinct from an external clickable link.
+- Runtime source: `storefront.js`; styling: `storefront.css`. The existing page image limits remain unchanged: homepage 5 maximum, inner pages 4.
