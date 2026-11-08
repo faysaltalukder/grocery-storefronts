@@ -1,0 +1,2 @@
+-- Fashion template suite: additive template registry and page definitions are applied separately through the Neon transaction.
+-- This migration note intentionally contains no DDL; the existing builder schema supports template_catalog, template_designs and template_pages.
