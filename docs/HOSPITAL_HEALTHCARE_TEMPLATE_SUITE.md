@@ -102,3 +102,36 @@ The staging deployment is not the production custom domain. Production promotion
 - Institute for Healthcare Improvement, Telemedicine: Ensuring Safe, Equitable, Person-Centered Virtual Care: https://www.ihi.org/library/white-papers/telemedicine-ensuring-safe-equitable-person-centered-virtual-care
 
 These references inform design and risk boundaries; they do not replace legal, clinical or regulatory review by the provider.
+
+
+## Visual redesign v2 — 2026-11-08
+
+All four templates have been re-art-directed against MASTER WEBSITE ENGINEERING STANDARD v2.0. Each now has an independent visual identity, palette, hero composition, page rhythm and image treatment.
+
+| Template | Visual identity | Palette | Composition |
+|---|---|---|---|
+| MedCore | Warm architectural editorial | Warm ivory, botanical green, terracotta | Asymmetric hospital hero, architectural crop, calm editorial gallery |
+| VitalLab | Dark precision-science | Midnight blue, slate, electric lime | Dark scientific interface, lab image hero, high-contrast data-led accents |
+| CarePoint | Human-centered specialist editorial | Warm blush, muted coral, deep plum | Portrait-arch hero, personal consultation imagery, softer editorial rhythm |
+| MediConnect | Digital healthcare product | Midnight violet, lavender, lilac | Dark technology-led hero, connected-care overlay, remote-consultation imagery |
+
+### Image implementation
+
+- Six distinct Pexels photographs per template; 24 unique photo IDs in total.
+- One image is used as the hero and five as the template's image story/gallery.
+- No photo ID is repeated between templates.
+- Both the admin preview renderer and live healthcare homepage renderer use the same template-specific six-photo sets.
+- Images have descriptive alt text, visible source/creator credits, responsive crops and lazy loading for gallery images.
+- Stock-image disclosure clarifies that the photos do not represent actual providers, facilities, staff or patients.
+- All sources and licensing notes are recorded in the Hospital & Healthcare Asset Register.
+
+### QA status
+
+- [x] Four distinct palettes and art directions defined.
+- [x] Six photo records per template and 24 unique IDs checked in code.
+- [x] Admin preview renderer updated.
+- [x] Live healthcare homepage renderer updated.
+- [x] Responsive CSS added for mobile.
+- [ ] Browser verification of every image request and visual layout.
+- [ ] Full mobile screenshot review and visual score.
+- [ ] Production promotion; staging review is required first.
