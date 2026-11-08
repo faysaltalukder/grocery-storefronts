@@ -224,3 +224,16 @@ The 240-image asset set was rebuilt using individual Pexels photo-page records o
 - All 60 distinct image assets per template are used at least once (240 globally unique photo IDs). Assignments are stored in `page_spec.media.imageAssetIds`.
 - Renderer source commit: `007bfd8b13fcd0da0ca794f09d668678eb492110`. Subsequent bundle and documentation commits contain the fixes and evidence.
 - Remote Pexels request success and visual browser QA remain pending. A fallback is implemented but does not prove every CDN URL responds successfully.
+
+
+## Homepage album regression investigation and correction — 2026-11-08
+
+- Root cause confirmed in the deployed UI source: the admin template preview explicitly rendered `gallerySec` with four consecutive image stories from `imgs.slice(1,5)`. At preview widths below 720px, CSS changed the story grid to one column, making the homepage appear as a vertical photo album.
+- The live storefront homepage independently rendered four additional images inside its feature rows, so correcting database image-count metadata alone did not change the visual composition.
+- The browser tab used during the user's review was still on the older immutable deployment `https://radiant-trail-s3x3aqc.shipstatic.com`; that URL did not contain the latest homepage correction.
+- Corrected both renderers: removed the separate homepage photo-gallery section and all four secondary homepage photo rows. The homepage now renders one contextual hero image and four text-led service pathway cards. This is within the requested five-image maximum and cannot become an image album at narrow widths.
+- Inner pages retain three contextual image-and-copy stories per page (within the requested 3–4 range).
+- Fresh staging deployment: `https://shaped-node-4aw3b9q.shipstatic.com` (39 files; 1,133,995 bytes; success). Source commit: `d707d4921e7e35085f2433cf2f21e8cb907a1ec1`.
+- Static checks: all 12 JavaScript files parse; all local HTML script/style references resolve; admin preview gallery markup and secondary homepage photo rendering are absent from the updated source.
+- The older `radiant-trail` staging URL is immutable and intentionally not modified. Use the fresh `shaped-node` URL for review. Production domain was not changed.
+- Remaining QA: browser interaction/visual verification in a real user viewport and direct-route checks for all 160 pages. Do not treat static checks as a substitute for those checks.
