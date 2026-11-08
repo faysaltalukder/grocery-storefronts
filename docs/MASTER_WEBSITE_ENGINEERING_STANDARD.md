@@ -3,7 +3,7 @@
 **Canonical file:** `docs/MASTER_WEBSITE_ENGINEERING_STANDARD.md`  
 **Applies to:** Every industry, business model, website, and template in WordPress Studio  
 **Status:** Active project standard  
-**Version:** 1.0
+**Version:** 2.0
 
 > This is the universal source of truth for designing, building, completing, testing, and releasing any website template in this repository. It is intentionally industry-neutral. Industry-specific requirements must be discovered and added as an implementation profile; they must never narrow or replace this standard.
 
@@ -72,7 +72,7 @@ Before design, research the selected industry's:
 Use credible, current sources where factual or regulated information matters. Record important assumptions and sources in project documentation. Never invent certifications, clinical outcomes, licenses, testimonials, customer numbers, guarantees, or legal claims.
 
 ### Layer C — Four distinct business templates
-Every industry must contain four genuinely different business solutions. The four templates must differ in target operator, customer intent, catalog/service structure, navigation, conversion path, operational needs, content strategy, and relevant visual language—not merely in color, typography, or homepage arrangement.
+Every industry must contain four genuinely different business solutions. The four templates must differ in target operator, customer intent, catalog/service structure, navigation, conversion path, operational needs, content strategy, and complete creative direction—not merely in color, typography, or homepage arrangement. Visual differentiation is mandatory and independently testable: each template must have a recognizably different brand personality, palette, composition, typography, imagery, component styling, and interaction language. A palette swap or rearranged version of the same starter layout does not count as a distinct template.
 
 For each template, write a short business profile:
 - Template name and business model
@@ -217,6 +217,51 @@ Create a polished first impression, strong visual hierarchy, clear conversion pa
 
 Use distinctive layouts when justified: editorial storytelling, premium catalog grids, split-screen narratives, asymmetric compositions, immersive hero sections, data-rich dashboards, map-led discovery, or other suitable patterns. Ensure the design serves the customer journey.
 
+
+### 8.1 Mandatory visual differentiation across templates
+
+Visual identity is a first-class product requirement, not a final styling pass. Every template—including templates within the same industry—must feel like a separately art-directed, contemporary website.
+
+For every template, create and document a **Visual Identity Brief** before implementation:
+- Brand personality, positioning, audience and emotional tone
+- A distinct primary, secondary and accent palette plus background, surface, text, border, success, warning and error tokens
+- Typography pairing, scale, weights, line lengths and hierarchy
+- Layout grammar: grid, page rhythm, section compositions, whitespace and content density
+- Hero concept and image art direction
+- Card, navigation, button, form, table, badge and footer treatments
+- Iconography, illustration style, photography treatment and motion language
+- Mobile-specific composition and navigation behavior
+
+**Color autonomy and diversity**
+- Choose colors from the actual business positioning, audience, culture, product/service and content—not from a fixed repository-wide palette or a single industry stereotype.
+- Different templates may use different warm, cool, neutral, saturated, muted, light, dark, editorial, premium or playful directions when appropriate. There is no mandatory blue/green/white healthcare look, nor any other fixed industry color.
+- Do not force every template into one color family, one background tone, one accent color, or one visual mood.
+- Each template must have its own complete token set. Do not merely change one accent hex value while leaving the same dominant surfaces and components.
+- Apply tokens consistently to the actual rendered UI. Defining unused palette variables does not satisfy this requirement.
+- Maintain accessible contrast and meaningful semantic states; aesthetic freedom never overrides accessibility.
+
+**Structural and artistic differentiation**
+- Do not reuse one homepage composition, hero layout, section sequence, card geometry, navigation treatment or page rhythm across all four templates by default.
+- Select a visual concept that fits each business model: for example editorial, architectural, immersive photography, premium minimal, bold typographic, data-led, human-centered, asymmetrical, modular, or cinematic.
+- Shared code primitives are allowed, but template-specific compositions and styling must remain visible. Avoid a single generic shared CSS shell that flattens all identities.
+- Use deliberate art direction: subject choice, crop, lighting, aspect ratio, focal point, overlays, negative space and image-to-copy balance must work together.
+- Create visual hierarchy through composition, typography, imagery, contrast and spacing—not oversized cards, random gradients or decoration alone.
+- Review all four templates side-by-side. If a reviewer can mistake one for another after the logo and business name are hidden, differentiation is insufficient.
+
+### 8.2 Contemporary and dynamic website experience
+
+“Dynamic” means more than animation or a fashionable hero. A contemporary website should combine:
+- Content and records rendered from the correct website-specific data, not hard-coded repeated filler
+- Responsive layouts and navigation adapted to mobile, tablet and desktop
+- Useful live or near-real-time states when supported by the backend (availability, inventory, status, appointments, notices or other relevant data); never fake live data
+- Meaningful interactive discovery, filters, search, forms, calculators, galleries, comparison or booking tools where relevant
+- Thoughtful motion, transitions, hover/focus feedback and micro-interactions with reduced-motion support
+- Strong visual storytelling, high-quality imagery, layered composition and purposeful whitespace
+- Loading, empty, error, success, offline and retry states designed as part of the experience
+- Fast rendering, progressive enhancement and graceful fallbacks on lower-powered devices
+
+Do not equate “modern” with excessive animation, glassmorphism, gradients, 3D or trendy effects. Use a technique only when it strengthens the brand, clarity or task completion. A static brochure with decorative motion is not a dynamic product; a useful, data-driven and responsive experience can be contemporary without heavy effects.
+
 ## 9. 3D, motion, and visual technology
 
 Use 3D and advanced motion when they add real value to the brand or product:
@@ -231,8 +276,17 @@ Do not add 3D merely as decoration. Avoid heavy scenes on mobile, GPU-intensive 
 
 ## 10. Image, font, icon, and asset sourcing policy
 
-The agent must independently find suitable free/open resources and choose assets that fit the exact business and visual direction. Do not ask the user to select routine assets.
+Visual assets are required content, not optional decoration. The agent must independently research, select, verify, prepare and integrate assets that match the exact template, page purpose and creative direction. Do not ask the user to curate ordinary assets.
 
+### Minimum visual asset coverage
+- A complete multi-page website should target **at least 60 distinct, meaningful image assets per website**, distributed across the homepage, category/service pages, detail pages, team/location/editorial content and other relevant sections. This is a site-wide target, not a requirement to place 60 images on the homepage.
+- Count actual photographs, original illustrations, diagrams, meaningful infographics and other substantial visual assets. Do not inflate the count with icons, tiny UI glyphs, repeated crops of the same source, background textures, logos or duplicate files.
+- Use a balanced mix appropriate to the business: hero imagery, service/product imagery, people/team imagery where authorized, facilities/locations, editorial images, process diagrams, charts and contextual illustrations.
+- Every important page or reusable page type must have an intentional visual plan. Avoid long runs of text-only pages where imagery, diagrams or visual examples would materially improve comprehension or trust.
+- Use genuinely varied images and subjects. Do not repeat the same four hero illustrations throughout a 30–40 page website or fill every card with the same stock photograph.
+- For business models where 60 meaningful assets would be artificial or misleading, document the reason and provide an equivalent visual-content plan (for example, original diagrams, maps, product renders or data visualizations). Never invent real people, facilities, products, clinical outcomes or evidence to hit a count.
+
+### Asset research and rights
 Potential sources include Unsplash, Pexels, Pixabay, Wikimedia Commons, Google Fonts, Lucide, Material Symbols, and reputable open-source libraries. These are discovery starting points, not blanket permission to use every asset.
 
 For every external asset:
@@ -241,10 +295,26 @@ For every external asset:
 3. Prefer assets with clear commercial rights; preserve attribution when required.
 4. Do not use paid, trial-only, watermarked, pirated, scraped, or license-unclear assets.
 5. Do not hotlink third-party assets blindly. Download/optimize and host locally when permitted and appropriate.
-6. Keep an asset register with source URL, creator, license, attribution text, date checked, and local path.
+6. Keep an asset register with source URL, creator, license, attribution text, date checked, local path, intended placement and any release/permission notes.
 7. Use genuinely distinct images for distinct products/listings. Avoid reusing one image across an entire catalog unless it is intentionally a placeholder clearly marked as such.
-8. Never present a stock photo as a real customer, employee, doctor, property, facility, product, or testimonial.
+8. Never present a stock photo as a real customer, employee, doctor, property, facility, product, testimonial or actual business location.
 9. Use safe fallbacks and descriptive alt text; decorative images should have empty alt text.
+10. For people, verify permission and releases appropriate to the asset and intended use. For regulated or sensitive contexts, avoid identifiable people unless the rights and context are explicitly cleared.
+
+### Image implementation and quality
+- Prefer high-quality, relevant images with intentional focal points, authentic subject matter and crops that suit each component.
+- Use responsive image sources and sizes or the framework's equivalent, modern formats such as AVIF/WebP where supported, explicit dimensions/aspect ratios, and lazy loading below the fold.
+- Prioritize the main hero/LCP image appropriately; do not lazy-load the primary above-the-fold image by default.
+- Prevent layout shift, oversized downloads, blurry thumbnails and broken image URLs.
+- Optimize image payloads for mobile and use local assets/CDN delivery according to the existing architecture.
+- Provide meaningful alt text for informative images and empty alt text for purely decorative visuals.
+- Provide a designed fallback state for missing/failed assets; do not leave broken-image icons or empty visual holes.
+- Ensure image overlays and text remain legible and contrast-compliant.
+
+### Fonts and icons
+- Use a deliberate, limited type system with reliable fallbacks and optimized font loading.
+- Use a consistent icon family and stroke/fill style within each template. Icons support comprehension; they do not substitute for meaningful photography or illustrations.
+- Verify icon licenses and avoid emoji as a substitute for professional interface iconography.
 
 ## 11. Commerce, bookings, and conversion workflows
 
@@ -361,13 +431,13 @@ Score each template out of 100:
 
 | Dimension | Weight |
 |---|---:|
-| Visual design, originality, and brand fit | 15 |
-| Business-model fit and functional completeness | 20 |
-| Content quality and page/catalog completeness | 15 |
+| Visual design, originality, brand fit and visual asset quality | 25 |
+| Business-model fit and functional completeness | 18 |
+| Content quality and page/catalog completeness | 12 |
 | UX, interaction quality, and conversion journey | 15 |
 | Accessibility and responsive behavior | 10 |
-| Backend, data integrity, security, and admin integration | 10 |
-| Performance and SEO | 10 |
+| Backend, data integrity, security, and admin integration | 8 |
+| Performance and SEO | 7 |
 | QA evidence, maintainability, and documentation | 5 |
 | **Total** | **100** |
 
@@ -375,6 +445,7 @@ Acceptance:
 - **90–100:** preferred production-ready target, subject to all release gates.
 - **85–89:** acceptable project target if all critical gates pass and known limitations are documented.
 - **Below 85:** improve before acceptance.
+- **Independent visual gate:** a template must score at least **20/25** in visual design and pass the visual verification checks below. A high total score cannot compensate for weak visual design, generic appearance or missing imagery.
 
 ### Non-negotiable release blockers
 Do not mark complete if any of the following remain:
@@ -386,6 +457,8 @@ Do not mark complete if any of the following remain:
 - Critical mobile layout failure or inaccessible core interaction
 - Major missing/empty pages that are represented as finished
 - Unlicensed, watermarked, misleading, or inappropriate assets
+- A template that fails the independent visual gate, lacks its own visual identity, or uses a generic/recolored clone of another template
+- Major missing image coverage, broken image assets, or an undocumented shortfall against the 60-asset target without a justified equivalent plan
 - Serious data loss risk or unverified destructive migration
 - Critical console/runtime errors affecting user journeys
 
@@ -407,6 +480,10 @@ Test at minimum:
 - Keyboard navigation, focus, labels, and reduced motion
 - Loading, network failure, server error, and retry behavior
 - SEO metadata, broken links, console errors, and performance
+- Visual review of every template at desktop and mobile widths, including homepage and representative inner/detail pages
+- Side-by-side comparison of all four templates to verify distinct palettes, typography, hero art direction, layouts, imagery and component styling
+- Asset audit: count meaningful assets, inspect source/licensing register, verify image URLs/load success, detect duplicates, review alt text, responsive sizing and mobile payloads
+- Confirm color tokens are actually consumed by rendered components and no template silently falls back to a generic shared skin
 - Existing templates and shared runtime for regressions
 
 Record the test method and actual result. If a third-party provider cannot be exercised in the available environment, state that it was not live-tested and verify the integration through safe mocks/staging checks instead.
@@ -425,12 +502,16 @@ Record the test method and actual result. If a third-party provider cannot be ex
 
 A template is complete only when all applicable items are true:
 - [ ] Industry and business model are researched and documented.
-- [ ] The template is meaningfully distinct from the other templates in its industry.
+- [ ] The template is meaningfully distinct from the other templates in its industry in business model and visual identity.
+- [ ] Its Visual Identity Brief is documented and its palette, typography, layout grammar, imagery and motion are applied in the rendered website.
+- [ ] The template passes the independent visual gate (at least 20/25) and side-by-side differentiation review.
+- [ ] The site meets the 60-asset visual target or has a documented business-specific equivalent visual-content plan.
 - [ ] Page architecture is complete and contains no filler pages.
 - [ ] Copy and editorial content are useful, original, and sufficiently complete.
 - [ ] Product/service/listing catalog is populated with distinct, relevant records.
-- [ ] Images and other assets are relevant, licensed, optimized, and documented.
-- [ ] Visual design is polished, coherent, responsive, and accessible.
+- [ ] Images and other assets are relevant, licensed, optimized, distinct, distributed across relevant pages, and documented in the asset register.
+- [ ] Image loading, responsive behavior, alt text, duplication and mobile payload checks are verified.
+- [ ] Visual design is polished, artistic, coherent, contemporary, responsive, accessible and unmistakably distinct from sibling templates.
 - [ ] Interactive components and all visible controls work.
 - [ ] Primary business journey is fully implemented and persists data.
 - [ ] Central admin integration and website-level data isolation are verified.
