@@ -16,3 +16,16 @@ The four templates share the existing Neon commerce API, website ownership model
 All sample prices, product cards and Unsplash images in the library preview are illustrative design content, not a real merchant catalogue. Before a storefront is published, the merchant must add verified products and licensed/owned imagery, set product information, stock, delivery zones, contact details, payment configuration and their own returns/exchange policy.
 
 The release is additive: existing Grocery templates, websites, products and orders are not deleted or migrated.
+
+## Design and engineering references
+
+- Baymard Institute, Apparel & Accessories UX Research: https://baymard.com/research/apparel-and-accessories
+- Baymard Institute, Apparel UX industry guidance: https://baymard.com/industries/apparel-ux
+- Baymard Institute, 2026 apparel quantitative insights: https://baymard.com/research-articles/apparel-and-accessories-quantitative-ux-insights-2026
+- Shopify, SKU management for products and variants: https://help.shopify.com/en/manual/products/details/sku
+- Shopify, initial inventory setup and variant-level quantity tracking: https://help.shopify.com/en/manual/inventory-and-locations/setup/initial-inventory-setup
+- Google Search Central, Core Web Vitals: https://developers.google.com/search/docs/appearance/core-web-vitals
+- W3C, Web Content Accessibility Guidelines 2.2: https://www.w3.org/TR/WCAG22/
+- Unsplash, image license: https://unsplash.com/license
+
+The design references informed apparel discovery, sizing/fit content, model imagery, product detail hierarchy, truthful stock messaging, responsive performance and accessibility. The template preview uses Unsplash-hosted sample images; these are visual placeholders and should be replaced with merchant-owned or appropriately licensed product photography for a real store.
