@@ -201,8 +201,7 @@ const restaurantPhotoSets={
 ],
 "gathered-table-catering":[
 "photo-1511795409834-ef04bbd61622","photo-1519167758481-83f550bb49b3","photo-1464366400600-7168b8af9bc3","photo-1507504031003-b417219a0fde",
-"photo-1511578314322-379afb476865","photo-1531058020387-3be344556be6","photo-1519671482749-fd09be7ccebf","photo-1517457373958-b7bdd4587205",
-"photo-1511795409834-ef04bbd61622","photo-1464366400600-7168b8af9bc3","photo-1519167758481-83f550bb49b3","photo-1531058020387-3be344556be6"
+"photo-1511578314322-379afb476865","photo-1531058020387-3be344556be6","photo-1519671482749-fd09be7ccebf","photo-1517457373958-b7bdd4587205"
 ]
 };
 const restaurantPhotoCache=new Map(),restaurantPhotoCounters=Object.create(null);
