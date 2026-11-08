@@ -89,7 +89,7 @@ All four hero illustrations are original, local SVG assets in `assets/`. They co
 
 The implementation is committed on branch `feature/hospital-healthcare-templates`. A staging deployment was created at:
 
-`https://chaotic-ghost-e3vs866.shipstatic.com`
+`https://radiant-trail-s3x3aqc.shipstatic.com`
 
 The staging deployment is not the production custom domain. Production promotion must happen only after the final browser review of the admin category, all four previews and mobile layouts.
 
@@ -134,7 +134,7 @@ All four templates have been re-art-directed against MASTER WEBSITE ENGINEERING 
 - [x] Admin preview renderer updated.
 - [x] Live healthcare homepage renderer updated.
 - [x] Responsive CSS added for mobile.
-- [ ] Browser verification of every image request and visual layout (not yet confirmed; the staging admin route was reachable, but the crawler did not expose dynamically rendered gallery image requests).
+- [ ] DOM-level verification of all four admin previews: 60 Pexels image elements and 60 unique IDs per template. Actual CDN network load and crop verification remain pending.
 - [ ] Full mobile screenshot review and visual score.
 - [ ] Production promotion; staging review is required first.
 
@@ -154,7 +154,8 @@ The 240-image asset set was rebuilt using individual Pexels photo-page records o
 ### Staging verification note — 2026-11-08
 
 - Latest staging deployment: https://chaotic-ghost-e3vs866.shipstatic.com (39 files; deployment status success).
-- Healthcare admin category route is reachable on staging.
-- A crawler request to the public storefront preview returned `TypeError: Failed to fetch`; this may be a staging-origin/authenticated Neon API constraint. It is not treated as a successful storefront render.
-- JavaScript syntax checks passed for both the live storefront and admin template renderer. Code-level assertions passed for 60 assets per template, 240 globally unique IDs, individual Pexels photo-page sources and page-level gallery allocation.
-- Production domain and production promotion remain untouched. Complete browser QA is still a release gate.
+- All four healthcare admin template previews rendered on staging; each contained 60 Pexels image elements with 60 unique IDs.
+- The admin scraper showed Neon OFFLINE / sample-preview state; the public storefront preview returned `TypeError: Failed to fetch` in the crawler environment. Neither result is treated as a verified live Neon-backed storefront render.
+- JavaScript syntax checks passed for both the live storefront and admin template renderer. Code-level assertions passed for 60 assets per template, 240 globally unique IDs, individual Pexels photo-page sources, complete alt/source metadata and page-level gallery allocation.
+- Staging HTML now loads its CSS and JavaScript from relative deployment-local asset paths, avoiding accidental loading of production bundle assets.
+- Production domain and production promotion remain untouched. Full CDN network, mobile crop, visual score and end-to-end Neon-backed storefront QA are still release gates.
