@@ -89,7 +89,7 @@ All four hero illustrations are original, local SVG assets in `assets/`. They co
 
 The implementation is committed on branch `feature/hospital-healthcare-templates`. A staging deployment was created at:
 
-`https://sharded-robot-my7tk6g.shipstatic.com`
+`https://chaotic-ghost-e3vs866.shipstatic.com`
 
 The staging deployment is not the production custom domain. Production promotion must happen only after the final browser review of the admin category, all four previews and mobile layouts.
 
@@ -134,7 +134,7 @@ All four templates have been re-art-directed against MASTER WEBSITE ENGINEERING 
 - [x] Admin preview renderer updated.
 - [x] Live healthcare homepage renderer updated.
 - [x] Responsive CSS added for mobile.
-- [ ] Browser verification of every image request and visual layout (not yet confirmed; Firecrawl could load the admin page but did not expose the dynamic gallery image requests).
+- [ ] Browser verification of every image request and visual layout (not yet confirmed; the staging admin route was reachable, but the crawler did not expose dynamically rendered gallery image requests).
 - [ ] Full mobile screenshot review and visual score.
 - [ ] Production promotion; staging review is required first.
 
@@ -149,3 +149,12 @@ The image CDN is remote-hosted at present rather than mirrored into the reposito
 ## Source verification update
 
 The 240-image asset set was rebuilt using individual Pexels photo-page records only (search/category tiles and sponsored stock-photo links were excluded). Every record has a unique photo ID, individual Pexels photo-page URL, CDN image URL and descriptive alt text. See the asset register for all placements and creator credits.
+
+
+### Staging verification note — 2026-11-08
+
+- Latest staging deployment: https://chaotic-ghost-e3vs866.shipstatic.com (39 files; deployment status success).
+- Healthcare admin category route is reachable on staging.
+- A crawler request to the public storefront preview returned `TypeError: Failed to fetch`; this may be a staging-origin/authenticated Neon API constraint. It is not treated as a successful storefront render.
+- JavaScript syntax checks passed for both the live storefront and admin template renderer. Code-level assertions passed for 60 assets per template, 240 globally unique IDs, individual Pexels photo-page sources and page-level gallery allocation.
+- Production domain and production promotion remain untouched. Complete browser QA is still a release gate.
