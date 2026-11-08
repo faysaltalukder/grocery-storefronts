@@ -49,6 +49,21 @@ The master standard's visual requirements are release requirements for every ind
 7. Each template must pass the master standard's independent visual gate (minimum 20/25) as well as the overall quality and release gates. A high total score cannot excuse weak visual quality or missing image coverage.
 8. Build contemporary dynamic experiences through useful data-driven content, responsive behavior, meaningful interactions, deliberate motion and complete loading/error/empty/success states. Never fake real-time data or add effects that damage accessibility or performance.
 
+
+### Mandatory image distribution rules (must also follow the master standard)
+
+For every website template, enforce the page-level image budget—not just the site-wide asset count:
+- Homepage: maximum **5 meaningful images total** across the full rendered page.
+- Every non-homepage page: minimum **2** and maximum **4 meaningful images** across the full rendered page.
+- Each website must have at least **60 distinct meaningful image assets** overall. The per-page minimum is stricter when it requires more; a 40-page site will normally need at least 79 unique images.
+- Images must be unique to that website and must not be reused across other websites/templates or repeated across pages as a shortcut.
+- Host/use images as assets of the current website through its approved local asset or first-party CDN pipeline.
+- Never attach an outbound link to an image. If clickable, an image must navigate to a valid internal page on the same website and preserve its website identity. If no useful internal destination exists, keep it non-clickable.
+- Select high-quality, varied, artistic, dynamic, context-appropriate images; avoid repetitive image grids and album-like dumps.
+- Prepare a page-by-page image allocation map and verify rendered image counts, uniqueness, image loading, and same-origin internal destinations before completion. Any limit violation or outbound image link is a release blocker.
+
+The canonical master standard remains the full source of truth for these requirements.
+
 ## Repository safety
 
 - The repository name does not limit the industries that may be designed here.
