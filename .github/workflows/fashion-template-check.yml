@@ -2,7 +2,7 @@ name: Validate Fashion Template Bundle
 
 on:
   push:
-    branches: [feature/fashion-template-suite-20261108]
+    branches: [main, feature/fashion-template-suite-20261108]
     paths:
       - "wordpress-app/.shipstatic-deploy-bundle.json"
       - "wordpress-app/.fashion-validation-trigger"
