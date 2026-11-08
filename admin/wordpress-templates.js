@@ -119,12 +119,13 @@
    if(!api?.ensureWebsite||!api?.publishShowcaseWebsite)throw new Error("The live website publishing API did not load. Refresh the workspace.");
    const selected=templates.find(item=>item.key===templateKey);
    const website=await api.ensureWebsite(templateKey,selected?.name||templateKey);
-   const liveWebsite=await api.publishShowcaseWebsite(website);
-   const href="../storefront.html?site="+encodeURIComponent(liveWebsite.slug)+"&preview=1";
+   const targetCategory=["medicine-pharmacy","hospital-healthcare","real-estate-property"].includes(selected?.categorySlug);
+   const liveWebsite=targetCategory?await api.publishShowcaseWebsite(website):website;
+   const href="../storefront.html?site="+encodeURIComponent(liveWebsite.slug)+(liveWebsite.status==="published"?"&preview=1":"&preview=1");
    links.forEach(link=>{link.href=href;link.dataset.previewReady="true";link.removeAttribute("aria-disabled");});
    const address=$("wpTemplateAddress");if(address)address.textContent=location.origin+"/storefront.html?site="+liveWebsite.slug;
    const connection=$("wpTemplateConnection");
-   if(connection){connection.textContent="PUBLIC SHOWCASE · LIVE";connection.dataset.state="connected";connection.title="Published showcase website; sample content only, checkout and enquiries disabled.";}
+   if(connection){connection.textContent=targetCategory?"PUBLIC SHOWCASE · LIVE":"NEON CONNECTED · PRIVATE PREVIEW";connection.dataset.state="connected";connection.title=targetCategory?"Published showcase website; sample content only, checkout and enquiries disabled.":"Private draft preview; this category's publish state is unchanged.";}
    if(templates[active]?.key!==templateKey)return;
    if(["medicine-pharmacy","hospital-healthcare","real-estate-property"].includes(selected?.categorySlug)){
     const host=$("wpStorefront");
