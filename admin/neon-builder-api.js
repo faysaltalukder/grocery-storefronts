@@ -99,8 +99,8 @@
     const heading=custom.heading||content.heading;
     const description=custom.description||content.description;
     const blocks=Array.isArray(custom.blocks)?custom.blocks:[];
-    const color={"general-supermarket":"#b94f35","fresh-produce":"#657c4a","express-grocery":"#df6b35","wholesale-bulk":"#344b70","modern-fashion-brand":"#9b7458","boutique-ethnic-wear":"#a05d48","streetwear-sneaker-store":"#d6ff3f","fashion-retailer":"#426b77","multispecialty-hospital":"#176b87","diagnostics-laboratory":"#376e9b","specialist-clinic":"#8a5a5b","telehealth-platform":"#4d5da6","estate-luxe":"#a98755","nestliving-rentals":"#b66d52","urbanaxis-commercial":"#3e7189","horizon-developments":"#a66b49"}[templateKey]||"#b94f35";
-    const bg={"general-supermarket":"#fbf8f1","fresh-produce":"#f7f7ef","express-grocery":"#f7f8fb","wholesale-bulk":"#f5f7fa","modern-fashion-brand":"#f7f4ef","boutique-ethnic-wear":"#f8f2eb","streetwear-sneaker-store":"#f1f0ed","fashion-retailer":"#f6f7f8","multispecialty-hospital":"#f3f8fa","diagnostics-laboratory":"#f2f6fa","specialist-clinic":"#faf5f1","telehealth-platform":"#f4f5fc","estate-luxe":"#f6f3ed","nestliving-rentals":"#f8f4ee","urbanaxis-commercial":"#f1f5f7","horizon-developments":"#f4f3ef"}[templateKey]||"#fbf8f1";
+    const color={"general-supermarket":"#b94f35","fresh-produce":"#657c4a","express-grocery":"#df6b35","wholesale-bulk":"#344b70","modern-fashion-brand":"#9b7458","boutique-ethnic-wear":"#a05d48","streetwear-sneaker-store":"#d6ff3f","fashion-retailer":"#426b77","multispecialty-hospital":"#176b87","diagnostics-laboratory":"#376e9b","specialist-clinic":"#8a5a5b","telehealth-platform":"#4d5da6","modern-pharmacy":"#168b83","carewell-health-store":"#6b8f7a","clinic-medical-supplies":"#3e7189","express-medicine-delivery":"#1d8c98","estate-luxe":"#a98755","nestliving-rentals":"#b66d52","urbanaxis-commercial":"#3e7189","horizon-developments":"#a66b49"}[templateKey]||"#b94f35";
+    const bg={"general-supermarket":"#fbf8f1","fresh-produce":"#f7f7ef","express-grocery":"#f7f8fb","wholesale-bulk":"#f5f7fa","modern-fashion-brand":"#f7f4ef","boutique-ethnic-wear":"#f8f2eb","streetwear-sneaker-store":"#f1f0ed","fashion-retailer":"#f6f7f8","multispecialty-hospital":"#f3f8fa","diagnostics-laboratory":"#f2f6fa","specialist-clinic":"#faf5f1","telehealth-platform":"#f4f5fc","modern-pharmacy":"#f3faf8","carewell-health-store":"#f4f7f3","clinic-medical-supplies":"#f1f5f7","express-medicine-delivery":"#f2f8f8","estate-luxe":"#f6f3ed","nestliving-rentals":"#f8f4ee","urbanaxis-commercial":"#f1f5f7","horizon-developments":"#f4f3ef"}[templateKey]||"#fbf8f1";
     return {
       schemaVersion:1,site:{templateKey},page:{id:page.page_key||slug,title,pageType:type,slug,seoTitle:page.page_spec?.seo?.title||title,seoDescription:page.page_spec?.seo?.description||description},
       content:{heading,description,cta:custom.cta||content.cta,blocks,faqs:Array.isArray(custom.faqs)?custom.faqs:[],resources:Array.isArray(custom.resources)?custom.resources:[],listings:Array.isArray(custom.listings)?custom.listings:[],featuredProperty:custom.featuredProperty||null,sections:page.page_spec?.sections||[]},
@@ -111,20 +111,21 @@
       ]}]
     };
   }
-  async function loadTemplateCatalog(categorySlug="ecommerce-grocery"){
+  async function loadTemplateCatalog(categorySlug=null){
     const [catalog,designs]=await Promise.all([
       request("template_catalog","?select=template_key,category_slug,name,tagline,description,business_types,feature_flags,sort_order,is_builtin&is_builtin=eq.true&order=sort_order.asc",{public:true}),
       request("template_designs","?select=template_key,design_version,design_spec,preview_settings,source_commit,is_active&is_active=eq.true&order=design_version.desc",{public:true})
     ]);
     const latest=new Map();(designs||[]).forEach(row=>{if(!latest.has(row.template_key))latest.set(row.template_key,row);});
-    const rows=(catalog||[]).filter(row=>ALLOWED_TEMPLATES.has(row.template_key)&&row.category_slug===categorySlug).map(row=>({...row,design:latest.get(row.template_key)||null}));
-    if(rows.length!==4||rows.some(row=>!row.design))throw new Error("Neon catalog is missing one or more active "+categorySlug+" template design records.");
+    const rows=(catalog||[]).filter(row=>ALLOWED_TEMPLATES.has(row.template_key)&&(!categorySlug||row.category_slug===categorySlug)).map(row=>({...row,design:latest.get(row.template_key)||null}));
+    if(!rows.length||rows.some(row=>!row.design))throw new Error("Neon catalog is missing one or more active template design records"+(categorySlug?" for "+categorySlug:"")+".");
+    if(categorySlug&&rows.length!==4)throw new Error("Neon catalog must return exactly four templates for "+categorySlug+"; received "+rows.length+".");
     return rows;
   }
   async function loadTemplatePages(templateKey){
     if(!ALLOWED_TEMPLATES.has(templateKey))throw new Error("Unsupported storefront template.");
     const rows=await request("template_pages","?select=template_key,page_key,page_type,title,slug,sort_order,page_spec,is_required,is_active&template_key=eq."+$(templateKey)+"&is_active=eq.true&order=sort_order.asc",{public:true});
-    const pageCount=(rows||[]).length;const healthcareTemplates=["multispecialty-hospital","diagnostics-laboratory","specialist-clinic","telehealth-platform"];const realEstateTemplates=["estate-luxe","nestliving-rentals","urbanaxis-commercial","horizon-developments"];if(healthcareTemplates.includes(templateKey)&&pageCount!==40)throw new Error("Healthcare page catalog is incomplete for "+templateKey+" (expected exactly 40 designed pages; Neon returned "+pageCount+").");if(realEstateTemplates.includes(templateKey)&&pageCount!==40)throw new Error("Real Estate page catalog is incomplete for "+templateKey+" (expected exactly 40 designed pages; Neon returned "+pageCount+").");if(!healthcareTemplates.includes(templateKey)&&!realEstateTemplates.includes(templateKey)&&pageCount<25)throw new Error("Neon page catalog is incomplete for "+templateKey+" (expected at least 25 designed pages; Neon returned "+pageCount+").");if(realEstateTemplates.includes(templateKey)){const imageRows=(rows||[]).map(page=>({key:page.page_key,images:page.page_spec?.media?.images||[],count:page.page_spec?.media?.imageCount}));const invalid=imageRows.find(page=>page.key==="home"?page.images.length!==5||page.count!==5:page.images.length<2||page.images.length>4||page.count!==page.images.length);if(invalid)throw new Error("Real Estate image allocation failed for "+templateKey+" page "+invalid.key+".");const ids=imageRows.flatMap(page=>page.images.map(image=>String(image.id||"")));if(ids.length!==83||new Set(ids).size!==83)throw new Error("Real Estate template "+templateKey+" must contain exactly 83 unique image assets across its 40 pages.");if(imageRows.some(page=>page.images.some(image=>/^https?:\\/\\//i.test(String(image.src||"")))))throw new Error("Real Estate template "+templateKey+" contains an external image source; use first-party original art.");}
+    const pageCount=(rows||[]).length;const healthcareTemplates=["multispecialty-hospital","diagnostics-laboratory","specialist-clinic","telehealth-platform"];const realEstateTemplates=["estate-luxe","nestliving-rentals","urbanaxis-commercial","horizon-developments"];if(healthcareTemplates.includes(templateKey)&&pageCount!==40)throw new Error("Healthcare page catalog is incomplete for "+templateKey+" (expected exactly 40 designed pages; Neon returned "+pageCount+").");if(realEstateTemplates.includes(templateKey)&&pageCount!==40)throw new Error("Real Estate page catalog is incomplete for "+templateKey+" (expected exactly 40 designed pages; Neon returned "+pageCount+").");if(!healthcareTemplates.includes(templateKey)&&!realEstateTemplates.includes(templateKey)&&pageCount<25)throw new Error("Neon page catalog is incomplete for "+templateKey+" (expected at least 25 designed pages; Neon returned "+pageCount+").");if(realEstateTemplates.includes(templateKey)){const imageRows=(rows||[]).map(page=>({key:page.page_key,images:page.page_spec?.media?.images||[],count:page.page_spec?.media?.imageCount}));const invalid=imageRows.find(page=>page.key==="home"?page.images.length!==5||page.count!==5:page.images.length<2||page.images.length>4||page.count!==page.images.length);if(invalid)throw new Error("Real Estate image allocation failed for "+templateKey+" page "+invalid.key+".");const ids=imageRows.flatMap(page=>page.images.map(image=>String(image.id||"")));if(ids.length!==83||new Set(ids).size!==83)throw new Error("Real Estate template "+templateKey+" must contain exactly 83 unique image assets across its 40 pages.");if(imageRows.some(page=>page.images.some(image=>/^https?:\/\//i.test(String(image.src||"")))))throw new Error("Real Estate template "+templateKey+" contains an external image source; use first-party original art.");}
     return rows;
   }
   async function ensureWebsite(templateKey,name){
@@ -168,6 +169,26 @@
     if(!document||document.schemaVersion!==1||!document.page||typeof document.page.title!=="string"||!Array.isArray(document.tree)||document.tree.length>100)throw new Error("The page document did not pass schema validation.");
     const rows=await request("website_documents","?on_conflict=website_id,page_key&select=id,updated_at",{method:"POST",prefer:"resolution=merge-duplicates,return=representation",body:{website_id:website.id,owner_id:user.id,page_key,schema_version:1,document,updated_at:new Date().toISOString()}});
     if(!rows?.[0]?.id)throw new Error("Neon did not confirm that the page was saved.");
+    return rows[0];
+  }
+  async function loadOwnerWebsites(){
+    const {user}=await authContext();
+    return await request("websites","?select=id,owner_id,name,slug,category_slug,template_key,status,brand,settings,created_at,updated_at&owner_id=eq."+$(user.id)+"&order=updated_at.desc");
+  }
+  async function publishShowcaseWebsite(website){
+    const {user}=await authContext();
+    if(!website?.id||website.owner_id!==user.id)throw new Error("Website ownership check failed before showcase publish.");
+    if(website.status==="published"&&website.settings?.demo_catalog!==true)return website;
+    const [products,categories]=await Promise.all([
+      request("products","?select=id&website_id=eq."+$(website.id)+"&is_active=eq.true&limit=1"),
+      request("categories","?select=id&website_id=eq."+$(website.id)+"&is_active=eq.true&limit=1")
+    ]);
+    if((products||[]).length||(categories||[]).length)throw new Error("This website contains merchant catalogue data. Use the normal verified publishing workflow instead of showcase publishing.");
+    const seeded=await seedWebsitePages(website,website.template_key);
+    if(seeded.pages.length<25||seeded.documents.length!==seeded.pages.length)throw new Error("Showcase publish blocked: the website does not have a complete saved page set.");
+    const settings={...(website.settings||{}),builder_version:2,isolated_sandbox:true,demo_catalog:true,showcase_mode:true,orders_enabled:false,checkout_enabled:false,appointments_enabled:false,enquiries_enabled:false,showcase_notice:"Template showcase only. All content is illustrative; no orders, appointments or enquiries are accepted."};
+    const rows=await request("websites","?id=eq."+$(website.id)+"&owner_id=eq."+$(user.id)+"&select=id,owner_id,name,slug,category_slug,template_key,status,brand,settings,updated_at",{method:"PATCH",body:{status:"published",settings,updated_at:new Date().toISOString()}});
+    if(!rows?.[0]||rows[0].status!=="published")throw new Error("Neon did not confirm the public showcase publish.");
     return rows[0];
   }
   async function loadStorefrontData(siteSlug,{token=null,preview=false}={}){
@@ -548,5 +569,5 @@
     if(!rows?.[0])throw new Error("Wholesale price tier save was not confirmed.");return rows[0];
   }
 
-  window.WPNeonBuilderApi=Object.freeze({apiBase:API_BASE,loadTemplateCatalog,loadTemplatePages,ensureWebsite,loadWebsiteDocuments,seedWebsitePages,loadPageDocument,savePageDocument,loadDocument:loadPageDocument,saveDocument:(website,document,pageKey="home")=>savePageDocument(website,pageKey,document),loadStorefrontData,placeOrder,trackOrder,submitReturnRequest,submitQuoteRequest,getWebsiteStats,loadWebsiteOrders,updateOrderStatus,loadWebsiteCatalog,saveWebsiteCategory,saveWebsiteProduct,setWebsiteProductActive,setWebsiteCategoryActive,saveWebsiteProfile,verifyWebsiteCatalog,loadCentralCommerce,saveCentralSupplier,saveCentralCustomer,saveCentralDeliveryZone,setCentralZoneActive,saveCentralStoreProfile,createCentralFinanceEntry,createCentralReturn,updateCentralReturn,centralProcessReturnRefund,centralAdjustInventory,centralCreatePurchaseOrder,centralReceivePurchaseOrder,centralRecordOrderPayment,centralRecordSupplierPayment,centralSavePriceTier,updateCentralQuote,createCustomPage,publishWebsite,defaultPageDocument});
+  window.WPNeonBuilderApi=Object.freeze({apiBase:API_BASE,loadTemplateCatalog,loadTemplatePages,ensureWebsite,loadOwnerWebsites,publishShowcaseWebsite,loadWebsiteDocuments,seedWebsitePages,loadPageDocument,savePageDocument,loadDocument:loadPageDocument,saveDocument:(website,document,pageKey="home")=>savePageDocument(website,pageKey,document),loadStorefrontData,placeOrder,trackOrder,submitReturnRequest,submitQuoteRequest,getWebsiteStats,loadWebsiteOrders,updateOrderStatus,loadWebsiteCatalog,saveWebsiteCategory,saveWebsiteProduct,setWebsiteProductActive,setWebsiteCategoryActive,saveWebsiteProfile,verifyWebsiteCatalog,loadCentralCommerce,saveCentralSupplier,saveCentralCustomer,saveCentralDeliveryZone,setCentralZoneActive,saveCentralStoreProfile,createCentralFinanceEntry,createCentralReturn,updateCentralReturn,centralProcessReturnRefund,centralAdjustInventory,centralCreatePurchaseOrder,centralReceivePurchaseOrder,centralRecordOrderPayment,centralRecordSupplierPayment,centralSavePriceTier,updateCentralQuote,createCustomPage,publishWebsite,defaultPageDocument});
 })();
