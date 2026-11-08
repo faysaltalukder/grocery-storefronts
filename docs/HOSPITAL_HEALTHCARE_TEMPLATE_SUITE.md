@@ -207,11 +207,12 @@ The 240-image asset set was rebuilt using individual Pexels photo-page records o
 ### Staging verification note — 2026-11-08
 
 - Previous staging deployment: https://radiant-trail-s3x3aqc.shipstatic.com (39 files; success), created before the 40-page/image-cap correction; its prior 60-image-gallery verification is superseded.
-- Updated source bundle passed JavaScript syntax checks for the live storefront, admin renderer and Neon builder API.
+- Fresh staging deployment: https://blurred-fog-8md93s7.shipstatic.com (39 files; 1,134,915 bytes; status success; label `env:staging`). Production domain was not changed.
+- All 12 JavaScript files in the deployed bundle pass syntax parsing after fixing a malformed quote in `admin/commerce.js`; all local HTML JS/CSS references resolve within the 39-file bundle.
 - Neon confirms 40 active page definitions per template (160 total), with exactly 5 homepage image IDs and 3 image IDs on each of the 39 non-home pages; no page exceeds 5.
 - All 60 distinct assets per template (240 unique IDs globally) are assigned at least once, and the asset register records exact page-key placements.
-- Updated renderer provides an all-pages navigation menu, sitemap destinations, page-level image/copy stories, failed-image fallbacks and below-the-fold lazy loading.
-- A fresh staging deployment and browser-level CDN/mobile review are still required. Production domain and production promotion remain untouched.
+- Updated renderer provides an all-pages navigation dropdown, a sitemap renderer where defined, page-level image/copy stories, failed-image fallbacks and below-the-fold lazy loading.
+- Browser-level visual review, remote Pexels CDN request verification, mobile screenshot review and end-to-end direct-route testing remain pending; do not infer them from successful upload or static checks. Production domain and production promotion remain untouched.
 
 
 ## 40-page and strict image-cap implementation update — 2026-11-08
