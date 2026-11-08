@@ -135,3 +135,10 @@ All four templates have been re-art-directed against MASTER WEBSITE ENGINEERING 
 - [ ] Browser verification of every image request and visual layout.
 - [ ] Full mobile screenshot review and visual score.
 - [ ] Production promotion; staging review is required first.
+
+
+## Visual asset expansion — 60 images per website
+
+The healthcare collection now contains **60 distinct Pexels photographs per template (240 unique image IDs across all four)**. Images are allocated to the homepage hero, three distinct homepage gallery sections, service directory, provider/care-team page, patient-information content and appointment-request page. The admin template preview exposes all 60 images for each selected template. Image records include original Pexels photo page, creator/listing credit, descriptive alt text, CDN URL and intended page placement in `docs/HOSPITAL_HEALTHCARE_ASSET_REGISTER.md`.
+
+The image CDN is remote-hosted at present rather than mirrored into the repository. Non-hero images are lazy-loaded. Browser-level image request, responsive crop and mobile payload verification remain required before production promotion.
