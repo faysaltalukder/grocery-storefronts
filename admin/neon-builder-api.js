@@ -178,6 +178,7 @@
   async function publishShowcaseWebsite(website){
     const {user}=await authContext();
     if(!website?.id||website.owner_id!==user.id)throw new Error("Website ownership check failed before showcase publish.");
+    if(!["hospital-healthcare","real-estate-property","medicine-pharmacy"].includes(website.category_slug))throw new Error("Showcase publishing is enabled only for the three requested template categories.");
     if(website.status==="published"&&website.settings?.demo_catalog!==true)return website;
     const [products,categories]=await Promise.all([
       request("products","?select=id&website_id=eq."+$(website.id)+"&is_active=eq.true&limit=1"),
