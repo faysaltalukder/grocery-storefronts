@@ -68,8 +68,10 @@ assert.equal(commerceBundle["admin/commerce.js"],commerce,"Production Studio com
 assert.equal(commerceBundle["admin/neon-builder-api.js"],adminApi,"Production Studio API must match the tested source.");
 assert.equal(commerceBundle["admin/commerce.css"],fs.readFileSync("admin/commerce.css","utf8"),"Production Studio CSS must match the tested source.");
 assert.equal(commerceBundle["admin/commerce.html"],fs.readFileSync("admin/commerce.html","utf8"),"Production Studio HTML must match the tested source.");
-assert.equal(bundle["storefront.js"],storefront,"ShipStatic preview storefront JS must match the tested shared runtime");
-assert.equal(bundle["storefront.css"],css,"ShipStatic preview CSS must match the tested shared styles");
+const previewStorefront=fs.readFileSync("storefront.js","utf8");
+const previewCss=fs.readFileSync("storefront.css","utf8");
+assert.equal(bundle["storefront.js"],previewStorefront,"ShipStatic preview storefront JS must match the tested multi-industry preview runtime");
+assert.equal(bundle["storefront.css"],previewCss,"ShipStatic preview CSS must match the tested multi-industry preview styles");
 assert.equal(bundle["admin/neon-builder-api.js"],adminApi,"ShipStatic preview API must match the tested Neon API");
 const templateScript=bundle["admin/wordpress-templates.js"];
 assert.ok(templateScript.includes("async function updateBrowserPreviewLinks(templateKey)") && templateScript.includes('const href="../storefront.html?site="+encodeURIComponent(website.slug)+"&preview=1"') && templateScript.includes('links.forEach(link=>{link.href=href;link.dataset.previewReady="true";})'),"Preview buttons must resolve the signed-in merchant storefront slug before opening preview.");
