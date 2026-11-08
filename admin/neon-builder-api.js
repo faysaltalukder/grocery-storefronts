@@ -6,7 +6,8 @@
 (() => {
   "use strict";
   const API_BASE="https://ep-wild-lab-a1jqqu0p.apirest.ap-southeast-1.aws.neon.tech/halal_food_db/rest/v1";
-  const ALLOWED_TEMPLATES=new Set(["general-supermarket","fresh-produce","express-grocery","wholesale-bulk"]);
+  const ALLOWED_TEMPLATES=new Set(["general-supermarket","fresh-produce","express-grocery","wholesale-bulk","modern-fashion-brand","boutique-ethnic-wear","streetwear-sneaker-store","fashion-retailer","modern-pharmacy","carewell-health-store","clinic-medical-supplies","express-medicine-delivery","multispecialty-hospital","diagnostics-laboratory","specialist-clinic","telehealth-platform","estate-luxe","nestliving-rentals","urbanaxis-commercial","horizon-developments"]);
+  const TEMPLATE_CATEGORIES={"general-supermarket":"ecommerce-grocery","fresh-produce":"ecommerce-grocery","express-grocery":"ecommerce-grocery","wholesale-bulk":"ecommerce-grocery","modern-fashion-brand":"clothing-fashion","boutique-ethnic-wear":"clothing-fashion","streetwear-sneaker-store":"clothing-fashion","fashion-retailer":"clothing-fashion","modern-pharmacy":"medicine-pharmacy","carewell-health-store":"medicine-pharmacy","clinic-medical-supplies":"medicine-pharmacy","express-medicine-delivery":"medicine-pharmacy","multispecialty-hospital":"hospital-healthcare","diagnostics-laboratory":"hospital-healthcare","specialist-clinic":"hospital-healthcare","telehealth-platform":"hospital-healthcare","estate-luxe":"real-estate-property","nestliving-rentals":"real-estate-property","urbanaxis-commercial":"real-estate-property","horizon-developments":"real-estate-property"};
   const $=v=>encodeURIComponent(String(v??""));
   async function getClient(){
     if(!window.WPNeonClientReady)throw new Error("The independent Neon authentication client did not load.");
@@ -94,32 +95,36 @@
     const type=page.page_type||"content",content=defaultContent[type]||defaultContent.content;
     const title=page.title||"New page";
     const slug=page.slug||page.page_key;
-    const color={"general-supermarket":"#b94f35","fresh-produce":"#657c4a","express-grocery":"#df6b35","wholesale-bulk":"#344b70"}[templateKey]||"#b94f35";
-    const bg={"general-supermarket":"#fbf8f1","fresh-produce":"#f7f7ef","express-grocery":"#f7f8fb","wholesale-bulk":"#f5f7fa"}[templateKey]||"#fbf8f1";
+    const custom=page.page_spec?.content||{};
+    const heading=custom.heading||content.heading;
+    const description=custom.description||content.description;
+    const blocks=Array.isArray(custom.blocks)?custom.blocks:[];
+    const color={"general-supermarket":"#b94f35","fresh-produce":"#657c4a","express-grocery":"#df6b35","wholesale-bulk":"#344b70","modern-fashion-brand":"#9b7458","boutique-ethnic-wear":"#a05d48","streetwear-sneaker-store":"#d6ff3f","fashion-retailer":"#426b77","multispecialty-hospital":"#176b87","diagnostics-laboratory":"#376e9b","specialist-clinic":"#8a5a5b","telehealth-platform":"#4d5da6","estate-luxe":"#a98755","nestliving-rentals":"#b66d52","urbanaxis-commercial":"#3e7189","horizon-developments":"#a66b49"}[templateKey]||"#b94f35";
+    const bg={"general-supermarket":"#fbf8f1","fresh-produce":"#f7f7ef","express-grocery":"#f7f8fb","wholesale-bulk":"#f5f7fa","modern-fashion-brand":"#f7f4ef","boutique-ethnic-wear":"#f8f2eb","streetwear-sneaker-store":"#f1f0ed","fashion-retailer":"#f6f7f8","multispecialty-hospital":"#f3f8fa","diagnostics-laboratory":"#f2f6fa","specialist-clinic":"#faf5f1","telehealth-platform":"#f4f5fc","estate-luxe":"#f6f3ed","nestliving-rentals":"#f8f4ee","urbanaxis-commercial":"#f1f5f7","horizon-developments":"#f4f3ef"}[templateKey]||"#fbf8f1";
     return {
-      schemaVersion:1,site:{templateKey},page:{id:page.page_key||slug,title,pageType:type,slug,seoTitle:title,seoDescription:content.description},
-      content:{heading:content.heading,description:content.description,cta:content.cta,sections:page.page_spec?.sections||[]},
+      schemaVersion:1,site:{templateKey},page:{id:page.page_key||slug,title,pageType:type,slug,seoTitle:page.page_spec?.seo?.title||title,seoDescription:page.page_spec?.seo?.description||description},
+      content:{heading,description,cta:custom.cta||content.cta,blocks,faqs:Array.isArray(custom.faqs)?custom.faqs:[],resources:Array.isArray(custom.resources)?custom.resources:[],listings:Array.isArray(custom.listings)?custom.listings:[],featuredProperty:custom.featuredProperty||null,sections:page.page_spec?.sections||[]},
       theme:{colors:{primary:color,paper:bg}},
       tree:[{id:"page-"+slug+"-hero",type:"section",label:"Page introduction",props:{background:bg,padding:44,width:"100%",align:"left"},children:[
-        {id:"page-"+slug+"-title",type:"heading",label:"Page heading",text:content.heading,props:{color:"#263247",fontSize:38,align:"left",width:"100%"},children:[]},
-        {id:"page-"+slug+"-description",type:"paragraph",label:"Page introduction",text:content.description,props:{color:"#68758a",fontSize:16,align:"left",width:"100%"},children:[]}
+        {id:"page-"+slug+"-title",type:"heading",label:"Page heading",text:heading,props:{color:"#263247",fontSize:38,align:"left",width:"100%"},children:[]},
+        {id:"page-"+slug+"-description",type:"paragraph",label:"Page introduction",text:description,props:{color:"#68758a",fontSize:16,align:"left",width:"100%"},children:[]}
       ]}]
     };
   }
-  async function loadTemplateCatalog(){
+  async function loadTemplateCatalog(categorySlug="ecommerce-grocery"){
     const [catalog,designs]=await Promise.all([
       request("template_catalog","?select=template_key,category_slug,name,tagline,description,business_types,feature_flags,sort_order,is_builtin&is_builtin=eq.true&order=sort_order.asc",{public:true}),
       request("template_designs","?select=template_key,design_version,design_spec,preview_settings,source_commit,is_active&is_active=eq.true&order=design_version.desc",{public:true})
     ]);
     const latest=new Map();(designs||[]).forEach(row=>{if(!latest.has(row.template_key))latest.set(row.template_key,row);});
-    const rows=(catalog||[]).filter(row=>ALLOWED_TEMPLATES.has(row.template_key)).map(row=>({...row,design:latest.get(row.template_key)||null}));
-    if(rows.length!==4||rows.some(row=>!row.design))throw new Error("Neon catalog is missing one or more active grocery template design records.");
+    const rows=(catalog||[]).filter(row=>ALLOWED_TEMPLATES.has(row.template_key)&&row.category_slug===categorySlug).map(row=>({...row,design:latest.get(row.template_key)||null}));
+    if(rows.length!==4||rows.some(row=>!row.design))throw new Error("Neon catalog is missing one or more active "+categorySlug+" template design records.");
     return rows;
   }
   async function loadTemplatePages(templateKey){
-    if(!ALLOWED_TEMPLATES.has(templateKey))throw new Error("Unsupported grocery template.");
+    if(!ALLOWED_TEMPLATES.has(templateKey))throw new Error("Unsupported storefront template.");
     const rows=await request("template_pages","?select=template_key,page_key,page_type,title,slug,sort_order,page_spec,is_required,is_active&template_key=eq."+$(templateKey)+"&is_active=eq.true&order=sort_order.asc",{public:true});
-    if((rows||[]).length<25)throw new Error("Neon page catalog is incomplete for "+templateKey+" (expected 25 designed pages).");
+    const pageCount=(rows||[]).length;const healthcareTemplates=["multispecialty-hospital","diagnostics-laboratory","specialist-clinic","telehealth-platform"];const realEstateTemplates=["estate-luxe","nestliving-rentals","urbanaxis-commercial","horizon-developments"];if(healthcareTemplates.includes(templateKey)&&pageCount!==40)throw new Error("Healthcare page catalog is incomplete for "+templateKey+" (expected exactly 40 designed pages; Neon returned "+pageCount+").");if(realEstateTemplates.includes(templateKey)&&pageCount!==40)throw new Error("Real Estate page catalog is incomplete for "+templateKey+" (expected exactly 40 designed pages; Neon returned "+pageCount+").");if(!healthcareTemplates.includes(templateKey)&&!realEstateTemplates.includes(templateKey)&&pageCount<25)throw new Error("Neon page catalog is incomplete for "+templateKey+" (expected at least 25 designed pages; Neon returned "+pageCount+").");if(realEstateTemplates.includes(templateKey)){const imageRows=(rows||[]).map(page=>({key:page.page_key,images:page.page_spec?.media?.images||[],count:page.page_spec?.media?.imageCount}));const invalid=imageRows.find(page=>page.key==="home"?page.images.length!==5||page.count!==5:page.images.length<2||page.images.length>4||page.count!==page.images.length);if(invalid)throw new Error("Real Estate image allocation failed for "+templateKey+" page "+invalid.key+".");const ids=imageRows.flatMap(page=>page.images.map(image=>String(image.id||"")));if(ids.length!==83||new Set(ids).size!==83)throw new Error("Real Estate template "+templateKey+" must contain exactly 83 unique image assets across its 40 pages.");if(imageRows.some(page=>page.images.some(image=>/^https?:\\/\\//i.test(String(image.src||"")))))throw new Error("Real Estate template "+templateKey+" contains an external image source; use first-party original art.");}
     return rows;
   }
   async function ensureWebsite(templateKey,name){
@@ -129,7 +134,7 @@
     const found=await request("websites",query);
     if(found?.[0])return found[0];
     const slug="store-"+String(user.id).replace(/-/g,"").slice(0,10)+"-"+templateKey;
-    const created=await request("websites","?select=id,owner_id,name,slug,category_slug,template_key,status,brand,settings",{method:"POST",prefer:"return=representation",body:{owner_id:user.id,name:String(name||templateKey).slice(0,120),slug,category_slug:"ecommerce-grocery",template_key:templateKey,status:"draft",brand:{},settings:{builder_version:2,isolated_sandbox:true}}});
+    const created=await request("websites","?select=id,owner_id,name,slug,category_slug,template_key,status,brand,settings",{method:"POST",prefer:"return=representation",body:{owner_id:user.id,name:String(name||templateKey).slice(0,120),slug,category_slug:TEMPLATE_CATEGORIES[templateKey]||"ecommerce-grocery",template_key:templateKey,status:"draft",brand:{},settings:{builder_version:2,isolated_sandbox:true}}});
     if(!created?.[0])throw new Error("Neon did not return the newly created website record.");
     return created[0];
   }
@@ -145,7 +150,7 @@
       if(website.owner_id!==user.id)throw new Error("Website ownership check failed while preparing page documents.");
       const records=missing.map(page=>({website_id:website.id,owner_id:user.id,page_key:page.page_key,schema_version:1,document:defaultPageDocument(page,templateKey)}));
       const saved=await request("website_documents","?on_conflict=website_id,page_key&select=id,page_key",{method:"POST",prefer:"resolution=merge-duplicates,return=representation",body:records});
-      if(!Array.isArray(saved)||saved.length!==missing.length)throw new Error("Neon did not confirm all 25 page drafts.");
+      if(!Array.isArray(saved)||saved.length!==missing.length)throw new Error("Neon did not confirm all "+missing.length+" page drafts.");
     }
     return {pages,documents:await loadWebsiteDocuments(website.id)};
   }
@@ -172,23 +177,35 @@
     const publicDemo=!!website&&website.status==="published"&&website.settings?.demo_catalog===true;
     if(preview&&!publicDemo){
       opts=token?{token}:{};
-      websites=await request("websites","?select=id,name,slug,template_key,status,brand,settings&slug=eq."+$(siteSlug)+"&limit=1",opts);
+      websites=await request("websites","?select=id,owner_id,name,slug,template_key,status,brand,settings&slug=eq."+$(siteSlug)+"&limit=1",opts);
       website=websites?.[0];
       if(!website)throw new Error("Storefront not found or not available for preview.");
       const {user}=await authContext();
       if(!user?.id)throw new Error("Sign in to the independent WordPress workspace to preview this draft.");
+      if(website.owner_id!==user.id)throw new Error("Storefront ownership verification failed.");
     }
     if(!website)throw new Error("Storefront not found or not published.");
     if(website.status!=="published"&&!preview)throw new Error("This storefront is not published yet.");
-    const [pages,documents,categories,products,deliveryZones,priceTiers]=await Promise.all([
-      loadTemplatePages(website.template_key),
-      request("website_documents","?select=page_key,schema_version,document,updated_at&website_id=eq."+$(website.id),opts),
+    let pages,documents;
+    if(preview&&website.status!=="published"){
+      // Draft previews must be self-contained: seed every missing page document
+      // before the storefront renderer tries to resolve its requested page.
+      const seeded=await seedWebsitePages(website,website.template_key);
+      pages=seeded.pages;
+      documents=seeded.documents||[];
+    }else{
+      [pages,documents]=await Promise.all([
+        loadTemplatePages(website.template_key),
+        request("website_documents","?select=page_key,schema_version,document,updated_at&website_id=eq."+$(website.id),opts)
+      ]);
+    }
+    const [categories,products,deliveryZones,priceTiers]=await Promise.all([
       request("categories","?select=id,name,slug,parent_id,sort_order,is_active&website_id=eq."+$(website.id)+"&is_active=eq.true&order=sort_order.asc",opts),
       request("products","?select=id,category_id,name,description,sku,price,compare_at_price,unit,stock,image_url,gallery,attributes,sort_order&website_id=eq."+$(website.id)+"&is_active=eq.true&order=sort_order.asc",opts),
       request("delivery_zones","?select=id,name,normalized_name,delivery_fee,minimum_order,eta_label&website_id=eq."+$(website.id)+"&is_active=eq.true&order=name.asc",opts),
       request("product_price_tiers","?select=id,product_id,minimum_quantity,unit_price,label&website_id=eq."+$(website.id)+"&is_active=eq.true&order=minimum_quantity.asc",opts)
     ]);
-    return {website,pages,documents:documents||[],categories:categories||[],products:products||[],deliveryZones:deliveryZones||[],priceTiers:priceTiers||[]};
+    return {website,pages,documents:documents||[],categories:categories||[],products:products||[],deliveryZones:deliveryZones||[],priceTiers:priceTiers||[],previewOnly:false};
   }
   async function placeOrder(siteSlug,items,customer,shippingAddress,notes="",idempotencyKey=""){
     if(!/^[a-f0-9]{32}$/.test(String(idempotencyKey)))throw new Error("A secure checkout retry key is required. Please refresh checkout and try again.");
