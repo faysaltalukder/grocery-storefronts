@@ -153,7 +153,7 @@ The 240-image asset set was rebuilt using individual Pexels photo-page records o
 
 ### Staging verification note — 2026-11-08
 
-- Latest staging deployment: https://chaotic-ghost-e3vs866.shipstatic.com (39 files; deployment status success).
+- Latest staging deployment: https://radiant-trail-s3x3aqc.shipstatic.com (39 files; deployment status success).
 - All four healthcare admin template previews rendered on staging; each contained 60 Pexels image elements with 60 unique IDs.
 - The admin scraper showed Neon OFFLINE / sample-preview state; the public storefront preview returned `TypeError: Failed to fetch` in the crawler environment. Neither result is treated as a verified live Neon-backed storefront render.
 - JavaScript syntax checks passed for both the live storefront and admin template renderer. Code-level assertions passed for 60 assets per template, 240 globally unique IDs, individual Pexels photo-page sources, complete alt/source metadata and page-level gallery allocation.
