@@ -6,7 +6,7 @@ Engineering baseline: `docs/MASTER_WEBSITE_ENGINEERING_STANDARD.md`
 
 ## Outcome
 
-The Hospital & Healthcare category now has four independent business-specific template definitions, four active version-1 design records and 36 reusable page definitions per template (144 pages total). The old Grocery preview fallback is no longer used for this category. Existing Grocery catalog entries and Grocery category data were not deleted or modified.
+The Hospital & Healthcare category now has four independent business-specific template definitions, four active version-1 design records and 40 reusable page definitions per template (160 pages total). The old Grocery preview fallback is no longer used for this category. Existing Grocery catalog entries and Grocery category data were not deleted or modified.
 
 ## Four template directions
 
@@ -23,16 +23,16 @@ The four directions do not share a grocery layout or simply recolour one common 
 
 - The template catalogue is registered in `builder.template_catalog`.
 - Versioned design records are stored in `builder.template_designs`.
-- The 36 page definitions for each template are stored in `builder.template_pages`.
+- The 40 page definitions for each template are stored in `builder.template_pages`.
 - The static application remains one reusable engine; template-specific renderer branches and configuration drive the four experiences.
 - Website content, page documents and business data remain scoped to each generated website.
-- Admin template previews use the category-specific healthcare renderer.
+- Admin template previews use the authenticated live storefront renderer; stale static sample fallbacks are not shown when Neon is unavailable.
 - Live storefront pages use the healthcare renderer, not the grocery product catalogue, cart or checkout flow.
 - Appointment requests, when explicitly enabled after compliance review, are recorded as healthcare service requests in the central request desk. They are not confirmed bookings.
 
 ## Page architecture
 
-Each template has 36 page definitions. They cover the appropriate subset of:
+Each template has 40 page definitions. They cover the appropriate subset of:
 - Home and organisation information
 - Service, department, specialty, test or care-category directory
 - Service/detail and provider/detail page types
@@ -75,7 +75,10 @@ All four hero illustrations are original, local SVG assets in `assets/`. They co
 |---|---|
 | Four catalogue rows in the Hospital & Healthcare category | Verified in Neon |
 | Four active design version-1 records | Verified in Neon |
-| 36 page definitions per template | Verified in Neon |
+| 40 page definitions per template | Verified in Neon |
+| Homepage image limit | 5 images maximum, including hero and service cards |
+| Inner-page image limit | 4 images per page, editorial image-and-copy layout |
+| Any page above 5 images | 0 pages across all four templates |
 | Eight patient-information resources per template | Registered in design specs and Health Library page specs |
 | Category-specific admin renderer mapping | Implemented in source bundle |
 | Live storefront healthcare renderer | Implemented in source bundle |
