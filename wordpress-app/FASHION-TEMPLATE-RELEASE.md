@@ -1,9 +1,18 @@
 # Fashion template suite release
 
-- Adds four Clothing & Fashion storefront templates to the Neon template catalog.
-- Adds four active design specifications and 36 page definitions per template (144 total).
-- Extends the template library and storefront renderer while preserving the existing four Grocery template definitions and shared commerce APIs.
-- Existing orders, products, customers and tenant records are not deleted or migrated.
-- Fashion catalogue pages are template blueprints; merchants must add verified products, size/fit details, stock, delivery zones and their own return policy before taking live orders.
-- Variant-level inventory is not enabled by this design release; product stock remains the existing product-level inventory model.
-- Sources used for design decisions: Baymard apparel UX research, Shopify product variants and SKU guidance, Google Core Web Vitals, W3C WCAG 2.2.
+This release adds four Clothing & Fashion storefront template families to the independent WordPress Studio:
+
+- Modern Fashion Brand
+- Boutique & Ethnic Wear
+- Streetwear & Sneaker Store
+- Multi-Category Fashion Retailer
+
+Each family has an active design specification and 36 reusable page definitions in Neon (144 page definitions total). The template library and storefront renderer are included in the deployment bundle at `.shipstatic-deploy-bundle.json`.
+
+The four templates share the existing Neon commerce API, website ownership model, cart/checkout, order submission, tracking and central order operations. Fashion page content is seeded when the merchant creates/opens a website from the template.
+
+**Important operational boundary:** the current shared product/order schema still tracks stock at product level. The templates include fit, size-guide, material, colour and care content locations, but per-size/per-colour SKU inventory reservation is not enabled by this release. Merchants must use the existing product stock model until a dedicated variant inventory workflow is implemented and tested. No claim of per-variant stock accuracy should be made.
+
+All sample prices, product cards and Unsplash images in the library preview are illustrative design content, not a real merchant catalogue. Before a storefront is published, the merchant must add verified products and licensed/owned imagery, set product information, stock, delivery zones, contact details, payment configuration and their own returns/exchange policy.
+
+The release is additive: existing Grocery templates, websites, products and orders are not deleted or migrated.
