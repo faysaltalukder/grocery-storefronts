@@ -659,7 +659,7 @@ body[data-template="athletelab-performance-coaching"]{--sf-primary:#4A83C2;--sf-
 .sf-fit-footer{background:var(--sf-ink)}.sf-mobile-dock--fitness{border-top:2px solid var(--sf-primary)}
 body[data-template="ironforge-performance-club"] .sf-fit-hero{border-radius:2px 2px 2px 42px}
 body[data-template="pulse-athletic-studio"] .sf-fit-hero{border-radius:28px;background:#202331}.sf-fit-preview{}
-body[data-template="balance-house-yoga-pilates"] .sf-fit-hero{background:#E6E8DC;color:#30372F;border-radius:90px 4px 90px 4px}.body[data-template="balance-house-yoga-pilates"] .sf-fit-hero p{color:#60695D}
+body[data-template="balance-house-yoga-pilates"] .sf-fit-hero{background:#E6E8DC;color:#30372F;border-radius:90px 4px 90px 4px}body[data-template="balance-house-yoga-pilates"] .sf-fit-hero p{color:#60695D}
 body[data-template="athletelab-performance-coaching"] .sf-fit-hero{background:#172638;border-left:8px solid #4A83C2}
 @media(max-width:900px){.sf-fit-feature-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sf-fit-hero{grid-template-columns:1fr}.sf-fit-hero-art{min-height:270px}.sf-fit-enquiry{grid-template-columns:1fr}.sf-fit-editorial{grid-template-columns:1fr}}
 @media(max-width:600px){.sf-fit-hero{border-radius:18px!important}.sf-fit-hero-copy{padding:28px 22px}.sf-fit-feature-grid{gap:9px}.sf-fit-feature-grid article{padding-bottom:12px}.sf-fit-feature-grid small,.sf-fit-feature-grid h2,.sf-fit-feature-grid p,.sf-fit-feature-grid a{margin-left:11px;margin-right:11px}.sf-fit-feature-grid h2{font-size:18px}.sf-fit-feature-grid p{font-size:11px;min-height:0}.sf-fit-home-cta{display:block;padding:23px}.sf-fit-home-cta .sf-btn{margin-top:10px}.sf-fit-enquiry{padding:20px}.sf-fit-page-media>div:last-child{gap:8px}}
