@@ -628,3 +628,8 @@
 .hf-fit-timetable{display:flex;justify-content:space-between;align-items:center;gap:20px;background:var(--fit-ink);color:white;padding:28px}.hf-fit-timetable p{max-width:600px}
 .hf-fit-preview footer{padding:22px 30px;background:var(--fit-ink);color:white;font-size:14px}.hf-fit-preview footer span{display:block;color:rgba(255,255,255,.65);font-size:10px;margin-top:8px}
 @media(max-width:650px){.hf-fit-preview .hf-fit-hero{grid-template-columns:1fr}.hf-fit-service-grid{grid-template-columns:repeat(2,1fr)}.hf-fit-timetable{display:block}}
+
+.hf-fit-preview--ironforge-performance-club{--fit-ink:#17191B;--fit-accent:#C58B45;--fit-paper:#F0EEE9}
+.hf-fit-preview--pulse-athletic-studio{--fit-ink:#202331;--fit-accent:#F05A42;--fit-paper:#F6F4F1}
+.hf-fit-preview--balance-house-yoga-pilates{--fit-ink:#30372F;--fit-accent:#8B9A78;--fit-paper:#F3F0E7}
+.hf-fit-preview--athletelab-performance-coaching{--fit-ink:#172638;--fit-accent:#4A83C2;--fit-paper:#EDF2F6}
