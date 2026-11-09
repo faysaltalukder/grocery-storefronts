@@ -5,7 +5,10 @@
   (async () => {
     try {
       const client = await window.WPNeonClientReady;
-      const session = await window.WPAuthReady;
+      const authState = await window.WPAuthReady;
+      // WPAuthReady resolves the Neon getSession() data envelope: { session }.
+      // Read both shapes for compatibility with older client bundles.
+      const session = authState?.session || authState;
       if (session?.user?.id) return;
       const gate = document.createElement("div");
       gate.className = "wp-preview-auth";

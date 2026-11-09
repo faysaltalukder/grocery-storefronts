@@ -24,7 +24,7 @@ The four designs use separate visual grammars and service-specific copy, not a s
 
 ## Page architecture and image allocation
 
-Each template contains **40 active page types**. Each homepage has exactly **5** meaningful illustrations; every inner page has **2**. This produces **83 unique images per website**, **332 unique image IDs across the four templates**, with no cross-template reuse.
+Each template contains **40 active page types**. Neon retains **83 distinct page-level image IDs per website** (332 IDs across the four templates). The visible photography integration in this release uses **5 unique Unsplash photographs per template** (one hero and four service cards on the homepage); inner pages render two photographs selected from that template's curated set. The page-level SVG illustration inventory remains available in the database, but it must not be described as 83 unique stock photographs. Full unique-photo coverage for every inner page remains a separate visual-quality improvement.
 
 ### Maison Beauty & Spa — 40 pages / 83 unique assets
 
@@ -251,3 +251,8 @@ The public template showcase remains isolated: showcase settings disable appoint
 - Public showcase preview disables appointment/enquiry submission.
 - Live appointment requests use the shared request desk and explicitly require manual confirmation.
 - Desktop/mobile visual review, internal-link crawl, keyboard/focus review, console checks and existing-template regression checks are required before declaring the suite production-ready.
+
+
+## Licensed stock photography update (2026-11-09)
+
+The admin preview and live storefront now use real Unsplash photographs for all four business identities. See [BEAUTY_SALON_PHOTOGRAPHY_ASSET_REGISTER.md](BEAUTY_SALON_PHOTOGRAPHY_ASSET_REGISTER.md) for creators, source pages, license checks and intended placements. Public showcase URLs omit the private-draft preview flag; appointment and enquiry actions remain disabled while showcase mode is active.
