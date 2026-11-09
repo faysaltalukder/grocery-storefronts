@@ -1,0 +1,963 @@
+{
+  "category": "automotive-services",
+  "pages": {
+    "northstar-autohaus": [
+      [
+        "home",
+        "Home"
+      ],
+      [
+        "inventory",
+        "Vehicle Inventory"
+      ],
+      [
+        "new-vehicles",
+        "New Vehicles"
+      ],
+      [
+        "pre-owned",
+        "Pre-Owned Vehicles"
+      ],
+      [
+        "certified-pre-owned",
+        "Certified Pre-Owned"
+      ],
+      [
+        "electric-vehicles",
+        "Electric Vehicles"
+      ],
+      [
+        "hybrid-vehicles",
+        "Hybrid Vehicles"
+      ],
+      [
+        "suv-range",
+        "SUV Collection"
+      ],
+      [
+        "sedan-range",
+        "Sedan Collection"
+      ],
+      [
+        "vehicle-detail",
+        "Vehicle Details"
+      ],
+      [
+        "compare-vehicles",
+        "Compare Vehicles"
+      ],
+      [
+        "trade-in",
+        "Part Exchange"
+      ],
+      [
+        "vehicle-valuation",
+        "Vehicle Valuation"
+      ],
+      [
+        "finance-options",
+        "Finance Options"
+      ],
+      [
+        "finance-calculator",
+        "Finance Calculator"
+      ],
+      [
+        "test-drive",
+        "Test Drive"
+      ],
+      [
+        "request-test-drive",
+        "Request a Test Drive"
+      ],
+      [
+        "showroom",
+        "The Showroom"
+      ],
+      [
+        "showroom-tour",
+        "Showroom Tour"
+      ],
+      [
+        "brand-partners",
+        "Brand Partners"
+      ],
+      [
+        "aftersales",
+        "Aftercare & Aftersales"
+      ],
+      [
+        "warranty",
+        "Warranty Information"
+      ],
+      [
+        "service-centre",
+        "Service Centre"
+      ],
+      [
+        "parts-accessories",
+        "Parts & Accessories"
+      ],
+      [
+        "delivery-process",
+        "Vehicle Handover"
+      ],
+      [
+        "buying-guide",
+        "Vehicle Buying Guide"
+      ],
+      [
+        "ownership-guide",
+        "Ownership Guide"
+      ],
+      [
+        "offers",
+        "Current Offers"
+      ],
+      [
+        "customer-stories",
+        "Customer Stories"
+      ],
+      [
+        "about",
+        "About Northstar"
+      ],
+      [
+        "leadership-team",
+        "Our Team"
+      ],
+      [
+        "locations",
+        "Showroom Locations"
+      ],
+      [
+        "location-detail",
+        "Location Details"
+      ],
+      [
+        "faq",
+        "Frequently Asked Questions"
+      ],
+      [
+        "contact",
+        "Contact"
+      ],
+      [
+        "vehicle-enquiry",
+        "Vehicle Enquiry"
+      ],
+      [
+        "finance-enquiry",
+        "Finance Enquiry"
+      ],
+      [
+        "privacy",
+        "Privacy Notice"
+      ],
+      [
+        "terms",
+        "Terms & Conditions"
+      ],
+      [
+        "accessibility",
+        "Accessibility Statement"
+      ]
+    ],
+    "torqueworks-garage": [
+      [
+        "home",
+        "Home"
+      ],
+      [
+        "services",
+        "Workshop Services"
+      ],
+      [
+        "diagnostics",
+        "Vehicle Diagnostics"
+      ],
+      [
+        "engine-repair",
+        "Engine Repair"
+      ],
+      [
+        "transmission",
+        "Transmission Service"
+      ],
+      [
+        "brakes",
+        "Brake Service"
+      ],
+      [
+        "suspension",
+        "Suspension & Steering"
+      ],
+      [
+        "electrical",
+        "Auto Electrical"
+      ],
+      [
+        "ac-service",
+        "Air Conditioning"
+      ],
+      [
+        "oil-service",
+        "Oil & Filter Service"
+      ],
+      [
+        "maintenance-plans",
+        "Maintenance Plans"
+      ],
+      [
+        "vehicle-inspection",
+        "Vehicle Inspection"
+      ],
+      [
+        "pre-purchase-inspection",
+        "Pre-Purchase Inspection"
+      ],
+      [
+        "repair-process",
+        "Our Repair Process"
+      ],
+      [
+        "technician-team",
+        "Technician Team"
+      ],
+      [
+        "technician-profile",
+        "Technician Profile"
+      ],
+      [
+        "equipment",
+        "Workshop Equipment"
+      ],
+      [
+        "service-pricing",
+        "Service Pricing Guide"
+      ],
+      [
+        "service-estimate",
+        "Repair Estimate"
+      ],
+      [
+        "request-repair",
+        "Request a Repair"
+      ],
+      [
+        "book-inspection",
+        "Inspection Request"
+      ],
+      [
+        "service-history",
+        "Service Records"
+      ],
+      [
+        "warranties",
+        "Parts & Workmanship Warranty"
+      ],
+      [
+        "parts-policy",
+        "Parts Policy"
+      ],
+      [
+        "locations",
+        "Workshop Locations"
+      ],
+      [
+        "location-detail",
+        "Workshop Details"
+      ],
+      [
+        "opening-hours",
+        "Opening Hours"
+      ],
+      [
+        "fleet-maintenance",
+        "Fleet Maintenance"
+      ],
+      [
+        "roadside-assistance",
+        "Roadside Support"
+      ],
+      [
+        "safety-advisories",
+        "Vehicle Safety Advisories"
+      ],
+      [
+        "about",
+        "About TorqueWorks"
+      ],
+      [
+        "faq",
+        "Frequently Asked Questions"
+      ],
+      [
+        "contact",
+        "Contact"
+      ],
+      [
+        "estimate-request",
+        "Request an Estimate"
+      ],
+      [
+        "privacy",
+        "Privacy Notice"
+      ],
+      [
+        "terms",
+        "Terms & Conditions"
+      ],
+      [
+        "service-policy",
+        "Service Policy"
+      ],
+      [
+        "cancellation-policy",
+        "Cancellation Policy"
+      ],
+      [
+        "accessibility",
+        "Accessibility Statement"
+      ],
+      [
+        "careers",
+        "Careers"
+      ]
+    ],
+    "treadline-express": [
+      [
+        "home",
+        "Home"
+      ],
+      [
+        "tyre-shop",
+        "Tyre & Wheel Centre"
+      ],
+      [
+        "tyres",
+        "Tyre Range"
+      ],
+      [
+        "tyre-brands",
+        "Tyre Brands"
+      ],
+      [
+        "wheel-alignment",
+        "Wheel Alignment"
+      ],
+      [
+        "wheel-balancing",
+        "Wheel Balancing"
+      ],
+      [
+        "puncture-repair",
+        "Puncture Repair"
+      ],
+      [
+        "battery-service",
+        "Battery Checks"
+      ],
+      [
+        "brake-check",
+        "Brake Checks"
+      ],
+      [
+        "quick-oil",
+        "Quick Oil Service"
+      ],
+      [
+        "express-service",
+        "Express Fitment"
+      ],
+      [
+        "service-packages",
+        "Service Packages"
+      ],
+      [
+        "seasonal-check",
+        "Seasonal Vehicle Check"
+      ],
+      [
+        "tyre-guide",
+        "Tyre Buying Guide"
+      ],
+      [
+        "size-guide",
+        "Tyre Size Guide"
+      ],
+      [
+        "booking-slots",
+        "Service Times"
+      ],
+      [
+        "service-centres",
+        "Service Centres"
+      ],
+      [
+        "centre-detail",
+        "Centre Details"
+      ],
+      [
+        "mobile-fitting",
+        "Mobile Fitting Enquiry"
+      ],
+      [
+        "fleet-tyres",
+        "Fleet Tyre Support"
+      ],
+      [
+        "road-safety",
+        "Road Safety"
+      ],
+      [
+        "tyre-care",
+        "Tyre Care Guide"
+      ],
+      [
+        "promotions",
+        "Offers & Promotions"
+      ],
+      [
+        "product-detail",
+        "Tyre Details"
+      ],
+      [
+        "warranty",
+        "Tyre Warranty"
+      ],
+      [
+        "about",
+        "About Treadline"
+      ],
+      [
+        "how-it-works",
+        "How It Works"
+      ],
+      [
+        "customer-stories",
+        "Customer Stories"
+      ],
+      [
+        "faq",
+        "Frequently Asked Questions"
+      ],
+      [
+        "contact",
+        "Contact"
+      ],
+      [
+        "service-booking",
+        "Request a Service"
+      ],
+      [
+        "quote-request",
+        "Tyre Quote Request"
+      ],
+      [
+        "privacy",
+        "Privacy Notice"
+      ],
+      [
+        "terms",
+        "Terms & Conditions"
+      ],
+      [
+        "returns-policy",
+        "Returns Policy"
+      ],
+      [
+        "delivery-policy",
+        "Delivery & Fitting Policy"
+      ],
+      [
+        "accessibility",
+        "Accessibility Statement"
+      ],
+      [
+        "careers",
+        "Careers"
+      ],
+      [
+        "journal",
+        "Road Notes"
+      ],
+      [
+        "guide-article",
+        "Guide Article"
+      ]
+    ],
+    "roam-motor-club": [
+      [
+        "home",
+        "Home"
+      ],
+      [
+        "fleet",
+        "Explore the Fleet"
+      ],
+      [
+        "economy-cars",
+        "City & Economy Cars"
+      ],
+      [
+        "premium-cars",
+        "Premium Cars"
+      ],
+      [
+        "suvs",
+        "SUVs & Crossovers"
+      ],
+      [
+        "vans",
+        "Passenger & Cargo Vans"
+      ],
+      [
+        "electric-fleet",
+        "Electric Vehicles"
+      ],
+      [
+        "vehicle-detail",
+        "Vehicle Details"
+      ],
+      [
+        "rental-rates",
+        "Rental Rates"
+      ],
+      [
+        "rental-calculator",
+        "Rental Cost Planner"
+      ],
+      [
+        "rental-requirements",
+        "Rental Requirements"
+      ],
+      [
+        "booking-process",
+        "How Rental Works"
+      ],
+      [
+        "request-vehicle",
+        "Request a Vehicle"
+      ],
+      [
+        "long-term-rental",
+        "Long-Term Rental"
+      ],
+      [
+        "corporate-fleet",
+        "Corporate Mobility"
+      ],
+      [
+        "chauffeur-service",
+        "Chauffeur Service"
+      ],
+      [
+        "airport-transfer",
+        "Airport Transfers"
+      ],
+      [
+        "locations",
+        "Pickup Locations"
+      ],
+      [
+        "location-detail",
+        "Location Details"
+      ],
+      [
+        "insurance-options",
+        "Protection Options"
+      ],
+      [
+        "mileage-fuel",
+        "Mileage & Fuel"
+      ],
+      [
+        "pickup-return",
+        "Pickup & Return"
+      ],
+      [
+        "driver-eligibility",
+        "Driver Eligibility"
+      ],
+      [
+        "rental-agreement",
+        "Rental Agreement Guide"
+      ],
+      [
+        "fleet-management",
+        "Fleet Management"
+      ],
+      [
+        "partner-drivers",
+        "Driver Partnerships"
+      ],
+      [
+        "customer-stories",
+        "Customer Stories"
+      ],
+      [
+        "travel-guides",
+        "Travel Guides"
+      ],
+      [
+        "about",
+        "About Roam"
+      ],
+      [
+        "team",
+        "Our Team"
+      ],
+      [
+        "faq",
+        "Frequently Asked Questions"
+      ],
+      [
+        "contact",
+        "Contact"
+      ],
+      [
+        "rental-enquiry",
+        "Rental Enquiry"
+      ],
+      [
+        "privacy",
+        "Privacy Notice"
+      ],
+      [
+        "terms",
+        "Terms & Conditions"
+      ],
+      [
+        "rental-policy",
+        "Rental Policy"
+      ],
+      [
+        "cancellation-policy",
+        "Cancellation Policy"
+      ],
+      [
+        "accessibility",
+        "Accessibility Statement"
+      ],
+      [
+        "careers",
+        "Careers"
+      ],
+      [
+        "fleet-quote",
+        "Corporate Fleet Quote"
+      ]
+    ]
+  },
+  "meta": {
+    "northstar-autohaus": {
+      "name": "Northstar Autohaus",
+      "brand": "NORTHSTAR AUTOHAUS",
+      "tagline": "Find the vehicle that moves your story forward.",
+      "type": "Vehicle dealership & certified pre-owned",
+      "accent": "#C39A55",
+      "ink": "#18212B",
+      "paper": "#F2EEE7",
+      "soft": "#D9D1C5",
+      "surface": "#FFFCF7",
+      "feature": "New & pre-owned vehicles · ownership guidance · test-drive requests",
+      "description": "A premium vehicle dealership and certified pre-owned showroom with inventory discovery, comparison, trade-in and test-drive requests.",
+      "best": "Vehicle dealerships and certified pre-owned showrooms",
+      "layout": "Luxury automotive editorial · cinematic split hero · vehicle-led inventory discovery",
+      "hero": "Find the vehicle that moves your story forward.",
+      "copy": "A considered way to explore new and pre-owned vehicles, understand ownership options and arrange a conversation with the showroom team.",
+      "eyebrow": "VEHICLE SALES · CERTIFIED PRE-OWNED",
+      "promise": [
+        "Vehicle discovery",
+        "Clear ownership guidance",
+        "Showroom-confirmed test drives"
+      ],
+      "primary": "Explore inventory",
+      "target": "inventory",
+      "secondary": "Request a test drive",
+      "secondaryTarget": "request-test-drive",
+      "audience": "new-car buyers, pre-owned vehicle shoppers and owners comparing ownership options",
+      "goal": "help visitors explore vehicle categories, compare ownership information and request a test drive or sales conversation",
+      "tone": "confident, premium and editorial",
+      "scenes": [
+        "showroom",
+        "vehicle-profile",
+        "electric-car",
+        "suv",
+        "sedan",
+        "vehicle-detail",
+        "trade-in",
+        "finance",
+        "handover",
+        "service-bay"
+      ],
+      "cards": [
+        [
+          "Explore the inventory",
+          "Browse operator-maintained vehicle listings and compare the details that matter."
+        ],
+        [
+          "Pre-owned selection",
+          "Review vehicle history and inspection information supplied by the seller."
+        ],
+        [
+          "Ownership options",
+          "Understand finance, trade-in and aftercare information before you decide."
+        ],
+        [
+          "Arrange a test drive",
+          "Send your preferred vehicle and the showroom will confirm availability."
+        ]
+      ],
+      "businessTypes": [
+        "Vehicle dealerships",
+        "Certified pre-owned showrooms"
+      ],
+      "visual": {
+        "palette": {
+          "paper": "#F2EEE7",
+          "accent": "#C39A55",
+          "ink": "#18212B",
+          "surface": "#FFFCF7",
+          "soft": "#D9D1C5"
+        },
+        "typography": {
+          "display": "DM Serif Display",
+          "body": "DM Sans"
+        }
+      }
+    },
+    "torqueworks-garage": {
+      "name": "TorqueWorks Garage",
+      "brand": "TORQUEWORKS GARAGE",
+      "tagline": "Know what your vehicle needs. Know what happens next.",
+      "type": "Repair, diagnostics & maintenance workshop",
+      "accent": "#D65A45",
+      "ink": "#262729",
+      "paper": "#EDEAE4",
+      "soft": "#D6D0C7",
+      "surface": "#FFFFFF",
+      "feature": "Diagnostics · mechanical repair · inspections · service estimates",
+      "description": "A technical repair and diagnostics workshop for mechanical service, inspections, maintenance and vehicle-specific estimates.",
+      "best": "Independent repair garages, diagnostics and maintenance workshops",
+      "layout": "Industrial service manual · technical grid · workshop process storytelling",
+      "hero": "Know what your vehicle needs. Know what happens next.",
+      "copy": "Clear repair pathways, practical maintenance guidance and a workshop team that explains the next step before work begins.",
+      "eyebrow": "REPAIR · DIAGNOSTICS · MAINTENANCE",
+      "promise": [
+        "Diagnostic-led requests",
+        "Vehicle-specific estimates",
+        "Operator-confirmed workshop visits"
+      ],
+      "primary": "Explore workshop services",
+      "target": "services",
+      "secondary": "Request a repair estimate",
+      "secondaryTarget": "estimate-request",
+      "audience": "private vehicle owners, used-car buyers seeking inspections and small business fleet operators",
+      "goal": "explain repair and diagnostic capabilities and capture clear, vehicle-specific service estimate requests",
+      "tone": "technical, direct and dependable",
+      "scenes": [
+        "workshop",
+        "engine",
+        "diagnostics",
+        "brakes",
+        "suspension",
+        "electrical",
+        "air-conditioning",
+        "inspection",
+        "technician",
+        "repair-tools"
+      ],
+      "cards": [
+        [
+          "Diagnostics & fault finding",
+          "Describe a warning light or symptom and request a diagnostic assessment."
+        ],
+        [
+          "Mechanical repairs",
+          "Explore engine, brake, steering and transmission service information."
+        ],
+        [
+          "Scheduled maintenance",
+          "Review maintenance options and ask the workshop to confirm the correct interval."
+        ],
+        [
+          "Pre-purchase inspection",
+          "Request an inspection conversation before committing to a used vehicle."
+        ]
+      ],
+      "businessTypes": [
+        "Independent repair garages",
+        "Diagnostics and maintenance workshops"
+      ],
+      "visual": {
+        "palette": {
+          "paper": "#EDEAE4",
+          "accent": "#D65A45",
+          "ink": "#262729",
+          "surface": "#FFFFFF",
+          "soft": "#D6D0C7"
+        },
+        "typography": {
+          "display": "Barlow Condensed",
+          "body": "Inter"
+        }
+      }
+    },
+    "treadline-express": {
+      "name": "Treadline Express",
+      "brand": "TREADLINE EXPRESS",
+      "tagline": "The right fit. The right feel. Back on the road.",
+      "type": "Tyre, wheel & express vehicle service centre",
+      "accent": "#2867B2",
+      "ink": "#182D3F",
+      "paper": "#F5F1E8",
+      "soft": "#E2D7C3",
+      "surface": "#FFFFFF",
+      "feature": "Tyres · wheel alignment · balancing · quick-service requests",
+      "description": "A tyre, wheel and quick-service centre with tyre discovery, fitment guidance, maintenance checks and booking requests.",
+      "best": "Tyre retailers, wheel centres and express vehicle service providers",
+      "layout": "Kinetic service lanes · bold blue panels · modular quick-service selector",
+      "hero": "The right fit. The right feel. Back on the road.",
+      "copy": "Explore tyres, wheel services and everyday vehicle checks with clear guidance on what to ask before booking a fitting.",
+      "eyebrow": "TYRES · WHEELS · EXPRESS SERVICE",
+      "promise": [
+        "Tyre and wheel discovery",
+        "Service guidance",
+        "Centre-confirmed fitting requests"
+      ],
+      "primary": "Explore tyre services",
+      "target": "tyres",
+      "secondary": "Request a fitting",
+      "secondaryTarget": "service-booking",
+      "audience": "daily drivers, commuters and fleet managers who need tyres, wheel services and quick maintenance",
+      "goal": "help customers identify tyre and quick-service options and request an operator-confirmed fitting appointment",
+      "tone": "energetic, practical and fast-moving",
+      "scenes": [
+        "tyre-tread",
+        "wheel",
+        "alignment",
+        "balancing",
+        "battery",
+        "brakes",
+        "oil-service",
+        "mobile-fitting",
+        "service-centre",
+        "road-safety"
+      ],
+      "cards": [
+        [
+          "Find the right tyres",
+          "Review tyre categories, sizes and fitment questions before requesting a quote."
+        ],
+        [
+          "Wheel alignment & balance",
+          "Understand common symptoms and request a centre assessment."
+        ],
+        [
+          "Quick vehicle checks",
+          "Explore battery, brake and oil-service options with clear scope."
+        ],
+        [
+          "Fleet tyre support",
+          "Request a coordinated conversation for multi-vehicle requirements."
+        ]
+      ],
+      "businessTypes": [
+        "Tyre retailers",
+        "Wheel and express-service centres"
+      ],
+      "visual": {
+        "palette": {
+          "paper": "#F5F1E8",
+          "accent": "#2867B2",
+          "ink": "#182D3F",
+          "surface": "#FFFFFF",
+          "soft": "#E2D7C3"
+        },
+        "typography": {
+          "display": "Manrope",
+          "body": "Inter"
+        }
+      }
+    },
+    "roam-motor-club": {
+      "name": "Roam Motor Club",
+      "brand": "ROAM MOTOR CLUB",
+      "tagline": "A better journey starts with the right way to move.",
+      "type": "Vehicle rental, chauffeur & fleet mobility",
+      "accent": "#2F7772",
+      "ink": "#173B3B",
+      "paper": "#F3EFE6",
+      "soft": "#DCCDBB",
+      "surface": "#FFFCF5",
+      "feature": "Vehicle fleet · rental requirements · pickup guidance · fleet quotes",
+      "description": "A vehicle rental and mobility service for short- and long-term rentals, chauffeur requests and corporate fleet enquiries.",
+      "best": "Vehicle rental operators and corporate mobility providers",
+      "layout": "Quiet mobility editorial · spacious fleet cards · destination-led storytelling",
+      "hero": "A better journey starts with the right way to move.",
+      "copy": "Explore flexible vehicle categories, understand pickup and rental requirements, and request a vehicle or corporate mobility conversation.",
+      "eyebrow": "VEHICLE RENTAL · CHAUFFEUR · FLEET",
+      "promise": [
+        "Vehicle category discovery",
+        "Clear rental requirements",
+        "Operator-confirmed vehicle requests"
+      ],
+      "primary": "Explore the fleet",
+      "target": "fleet",
+      "secondary": "Request a vehicle",
+      "secondaryTarget": "rental-enquiry",
+      "audience": "travellers, local renters, families and organisations arranging short- or long-term vehicle access",
+      "goal": "help visitors compare vehicle categories, understand rental requirements and request a rental or fleet quote",
+      "tone": "calm, premium and reassuring",
+      "scenes": [
+        "rental-car",
+        "city-car",
+        "premium-car",
+        "suv",
+        "van",
+        "electric-vehicle",
+        "car-keys",
+        "pickup",
+        "airport",
+        "fleet"
+      ],
+      "cards": [
+        [
+          "Explore the fleet",
+          "Compare vehicle categories and operator-supplied specifications."
+        ],
+        [
+          "Plan your rental",
+          "Review requirements, pickup steps, mileage and protection information."
+        ],
+        [
+          "Business mobility",
+          "Discuss long-term rental, fleet and chauffeur requirements."
+        ],
+        [
+          "Request a vehicle",
+          "Share your dates and preferred category for a team-confirmed response."
+        ]
+      ],
+      "businessTypes": [
+        "Vehicle rental operators",
+        "Corporate mobility providers"
+      ],
+      "visual": {
+        "palette": {
+          "paper": "#F3EFE6",
+          "accent": "#2F7772",
+          "ink": "#173B3B",
+          "surface": "#FFFCF5",
+          "soft": "#DCCDBB"
+        },
+        "typography": {
+          "display": "Cormorant Garamond",
+          "body": "DM Sans"
+        }
+      }
+    }
+  }
+}
