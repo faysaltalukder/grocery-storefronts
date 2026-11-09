@@ -46,6 +46,10 @@ jobs:
           echo "All four storefront entry points and shared runtime files passed validation."
       - name: Validate WordPress Studio runtime bundle
         run: node .github/scripts/validate-studio-bundle.mjs
+      - name: Validate Fitness & Gym templates
+        run: node .github/scripts/validate-fitness-gym.mjs
+      - name: Validate Automotive & Vehicle Services templates
+        run: node .github/scripts/validate-automotive-services.mjs
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3

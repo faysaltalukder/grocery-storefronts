@@ -606,3 +606,54 @@
 @media(max-width:760px){.hf-beauty-preview>header{align-items:flex-start;flex-direction:column}.hf-beauty-preview>header nav{gap:10px}.hf-beauty-hero,.hf-beauty-preview--the-hair-atelier .hf-beauty-hero,.hf-beauty-preview--the-bridal-edit .hf-beauty-hero{grid-template-columns:1fr;padding:32px 6%;gap:24px}.hf-beauty-hero-image,.hf-beauty-hero-image img{min-height:250px}.hf-beauty-service-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hf-beauty-cta{align-items:flex-start;flex-direction:column}.hf-beauty-preview>footer{flex-direction:column}}
 @media(max-width:430px){.hf-beauty-service-grid{grid-template-columns:1fr}.hf-beauty-hero h2{font-size:40px}.hf-beauty-service img{aspect-ratio:1.55}}
 @media(prefers-reduced-motion:reduce){.hf-beauty-preview *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+.hf-fit-preview{--fit-ink:#17191b;--fit-accent:#c58b45;--fit-paper:#f0eee9;background:var(--fit-paper);color:var(--fit-ink);font-family:Arial,sans-serif}
+.hf-fit-preview--pulse-athletic-studio{--fit-ink:#202331;--fit-accent:#f05a42;--fit-paper:#f6f4f1}
+.hf-fit-preview--balance-house-yoga-pilates{--fit-ink:#30372f;--fit-accent:#8b9a78;--fit-paper:#f3f0e7}
+.hf-fit-preview--athletelab-performance-coaching{--fit-ink:#172638;--fit-accent:#4a83c2;--fit-paper:#edf2f6}
+.hf-fit-preview .hf-fit-hero{display:grid;grid-template-columns:1fr 1fr;min-height:390px;background:var(--fit-ink);color:white}
+.hf-fit-preview .hf-fit-hero-copy{padding:clamp(22px,4vw,54px);display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
+.hf-fit-preview small{font-size:9px;letter-spacing:.16em;font-weight:900;color:var(--fit-accent)}
+.hf-fit-preview h2{font-size:clamp(28px,4vw,50px);line-height:1.02;margin:12px 0;font-weight:900}
+.hf-fit-preview p{color:rgba(255,255,255,.75);font-size:12px;line-height:1.7}
+.hf-fit-preview .hf-fit-hero-copy>a,.hf-fit-preview .hf-fit-timetable>a{background:var(--fit-accent);color:white;padding:12px 17px;text-decoration:none;font-weight:900;font-size:11px}
+.hf-fit-preview .hf-fit-hero-art{position:relative;min-height:300px;background:var(--fit-paper)}
+.hf-fit-preview .hf-fit-hero-art img{width:100%;height:100%;object-fit:cover}
+.hf-fit-preview .hf-fit-hero-art span{position:absolute;bottom:14px;right:14px;background:var(--fit-ink);color:white;padding:9px;font-size:8px}
+.hf-fit-preview .hf-fit-proof{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px;font-size:9px;color:rgba(255,255,255,.7)}
+.hf-fit-services{padding:30px}.hf-fit-services>div:first-child{max-width:680px;margin-bottom:20px}.hf-fit-services h3{font-size:26px;margin:8px 0}
+.hf-fit-service-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.hf-fit-service-grid article{background:white;padding-bottom:14px}.hf-fit-service-grid img{width:100%;aspect-ratio:1.2;object-fit:cover}
+.hf-fit-service-grid small,.hf-fit-service-grid h4,.hf-fit-service-grid p{display:block;margin:12px 13px 0}.hf-fit-service-grid h4{font-size:16px}.hf-fit-service-grid p{font-size:11px;line-height:1.6;color:#686868}
+.hf-fit-timetable{display:flex;justify-content:space-between;align-items:center;gap:20px;background:var(--fit-ink);color:white;padding:28px}.hf-fit-timetable p{max-width:600px}
+.hf-fit-preview footer{padding:22px 30px;background:var(--fit-ink);color:white;font-size:14px}.hf-fit-preview footer span{display:block;color:rgba(255,255,255,.65);font-size:10px;margin-top:8px}
+@media(max-width:650px){.hf-fit-preview .hf-fit-hero{grid-template-columns:1fr}.hf-fit-service-grid{grid-template-columns:repeat(2,1fr)}.hf-fit-timetable{display:block}}
+
+.hf-fit-preview--ironforge-performance-club{--fit-ink:#17191B;--fit-accent:#C58B45;--fit-paper:#F0EEE9}
+.hf-fit-preview--pulse-athletic-studio{--fit-ink:#202331;--fit-accent:#F05A42;--fit-paper:#F6F4F1}
+.hf-fit-preview--balance-house-yoga-pilates{--fit-ink:#30372F;--fit-accent:#8B9A78;--fit-paper:#F3F0E7}
+.hf-fit-preview--athletelab-performance-coaching{--fit-ink:#172638;--fit-accent:#4A83C2;--fit-paper:#EDF2F6}
+
+.hf-auto-preview{--auto-ink:#18212b;--auto-accent:#c39a55;--auto-paper:#f2eee7;--auto-surface:#fffcf7;background:var(--auto-paper);color:var(--auto-ink);font-family:Arial,sans-serif;overflow:hidden}
+.hf-auto-preview--torqueworks-garage{--auto-ink:#262729;--auto-accent:#d65a45;--auto-paper:#edeae4;--auto-surface:#fff}
+.hf-auto-preview--treadline-express{--auto-ink:#182d3f;--auto-accent:#2867b2;--auto-paper:#f5f1e8;--auto-surface:#fff}
+.hf-auto-preview--roam-motor-club{--auto-ink:#173b3b;--auto-accent:#2f7772;--auto-paper:#f3efe6;--auto-surface:#fffcf5}
+.hf-auto-topline{display:flex;justify-content:space-between;padding:10px 3%;background:var(--auto-ink);color:#fff;font-size:9px;letter-spacing:.15em;font-weight:900}
+.hf-auto-preview>header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:19px 3%;border-bottom:1px solid color-mix(in srgb,var(--auto-ink) 18%,transparent)}
+.hf-auto-preview>header strong{font-size:17px;letter-spacing:.08em}.hf-auto-preview>header nav{display:flex;gap:15px;flex-wrap:wrap;font-size:9px;font-weight:800}.hf-auto-preview>header b{font-size:9px;letter-spacing:.1em;color:var(--auto-accent)}
+.hf-auto-hero{display:grid;grid-template-columns:1fr .92fr;min-height:360px;background:var(--auto-ink);color:#fff}.hf-auto-hero-copy{padding:clamp(24px,4vw,52px);display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
+.hf-auto-hero-copy small,.hf-auto-section-head small,.hf-auto-service-grid small,.hf-auto-cta small{font-size:9px;letter-spacing:.18em;font-weight:900;color:var(--auto-accent)}
+.hf-auto-hero h2{font-size:clamp(30px,4vw,52px);line-height:1.02;margin:12px 0;font-weight:900;max-width:580px}.hf-auto-hero p{font-size:12px;line-height:1.8;color:rgba(255,255,255,.74);max-width:520px}
+.hf-auto-hero-copy>a,.hf-auto-cta>a{display:inline-flex;margin-top:16px;padding:12px 17px;background:var(--auto-accent);color:#fff;text-decoration:none;font-size:10px;font-weight:900}
+.hf-auto-hero-art{position:relative;min-height:300px;background:var(--auto-paper)}.hf-auto-hero-art img{width:100%;height:100%;object-fit:cover}.hf-auto-hero-art span{position:absolute;bottom:14px;right:14px;background:var(--auto-ink);color:#fff;padding:9px;font-size:8px;letter-spacing:.15em}
+.hf-auto-proof{display:flex;gap:12px;flex-wrap:wrap;margin-top:17px;font-size:9px;color:rgba(255,255,255,.72)}
+.hf-auto-services{padding:28px 3%}.hf-auto-section-head{max-width:680px;margin-bottom:20px}.hf-auto-section-head h3{font-size:27px;line-height:1.05;margin:8px 0}.hf-auto-section-head p{font-size:12px;line-height:1.7;color:#6c6a66}
+.hf-auto-service-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.hf-auto-service-grid article{background:var(--auto-surface);padding-bottom:15px;border:1px solid color-mix(in srgb,var(--auto-ink) 12%,transparent)}.hf-auto-service-grid img{width:100%;aspect-ratio:1.35;object-fit:cover;background:var(--auto-paper)}.hf-auto-service-grid small,.hf-auto-service-grid h3,.hf-auto-service-grid p{display:block;margin:12px 13px 0}.hf-auto-service-grid h3{font-size:15px}.hf-auto-service-grid p{font-size:10px;line-height:1.65;color:#6b6b69}
+.hf-auto-cta{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:27px 3%;background:var(--auto-ink);color:#fff}.hf-auto-cta h3{font-size:23px;margin:8px 0}.hf-auto-cta p{font-size:10px;line-height:1.7;color:rgba(255,255,255,.68);max-width:660px}
+.hf-auto-preview--northstar-autohaus .hf-auto-hero{grid-template-columns:1.12fr .88fr}.hf-auto-preview--northstar-autohaus .hf-auto-hero h2{font-family:Georgia,serif;font-weight:500;letter-spacing:-.04em}.hf-auto-preview--northstar-autohaus .hf-auto-hero-art{border-left:8px solid var(--auto-accent)}
+.hf-auto-preview--torqueworks-garage .hf-auto-hero{grid-template-columns:1fr 1fr;border-bottom:9px solid var(--auto-accent)}.hf-auto-preview--torqueworks-garage .hf-auto-service-grid article{border-top:5px solid var(--auto-accent)}
+.hf-auto-preview--treadline-express .hf-auto-hero{grid-template-columns:.9fr 1.1fr;background:#2867b2;border-radius:0 0 48px 0}.hf-auto-preview--treadline-express .hf-auto-hero-art{margin:18px 18px 18px 0;border-radius:26px;overflow:hidden}.hf-auto-preview--treadline-express .hf-auto-service-grid article{border-radius:16px;overflow:hidden}
+.hf-auto-preview--roam-motor-club .hf-auto-hero{background:#173b3b;border-radius:0 0 0 78px}.hf-auto-preview--roam-motor-club .hf-auto-hero h2{font-family:Georgia,serif;font-weight:500}.hf-auto-preview--roam-motor-club .hf-auto-hero-art{margin:20px;border-radius:120px 4px 4px 4px;overflow:hidden}
+@media(max-width:700px){.hf-auto-preview>header{align-items:flex-start;flex-direction:column}.hf-auto-preview>header nav{gap:9px}.hf-auto-hero{grid-template-columns:1fr}.hf-auto-hero-art{min-height:230px}.hf-auto-service-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hf-auto-cta{display:block}.hf-auto-cta>a{margin-top:10px}}
+@media(max-width:430px){.hf-auto-service-grid{grid-template-columns:1fr}.hf-auto-hero h2{font-size:36px}}
+@media(prefers-reduced-motion:reduce){.hf-auto-preview *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}

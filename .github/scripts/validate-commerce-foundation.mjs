@@ -75,8 +75,8 @@ assert.equal(bundle["storefront.css"],previewCss,"ShipStatic preview CSS must ma
 assert.equal(bundle["admin/neon-builder-api.js"],adminApi,"ShipStatic preview API must match the tested Neon API");
 const templateScript=bundle["admin/wordpress-templates.js"];
 assert.ok(templateScript.includes("async function updateBrowserPreviewLinks(templateKey)") && templateScript.includes('const href="../storefront.html?site="+encodeURIComponent(liveWebsite.slug)+"&preview=1"') && templateScript.includes('links.forEach(link=>{link.href=href;link.dataset.previewReady="true";link.removeAttribute("aria-disabled");})'),"Preview buttons must resolve the signed-in merchant storefront slug before opening preview.");
-assert.ok(bundle["storefront.html"].includes("storefront.js?v=beauty-photography-20261109-v2"),"Preview HTML must bust stale storefront JS cache");
-assert.ok(bundle["admin/wordpress-templates.html"].includes("wordpress-templates.js?v=beauty-photography-20261109-v2"),"Template library must bust stale preview-link JS cache");
+assert.ok(bundle["storefront.html"].includes("storefront.js?v=automotive-services-20261109-v1"),"Preview HTML must bust stale storefront JS cache");
+assert.ok(bundle["admin/wordpress-templates.html"].includes("wordpress-templates.js?v=automotive-services-20261109-v1"),"Template library must bust stale preview-link JS cache");
 for(const site of ["general-supermarket","fresh-produce","express-grocery","wholesale-bulk"]){
  const html=fs.readFileSync(site+"/index.html","utf8");
  assert.ok(html.includes("@neon/neon-js"),site+" must use the independent Neon client");
