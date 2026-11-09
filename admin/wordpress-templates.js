@@ -153,7 +153,7 @@
    const connection=$("wpTemplateConnection");
    if(connection){connection.textContent=targetCategory?"PUBLIC SHOWCASE · LIVE":"NEON CONNECTED · PRIVATE PREVIEW";connection.dataset.state="connected";connection.title=targetCategory?"Published showcase website; sample content only, checkout and enquiries disabled.":"Private draft preview; this category's publish state is unchanged.";}
    if(templates[active]?.key!==templateKey)return;
-   if(["medicine-pharmacy","hospital-healthcare","real-estate-property","restaurant-food","beauty-salon","automotive-services"].includes(selected?.categorySlug)){
+   if(["medicine-pharmacy","hospital-healthcare","real-estate-property","restaurant-food","beauty-salon","automotive-services","professional-services"].includes(selected?.categorySlug)){
     const host=$("wpStorefront");
     if(host){host.dataset.template=templateKey;host.innerHTML='<iframe class="hf-wpt-live-preview-frame" title="'+esc(selected.name)+' live storefront preview" src="'+href+'" loading="eager" referrerpolicy="same-origin"></iframe>';}
    }
