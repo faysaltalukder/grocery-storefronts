@@ -185,10 +185,7 @@ templates.push(
    const connection=$("wpTemplateConnection");
    if(connection){connection.textContent="LOCAL PREVIEW · LIVE LINK UNAVAILABLE";connection.dataset.state="offline";connection.title=String(error?.message||error);}
    const address=$("wpTemplateAddress");if(address)address.textContent="Local design preview active · public website connection pending";
-   if(templates[active]?.key===templateKey&&["medicine-pharmacy","hospital-healthcare","real-estate-property","restaurant-food","beauty-salon","automotive-services","professional-services","construction-interior","portfolio-agency","education-training","fitness-gym","events-weddings"].includes(selected?.categorySlug)){
-    const host=$("wpStorefront");
-    if(host){host.innerHTML='<div class="hf-healthcare-preview-error"><strong>Live website preview could not connect</strong><p>'+esc(error?.message||"The Neon connection is unavailable.")+'</p><span>Refresh after the workspace connection is restored. Your saved template design and page data remain unchanged.</span></div>';}
-   }
+   // Preserve the already-rendered local design when the live preview service is unavailable.
   }
  }
 
