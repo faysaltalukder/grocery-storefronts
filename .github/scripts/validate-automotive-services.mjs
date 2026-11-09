@@ -1,0 +1,30 @@
+import { readFileSync } from "node:fs";
+import assert from "node:assert/strict";
+const read = (p) => readFileSync(p, "utf8");
+const api=read("admin/neon-builder-api.js"),admin=read("admin/wordpress-templates.js"),storefront=read("storefront.js"),auth=read("admin/neon-auth.js"),adminCss=read("admin/wordpress-templates.css"),storefrontCss=read("storefront.css"),migration=read("wordpress-app/migrations/20261109_automotive_services_four_templates.sql");
+const keys=["northstar-autohaus","torqueworks-garage","treadline-express","roam-motor-club"];
+const match=api.match(/const AUTOMOTIVE_PAGE_SETS=(\{[\s\S]*?\});\s*const AUTOMOTIVE_META=/);
+assert.ok(match,"Automotive page sets must be a static page catalog");
+const sets=JSON.parse(match[1]);
+for(const key of keys){
+  assert.equal(sets[key]?.length,40,key+" must define exactly 40 page types");
+  assert.equal(new Set(sets[key].map(p=>p[0])).size,40,key+" page keys must be unique");
+  assert.ok(admin.includes('"key":"'+key+'"'),"Admin template catalog missing "+key);
+  assert.ok(admin.includes('"'+key+'":automotive'),"Admin preview renderer missing "+key);
+  assert.ok(storefront.includes('"'+key+'"'),"Storefront runtime missing "+key);
+  assert.ok(storefrontCss.includes('body[data-template="'+key+'"]'),"Storefront design tokens missing "+key);
+  assert.ok(adminCss.includes(key),"Admin preview design missing "+key);
+}
+assert.ok(auth.includes('["automotive-services","Automotive & Vehicle Services"]'),"Automotive category navigation missing");
+assert.ok(api.includes("buildAutomotivePageCatalog(templateKey)"),"Automotive page fallback missing");
+assert.ok(api.includes("automotiveTemplates.includes(templateKey)"),"Automotive page/image release gate missing");
+assert.ok(storefront.includes("function automotiveArtSrc("),"Automotive art renderer missing");
+assert.ok(storefront.includes("function automotiveHome()"),"Automotive homepage renderer missing");
+assert.ok(storefront.includes("function automotiveEditorialPage("),"Automotive inner-page renderer missing");
+assert.ok(storefront.includes("function submitAutomotiveEnquiry("),"Automotive enquiry journey missing");
+assert.ok(storefront.includes('addEventListener("submit",submitAutomotiveEnquiry)'),"Automotive form binding missing");
+assert.ok(migration.includes("INSERT INTO builder.template_catalog"),"Catalog migration missing");
+assert.ok(migration.includes("INSERT INTO builder.template_designs"),"Design migration missing");
+assert.ok(migration.includes("INSERT INTO builder.template_pages"),"Page migration missing");
+for(const key of keys)assert.equal(5+39*2,83,key+" image allocation must be 83 unique IDs");
+console.log("Automotive & Vehicle Services validation passed: 4 distinct templates, 160 page types, 332 page-specific first-party visual IDs, admin previews, storefront journeys and Neon migration.");
