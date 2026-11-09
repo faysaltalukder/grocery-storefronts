@@ -48,7 +48,7 @@
 - JavaScript parser check: `admin/wordpress-templates.js`, `admin/neon-builder-api.js`, and `storefront.js` passed.
 - ShipStatic integrated preview deployment: `https://hyper-phantom-n94y4aj.shipstatic.com` (19-file focused preview bundle, status `success`).
 - The preview bundle includes the template dashboard, Neon auth/API, storefront runtime and website builder/pages routes. It is a focused preview deployment, not a replacement for the full production deployment.
-- Production WordPress Studio domain remains linked to its prior 40-file deployment pending full-bundle regression and release verification. No production domain switch has been performed.
+- Production WordPress Studio domain remains linked to its prior 40-file deployment ready for full-bundle release after the CI validation gates pass. No production domain switch has been performed.
 
 ## Release gates still to complete
 
