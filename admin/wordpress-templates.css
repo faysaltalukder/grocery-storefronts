@@ -537,3 +537,72 @@
 .hf-edu-preview--brightpath-tutoring .hf-edu-hero-art img{border-radius:30px 30px 30px 4px}
 @media(max-width:760px){.hf-edu-header{align-items:flex-start;flex-wrap:wrap}.hf-edu-header nav{order:3;width:100%;gap:12px}.hf-edu-header>button{margin-left:auto}.hf-edu-hero,.hf-edu-feature{grid-template-columns:1fr;padding:34px 6%;gap:22px}.hf-edu-hero h2{font-size:42px}.hf-edu-stats{padding:20px 6%;gap:8px}.hf-edu-stats>div{display:block;padding-right:8px}.hf-edu-stats b{display:block;font-size:21px}.hf-edu-stats span{font-size:9px}.hf-edu-course-grid{grid-template-columns:repeat(2,1fr)}.hf-edu-cta{align-items:flex-start;flex-direction:column}.hf-edu-topline span{display:none}}
 @media(max-width:420px){.hf-edu-course-grid{grid-template-columns:1fr}.hf-edu-hero-copy>div:nth-of-type(1){align-items:flex-start;flex-direction:column;gap:12px}}
+
+/* Beauty & Salon — four independent preview identities */
+.hf-beauty-preview{--beauty-paper:#f6eee8;--beauty-ink:#302a29;--beauty-accent:#8d5d54;--beauty-soft:#e8d7ce;background:var(--beauty-paper);color:var(--beauty-ink);min-height:680px;overflow:hidden;font-family:"DM Sans",Arial,sans-serif}
+.hf-beauty-topline{padding:12px 4.5%;font-size:9px;letter-spacing:.2em;font-weight:800;border-bottom:1px solid currentColor;border-color:color-mix(in srgb,var(--beauty-ink) 18%,transparent)}
+.hf-beauty-preview>header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:24px 4.5%;border-bottom:1px solid color-mix(in srgb,var(--beauty-ink) 15%,transparent)}
+.hf-beauty-preview>header strong{font:700 23px "Cormorant Garamond",Georgia,serif;letter-spacing:.1em}
+.hf-beauty-preview>header nav{display:flex;gap:20px;flex-wrap:wrap}
+.hf-beauty-preview>header nav span{font-size:10px;color:color-mix(in srgb,var(--beauty-ink) 72%,transparent)}
+.hf-beauty-preview>header>b{font-size:9px;letter-spacing:.12em;border-bottom:1px solid var(--beauty-accent);padding-bottom:7px}
+.hf-beauty-hero{display:grid;grid-template-columns:1fr .92fr;gap:5%;align-items:center;padding:54px 6% 50px}
+.hf-beauty-hero-copy>small,.hf-beauty-section-head>small,.hf-beauty-cta small{font-size:9px;letter-spacing:.2em;font-weight:800;color:var(--beauty-accent)}
+.hf-beauty-hero h2{font:500 clamp(38px,5.5vw,70px)/.98 "Cormorant Garamond",Georgia,serif;letter-spacing:-.035em;max-width:620px;margin:18px 0}
+.hf-beauty-hero p{max-width:480px;font-size:13px;line-height:1.8;color:color-mix(in srgb,var(--beauty-ink) 76%,transparent)}
+.hf-beauty-hero-copy>div:first-of-type{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+.hf-beauty-hero-copy>div:first-of-type a{display:inline-flex;padding:13px 17px;background:var(--beauty-accent);color:#fff;text-decoration:none;font-size:10px;letter-spacing:.04em}
+.hf-beauty-hero-copy>div:first-of-type a.is-secondary{background:transparent;color:var(--beauty-ink);border:1px solid color-mix(in srgb,var(--beauty-ink) 30%,transparent)}
+.hf-beauty-promises{display:flex;gap:16px;flex-wrap:wrap;margin-top:28px}
+.hf-beauty-promises span{font-size:9px;color:color-mix(in srgb,var(--beauty-ink) 68%,transparent)}
+.hf-beauty-hero-image{position:relative;min-height:360px;max-height:460px;overflow:hidden;background:var(--beauty-soft)}
+.hf-beauty-hero-image img{display:block;width:100%;height:100%;min-height:360px;max-height:460px;object-fit:cover}
+.hf-beauty-hero-image span{position:absolute;left:18px;bottom:18px;color:var(--beauty-ink);background:var(--beauty-paper);padding:9px 12px;font-size:8px;letter-spacing:.16em}
+.hf-beauty-services{padding:42px 6% 58px}
+.hf-beauty-section-head{max-width:650px;margin:0 auto 28px;text-align:center}
+.hf-beauty-section-head h3{font:500 clamp(28px,4vw,43px)/1.08 "Cormorant Garamond",Georgia,serif;margin:10px 0}
+.hf-beauty-section-head p{font-size:12px;line-height:1.7;opacity:.72}
+.hf-beauty-service-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.hf-beauty-service{min-width:0;background:color-mix(in srgb,var(--beauty-paper) 76%,white);padding:0 0 18px;border:1px solid color-mix(in srgb,var(--beauty-ink) 12%,transparent)}
+.hf-beauty-service img{display:block;width:100%;aspect-ratio:1.25;object-fit:cover;background:var(--beauty-soft)}
+.hf-beauty-service small,.hf-beauty-service h3,.hf-beauty-service p,.hf-beauty-service span{display:block;margin-left:16px;margin-right:16px}
+.hf-beauty-service small{margin-top:16px;font-size:8px;letter-spacing:.15em;color:var(--beauty-accent)}
+.hf-beauty-service h3{font:600 19px "Cormorant Garamond",Georgia,serif;margin-top:8px;margin-bottom:6px}
+.hf-beauty-service p{font-size:10px;line-height:1.65;opacity:.72}
+.hf-beauty-service span{font-size:9px;font-weight:800;color:var(--beauty-accent);margin-top:14px}
+.hf-beauty-cta{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:28px 6%;background:var(--beauty-ink);color:#fff}
+.hf-beauty-cta h3{font:500 30px "Cormorant Garamond",Georgia,serif;margin:7px 0}
+.hf-beauty-cta p{font-size:11px;opacity:.76;max-width:560px}
+.hf-beauty-cta a{color:#fff;border:1px solid #ffffff70;padding:12px 16px;text-decoration:none;font-size:10px;white-space:nowrap}
+.hf-beauty-preview>footer{display:flex;justify-content:space-between;gap:18px;padding:20px 6%;font-size:9px;opacity:.7}
+.hf-beauty-preview--the-hair-atelier{--beauty-paper:#f0eee8;--beauty-ink:#202324;--beauty-accent:#b75b3a;--beauty-soft:#dccabd}
+.hf-beauty-preview--the-hair-atelier .hf-beauty-topline{background:#202324;color:#f0eee8}
+.hf-beauty-preview--the-hair-atelier>header{background:#202324;color:#f0eee8;border:0}
+.hf-beauty-preview--the-hair-atelier>header strong{font:700 18px "Space Grotesk",sans-serif;letter-spacing:.12em}
+.hf-beauty-preview--the-hair-atelier .hf-beauty-hero{grid-template-columns:1.1fr .9fr;padding-top:38px}
+.hf-beauty-preview--the-hair-atelier .hf-beauty-hero h2{font:700 clamp(40px,6vw,76px)/.92 "Space Grotesk",sans-serif;letter-spacing:-.07em;text-transform:uppercase}
+.hf-beauty-preview--the-hair-atelier .hf-beauty-hero-image{border-radius:0 0 100px 0}
+.hf-beauty-preview--the-hair-atelier .hf-beauty-service{border:0;background:#e6e1d8}
+.hf-beauty-preview--forme-nail-brow{--beauty-paper:#f4eff4;--beauty-ink:#3b303c;--beauty-accent:#a66a83;--beauty-soft:#e4d5e3}
+.hf-beauty-preview--forme-nail-brow .hf-beauty-topline{text-align:center}
+.hf-beauty-preview--forme-nail-brow>header{justify-content:center;flex-direction:column;gap:10px}
+.hf-beauty-preview--forme-nail-brow>header strong{font:700 28px "Space Grotesk",sans-serif;letter-spacing:.2em}
+.hf-beauty-preview--forme-nail-brow .hf-beauty-hero{grid-template-columns:1fr;max-width:940px;margin:auto;text-align:center}
+.hf-beauty-preview--forme-nail-brow .hf-beauty-hero-copy{max-width:740px;margin:auto}
+.hf-beauty-preview--forme-nail-brow .hf-beauty-hero h2{font:500 clamp(38px,5vw,64px)/1.02 "Playfair Display",Georgia,serif}
+.hf-beauty-preview--forme-nail-brow .hf-beauty-hero-copy>div:first-of-type,.hf-beauty-preview--forme-nail-brow .hf-beauty-promises{justify-content:center}
+.hf-beauty-preview--forme-nail-brow .hf-beauty-hero-image{max-width:560px;width:100%;min-height:260px;margin:auto;border-radius:46% 46% 10px 10px}
+.hf-beauty-preview--forme-nail-brow .hf-beauty-hero-image img{min-height:260px}
+.hf-beauty-preview--forme-nail-brow .hf-beauty-service{border-radius:18px;overflow:hidden;background:#fffafd;border:1px solid #e7dce8}
+.hf-beauty-preview--the-bridal-edit{--beauty-paper:#fbf5f0;--beauty-ink:#3b2d2d;--beauty-accent:#b88b61;--beauty-soft:#e9d8d0}
+.hf-beauty-preview--the-bridal-edit .hf-beauty-topline{text-align:center;letter-spacing:.28em}
+.hf-beauty-preview--the-bridal-edit>header{max-width:1120px;margin:auto;border:0}
+.hf-beauty-preview--the-bridal-edit>header strong{font:600 26px "Playfair Display",Georgia,serif}
+.hf-beauty-preview--the-bridal-edit .hf-beauty-hero{grid-template-columns:.88fr 1.12fr;padding:36px 7% 60px}
+.hf-beauty-preview--the-bridal-edit .hf-beauty-hero h2{font:500 clamp(42px,5vw,68px)/1.02 "Playfair Display",Georgia,serif}
+.hf-beauty-preview--the-bridal-edit .hf-beauty-hero-image{min-height:430px;border-radius:48% 48% 4px 4px}
+.hf-beauty-preview--the-bridal-edit .hf-beauty-hero-image img{min-height:430px}
+.hf-beauty-preview--the-bridal-edit .hf-beauty-service{background:#fffdfa;border:0;border-bottom:1px solid #dfcfc4}
+@media(max-width:760px){.hf-beauty-preview>header{align-items:flex-start;flex-direction:column}.hf-beauty-preview>header nav{gap:10px}.hf-beauty-hero,.hf-beauty-preview--the-hair-atelier .hf-beauty-hero,.hf-beauty-preview--the-bridal-edit .hf-beauty-hero{grid-template-columns:1fr;padding:32px 6%;gap:24px}.hf-beauty-hero-image,.hf-beauty-hero-image img{min-height:250px}.hf-beauty-service-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hf-beauty-cta{align-items:flex-start;flex-direction:column}.hf-beauty-preview>footer{flex-direction:column}}
+@media(max-width:430px){.hf-beauty-service-grid{grid-template-columns:1fr}.hf-beauty-hero h2{font-size:40px}.hf-beauty-service img{aspect-ratio:1.55}}
+@media(prefers-reduced-motion:reduce){.hf-beauty-preview *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
