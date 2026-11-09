@@ -133,7 +133,7 @@
    if(!api?.ensureWebsite||!api?.publishShowcaseWebsite)throw new Error("The live website publishing API did not load. Refresh the workspace.");
    const selected=templates.find(item=>item.key===templateKey);
    const website=await api.ensureWebsite(templateKey,selected?.name||templateKey);
-   const targetCategory=["medicine-pharmacy","hospital-healthcare","real-estate-property","restaurant-food"].includes(selected?.categorySlug);
+   const targetCategory=["medicine-pharmacy","hospital-healthcare","real-estate-property","restaurant-food","beauty-salon"].includes(selected?.categorySlug);
    const liveWebsite=targetCategory?await api.publishShowcaseWebsite(website):website;
    const href="../storefront.html?site="+encodeURIComponent(liveWebsite.slug)+"&preview=1";
    links.forEach(link=>{link.href=href;link.dataset.previewReady="true";link.removeAttribute("aria-disabled");});
@@ -141,7 +141,7 @@
    const connection=$("wpTemplateConnection");
    if(connection){connection.textContent=targetCategory?"PUBLIC SHOWCASE · LIVE":"NEON CONNECTED · PRIVATE PREVIEW";connection.dataset.state="connected";connection.title=targetCategory?"Published showcase website; sample content only, checkout and enquiries disabled.":"Private draft preview; this category's publish state is unchanged.";}
    if(templates[active]?.key!==templateKey)return;
-   if(["medicine-pharmacy","hospital-healthcare","real-estate-property","restaurant-food"].includes(selected?.categorySlug)){
+   if(["medicine-pharmacy","hospital-healthcare","real-estate-property","restaurant-food","beauty-salon"].includes(selected?.categorySlug)){
     const host=$("wpStorefront");
     if(host){host.dataset.template=templateKey;host.innerHTML='<iframe class="hf-wpt-live-preview-frame" title="'+esc(selected.name)+' live storefront preview" src="'+href+'" loading="eager" referrerpolicy="same-origin"></iframe>';}
    }
@@ -151,7 +151,7 @@
    const connection=$("wpTemplateConnection");
    if(connection){connection.textContent="PREVIEW ERROR";connection.dataset.state="offline";connection.title=String(error?.message||error);}
    const address=$("wpTemplateAddress");if(address)address.textContent="Preview unavailable · "+String(error?.message||"Check Neon connection");
-   if(templates[active]?.key===templateKey&&["medicine-pharmacy","hospital-healthcare","real-estate-property","restaurant-food"].includes(selected?.categorySlug)){
+   if(templates[active]?.key===templateKey&&["medicine-pharmacy","hospital-healthcare","real-estate-property","restaurant-food","beauty-salon"].includes(selected?.categorySlug)){
     const host=$("wpStorefront");
     if(host){host.innerHTML='<div class="hf-healthcare-preview-error"><strong>Live website preview could not connect</strong><p>'+esc(error?.message||"The Neon connection is unavailable.")+'</p><span>Refresh after the workspace connection is restored. Your saved template design and page data remain unchanged.</span></div>';}
    }
