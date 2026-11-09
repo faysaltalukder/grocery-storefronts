@@ -53,6 +53,10 @@
       "morrow-cafe-bakery": {name:"Morrow Café & Bakery",title:"Make room for a little everyday good.",accent:"#b85e3d",ink:"#30251f",paper:"#f8f2e9",soft:"#e9dccb",copy:"A warm café and artisan bakery with coffee, pastries and pickup-first ordering.",button:"Explore today's menu"},
       "emberline-cloud-kitchen": {name:"Emberline Cloud Kitchen",title:"Your next favourite meal is closer than you think.",accent:"#ef654d",ink:"#172a40",paper:"#f4f6f7",soft:"#dfe8e9",copy:"A fast, mobile-first food ordering experience with delivery zones and group meals.",button:"Order online"},
       "gathered-table-catering": {name:"Gathered Table Catering",title:"Bring people together around something memorable.",accent:"#a94f58",ink:"#29313b",paper:"#f6f0ea",soft:"#e9dad2",copy:"An event-led catering website with packages, menus and quotation requests.",button:"Explore catering"},
+      "maison-beauty-spa": {name:"Maison Beauty & Spa",title:"Make space for a more considered kind of care.",accent:"#8D5D54",ink:"#302A29",paper:"#F6EEE8",soft:"#E8D7CE",copy:"Explore restorative rituals, thoughtful facial services and moments designed around your own pace.",button:"Explore the rituals"},
+      "the-hair-atelier": {name:"The Hair Atelier",title:"A fresh perspective, shaped around you.",accent:"#B75B3A",ink:"#202324",paper:"#F0EEE8",soft:"#DCCABD",copy:"Discover considered cuts, expressive colour and occasion styling through a stylist-led studio.",button:"Explore hair services"},
+      "forme-nail-brow": {name:"Forme Nail & Brow Studio",title:"Your details, your design language.",accent:"#A66A83",ink:"#3B303C",paper:"#F4EFF4",soft:"#E4D5E3",copy:"Explore nail finishes, expressive design details and specialist brow and lash services.",button:"Explore the services"},
+      "the-bridal-edit": {name:"The Bridal Edit",title:"Beauty for the moments you will remember.",accent:"#B88B61",ink:"#3B2D2D",paper:"#FBF5F0",soft:"#E9D8D0",copy:"Discover bridal and occasion makeup and plan a consultation around your date, setting and preferred look.",button:"Explore bridal services"},
     };
     const profile = profiles[TEMPLATE_KEY];
     if (!profile) return doc;
