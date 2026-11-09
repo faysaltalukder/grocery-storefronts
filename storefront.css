@@ -737,7 +737,7 @@ body[data-template="circuitworks-it-services"]{--pro-paper:#F0F4F7;--pro-accent:
 .sf-event-moment-makers{--evt-paper:#F5F0EA;--evt-surface:#FFFCF8;--evt-ink:#3A3030;--evt-muted:#897A72;--evt-accent:#A56E59;--evt-soft:#EADFD6}
 .sf-header--event{background:var(--evt-paper);color:var(--evt-ink);border-bottom:1px solid color-mix(in srgb,var(--evt-ink) 13%,transparent)}
 .sf-header--event .sf-brand-mark{background:var(--evt-ink);color:var(--evt-paper)}
-.sf-event-header-cta,.sf-event-button{display:inline-flex;align-items:center;justify-content:center;padding:14px 21px;background:var(--evt-ink);color:#fff!important;text-decoration:none;border:0;font:700 10px/1.2 inherit;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+.sf-event-header-cta,.sf-event-button{display:inline-flex;align-items:center;justify-content:center;padding:14px 21px;background:var(--evt-ink);color:#fff!important;text-decoration:none;border:0;font:700 10px/1.2 Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
 .sf-event-header-cta{padding:11px 16px}
 .sf-event-hero{display:grid;grid-template-columns:1fr 1fr;min-height:590px;background:var(--evt-paper);color:var(--evt-ink);padding:68px 7%;gap:5%;align-items:center;overflow:hidden}
 .sf-event-hero-copy>small,.sf-event-intro>small,.sf-event-services header>small,.sf-event-story small,.sf-event-cta small,.sf-event-content-block small,.sf-event-editorial aside>small{font-size:9px;letter-spacing:.2em;color:var(--evt-accent);font-weight:800}
@@ -782,7 +782,7 @@ body[data-template="circuitworks-it-services"]{--pro-paper:#F0F4F7;--pro-accent:
 .sf-event-enquiry aside{padding:16px;background:var(--evt-soft);margin-top:28px;font-size:11px}
 #sfEventEnquiryForm{display:grid;gap:14px;background:var(--evt-surface);padding:28px}
 #sfEventEnquiryForm label{display:grid;gap:7px;font-size:10px;font-weight:700;color:var(--evt-ink)}
-#sfEventEnquiryForm input,#sfEventEnquiryForm select,#sfEventEnquiryForm textarea{width:100%;min-width:0;padding:12px;border:1px solid color-mix(in srgb,var(--evt-ink) 18%,transparent);background:var(--evt-paper);color:var(--evt-ink);font:12px inherit;border-radius:0}
+#sfEventEnquiryForm input,#sfEventEnquiryForm select,#sfEventEnquiryForm textarea{width:100%;min-width:0;padding:12px;border:1px solid color-mix(in srgb,var(--evt-ink) 18%,transparent);background:var(--evt-paper);color:var(--evt-ink);font:12px Arial,sans-serif;border-radius:0}
 .sf-event-form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 #sfEventEnquiryForm .sf-event-consent{display:flex;align-items:flex-start;gap:9px;font-weight:500}
 #sfEventEnquiryForm .sf-event-consent input{width:auto;margin:0}
