@@ -135,10 +135,9 @@
    const website=await api.ensureWebsite(templateKey,selected?.name||templateKey);
    const targetCategory=["medicine-pharmacy","hospital-healthcare","real-estate-property","restaurant-food","beauty-salon"].includes(selected?.categorySlug);
    const liveWebsite=targetCategory?await api.publishShowcaseWebsite(website):website;
-   // These category sites are already published, read-only showcase websites.
-   // Do not mark a public showcase as a private draft preview; the preview auth
-   // gate is reserved for unpublished merchant drafts.
-   const href="../storefront.html?site="+encodeURIComponent(liveWebsite.slug)+(targetCategory?"":"&preview=1");
+   // Keep the read-only showcase preview context. The preview auth gate now
+   // reads the nested Neon session correctly for the signed-in admin.
+   const href="../storefront.html?site="+encodeURIComponent(liveWebsite.slug)+"&preview=1";
    links.forEach(link=>{link.href=href;link.dataset.previewReady="true";link.removeAttribute("aria-disabled");});
    const address=$("wpTemplateAddress");if(address)address.textContent=location.origin+"/storefront.html?site="+liveWebsite.slug;
    const connection=$("wpTemplateConnection");
