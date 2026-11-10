@@ -70,7 +70,7 @@ templates.push(
 
  const params=new URLSearchParams(location.search), requestedCategory=params.get("category")||"ecommerce-grocery";
   // Travel has a dedicated 25-page studio renderer loaded after this shared script.
-  if(requestedCategory==="travel-tourism"||requestedCategory==="news-media")return;
+  if(requestedCategory==="travel-tourism"||requestedCategory==="news-media"||requestedCategory==="nonprofit-organization")return;
  templates=templates.filter(t=>(t.categorySlug||"ecommerce-grocery")===requestedCategory);
  const requestedTemplate=params.get("template"), initial=Math.max(0,templates.findIndex((t,i)=>t.key===requestedTemplate||String(i+1)===requestedTemplate));
  let active=initial,cart=0,category="All products",query="";

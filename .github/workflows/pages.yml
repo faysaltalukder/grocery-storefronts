@@ -50,6 +50,8 @@ jobs:
         run: node .github/scripts/validate-fitness-gym.mjs
       - name: Validate Automotive & Vehicle Services templates
         run: node .github/scripts/validate-automotive-services.mjs
+      - name: Validate Nonprofit & Organization templates
+        run: node .github/scripts/validate-nonprofit-organization.mjs
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
