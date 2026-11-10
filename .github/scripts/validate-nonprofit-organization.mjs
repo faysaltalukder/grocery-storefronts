@@ -22,7 +22,7 @@ const storefront = read("storefront.html");
 const api = read("admin/neon-builder-api.js");
 const runtime = read("storefront.js");
 assert.ok(admin.includes("nonprofit-organization-studio.js") && admin.includes("nonprofit-organization.css"));
-assert.ok(storefront.includes("nonprofit-storefront.js") && storefront.indexOf("nonprofit-storefront.js") < storefront.indexOf("storefront.js"));
+assert.ok(storefront.includes("nonprofit-storefront.js") && storefront.indexOf('src="/nonprofit-storefront.js') < storefront.indexOf('src="/storefront.js'));
 assert.ok(api.includes('"kindred-relief"') && api.includes('"nonprofit-organization"].includes(website.category_slug)'));
 assert.ok(runtime.includes("window.NonprofitStorefront.render") && runtime.includes("window.NonprofitStorefront.bind") && runtime.includes("window.NonprofitStorefront.mobileDock"));
 console.log("Nonprofit & Organization validation passed: 4 models, 160 page types, 83 unique page-assigned SVG assets per website, and showcase-only request/payment safety.");
