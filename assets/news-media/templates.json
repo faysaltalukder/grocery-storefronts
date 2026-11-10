@@ -1,0 +1,1136 @@
+{
+  "schemaVersion": 1,
+  "category": "news-media",
+  "pages": [
+    {
+      "key": "home",
+      "title": "Home"
+    },
+    {
+      "key": "latest",
+      "title": "Latest Stories"
+    },
+    {
+      "key": "breaking",
+      "title": "Breaking News"
+    },
+    {
+      "key": "local",
+      "title": "Local News"
+    },
+    {
+      "key": "world",
+      "title": "World News"
+    },
+    {
+      "key": "politics",
+      "title": "Politics"
+    },
+    {
+      "key": "business",
+      "title": "Business"
+    },
+    {
+      "key": "technology",
+      "title": "Technology"
+    },
+    {
+      "key": "markets",
+      "title": "Markets & Economy"
+    },
+    {
+      "key": "science",
+      "title": "Science"
+    },
+    {
+      "key": "climate",
+      "title": "Climate & Environment"
+    },
+    {
+      "key": "health",
+      "title": "Health & Wellbeing"
+    },
+    {
+      "key": "culture",
+      "title": "Culture"
+    },
+    {
+      "key": "lifestyle",
+      "title": "Lifestyle"
+    },
+    {
+      "key": "sports",
+      "title": "Sports"
+    },
+    {
+      "key": "opinion",
+      "title": "Opinion & Editorial"
+    },
+    {
+      "key": "investigations",
+      "title": "Investigations"
+    },
+    {
+      "key": "explainers",
+      "title": "Explainers"
+    },
+    {
+      "key": "fact-check",
+      "title": "Fact Check"
+    },
+    {
+      "key": "photo-essays",
+      "title": "Photo Essays"
+    },
+    {
+      "key": "video",
+      "title": "Video Stories"
+    },
+    {
+      "key": "podcasts",
+      "title": "Podcasts"
+    },
+    {
+      "key": "live",
+      "title": "Live Coverage"
+    },
+    {
+      "key": "newsletters",
+      "title": "Newsletters"
+    },
+    {
+      "key": "article",
+      "title": "Article Detail"
+    },
+    {
+      "key": "author",
+      "title": "Author Profile"
+    },
+    {
+      "key": "topic",
+      "title": "Topic Archive"
+    },
+    {
+      "key": "series",
+      "title": "Editorial Series"
+    },
+    {
+      "key": "newsroom",
+      "title": "Newsroom"
+    },
+    {
+      "key": "standards",
+      "title": "Editorial Standards"
+    },
+    {
+      "key": "corrections",
+      "title": "Corrections Policy"
+    },
+    {
+      "key": "submit-tip",
+      "title": "Submit a News Tip"
+    },
+    {
+      "key": "press",
+      "title": "Press & Media"
+    },
+    {
+      "key": "about",
+      "title": "About Us"
+    },
+    {
+      "key": "team",
+      "title": "Our Editorial Team"
+    },
+    {
+      "key": "advertise",
+      "title": "Advertise With Us"
+    },
+    {
+      "key": "contact",
+      "title": "Contact"
+    },
+    {
+      "key": "faq",
+      "title": "Frequently Asked Questions"
+    },
+    {
+      "key": "privacy",
+      "title": "Privacy Policy"
+    },
+    {
+      "key": "terms",
+      "title": "Terms & Accessibility"
+    }
+  ],
+  "templates": [
+    {
+      "key": "metroline-news",
+      "name": "Metroline News",
+      "short": "Independent digital newspaper",
+      "model": "Daily newsroom & local journalism",
+      "brand": "METROLINE",
+      "eyebrow": "INDEPENDENT JOURNALISM · CITY DESK",
+      "tag": "THE CITY, CLEARLY REPORTED",
+      "hero": "A clearer view of the stories shaping your day.",
+      "copy": "Independent reporting, useful context and the stories that matter to the communities we serve.",
+      "cta": "Explore the latest",
+      "accent": "#b84235",
+      "ink": "#202a30",
+      "paper": "#f7f3eb",
+      "surface": "#fffdf8",
+      "font": "Georgia",
+      "layout": "Newspaper masthead · strong typographic hierarchy · multi-column news desk",
+      "audience": "Readers seeking reliable local, national and international reporting",
+      "conversion": "Newsletter subscription and reader membership enquiry",
+      "images": [
+        "6950230",
+        "36376224",
+        "40670389",
+        "4206796"
+      ],
+      "imageAlts": [
+        "Press conference interview",
+        "Newspaper printing press",
+        "News lettering on a newspaper",
+        "Reader exploring the daily paper"
+      ],
+      "stories": [
+        [
+          "Inside the changing shape of the modern neighbourhood",
+          "Local",
+          "A reported-style sample exploring how public spaces, transport and small businesses shape a city's daily rhythm."
+        ],
+        [
+          "What a small business needs from a digital-first economy",
+          "Business",
+          "A practical editorial guide to digital tools, customer trust and resilient independent businesses."
+        ],
+        [
+          "The everyday science behind cleaner city air",
+          "Science",
+          "An accessible explainer on monitoring, green spaces and the choices that influence urban air quality."
+        ],
+        [
+          "Why local archives matter to living communities",
+          "Culture",
+          "A feature on preserving photographs, oral histories and the details that connect generations."
+        ],
+        [
+          "A reader's guide to checking a claim before sharing it",
+          "Fact Check",
+          "A step-by-step media literacy guide for tracing sources, dates, context and original evidence."
+        ],
+        [
+          "How public transport changes the shape of a city",
+          "Local",
+          "An illustrative long read about access, walkability and planning around everyday journeys."
+        ],
+        [
+          "The people keeping independent culture in motion",
+          "Culture",
+          "A profile-style sample about makers, venues and community-led creative work."
+        ],
+        [
+          "What responsible climate reporting should explain",
+          "Climate",
+          "A newsroom explainer about evidence, uncertainty, local impact and clear environmental language."
+        ]
+      ],
+      "pageImages": {
+        "home": [
+          "assets/news-media/metroline-news/6950230.jpg",
+          "assets/news-media/metroline-news/36376224.jpg",
+          "assets/news-media/metroline-news/40670389.jpg",
+          "assets/news-media/metroline-news/4206796.jpg",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-home-01"
+        ],
+        "latest": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-latest-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-latest-02"
+        ],
+        "breaking": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-breaking-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-breaking-02"
+        ],
+        "local": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-local-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-local-02"
+        ],
+        "world": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-world-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-world-02"
+        ],
+        "politics": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-politics-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-politics-02"
+        ],
+        "business": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-business-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-business-02"
+        ],
+        "technology": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-technology-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-technology-02"
+        ],
+        "markets": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-markets-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-markets-02"
+        ],
+        "science": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-science-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-science-02"
+        ],
+        "climate": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-climate-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-climate-02"
+        ],
+        "health": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-health-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-health-02"
+        ],
+        "culture": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-culture-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-culture-02"
+        ],
+        "lifestyle": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-lifestyle-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-lifestyle-02"
+        ],
+        "sports": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-sports-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-sports-02"
+        ],
+        "opinion": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-opinion-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-opinion-02"
+        ],
+        "investigations": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-investigations-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-investigations-02"
+        ],
+        "explainers": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-explainers-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-explainers-02"
+        ],
+        "fact-check": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-fact-check-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-fact-check-02"
+        ],
+        "photo-essays": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-photo-essays-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-photo-essays-02"
+        ],
+        "video": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-video-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-video-02"
+        ],
+        "podcasts": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-podcasts-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-podcasts-02"
+        ],
+        "live": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-live-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-live-02"
+        ],
+        "newsletters": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-newsletters-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-newsletters-02"
+        ],
+        "article": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-article-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-article-02"
+        ],
+        "author": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-author-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-author-02"
+        ],
+        "topic": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-topic-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-topic-02"
+        ],
+        "series": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-series-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-series-02"
+        ],
+        "newsroom": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-newsroom-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-newsroom-02"
+        ],
+        "standards": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-standards-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-standards-02"
+        ],
+        "corrections": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-corrections-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-corrections-02"
+        ],
+        "submit-tip": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-submit-tip-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-submit-tip-02"
+        ],
+        "press": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-press-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-press-02"
+        ],
+        "about": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-about-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-about-02"
+        ],
+        "team": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-team-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-team-02"
+        ],
+        "advertise": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-advertise-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-advertise-02"
+        ],
+        "contact": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-contact-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-contact-02"
+        ],
+        "faq": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-faq-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-faq-02"
+        ],
+        "privacy": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-privacy-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-privacy-02"
+        ],
+        "terms": [
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-terms-01",
+          "assets/news-media/metroline-news/sprite.svg#metroline-news-terms-02"
+        ]
+      },
+      "licenseSources": [
+        "https://www.pexels.com/license/"
+      ]
+    },
+    {
+      "key": "signal-desk",
+      "name": "Signal Desk",
+      "short": "Business & technology intelligence",
+      "model": "Business, markets & technology publication",
+      "brand": "SIGNAL / DESK",
+      "eyebrow": "BUSINESS · TECHNOLOGY · IDEAS",
+      "tag": "UNDERSTAND WHAT MOVES BUSINESS",
+      "hero": "The signals behind the headlines.",
+      "copy": "Business intelligence, technology reporting and practical analysis for people building what comes next.",
+      "cta": "Read the briefing",
+      "accent": "#c59b55",
+      "ink": "#17263a",
+      "paper": "#eef1f4",
+      "surface": "#ffffff",
+      "font": "Arial",
+      "layout": "Data-led briefing desk · modular insight cards · charts and analysis hierarchy",
+      "audience": "Founders, operators, investors, technology professionals and curious readers",
+      "conversion": "Briefing newsletter, research report and sponsorship enquiry",
+      "images": [
+        "7873570",
+        "7873569",
+        "5583980",
+        "6913330"
+      ],
+      "imageAlts": [
+        "Business workspace with laptop and newspaper",
+        "Market data on a mobile device",
+        "Professionals reviewing market data",
+        "Technology startup concept"
+      ],
+      "stories": [
+        [
+          "The questions every founder should ask before adopting AI",
+          "Technology",
+          "An editorial checklist for evaluating workflow fit, data exposure, reliability and measurable value."
+        ],
+        [
+          "Reading a market chart without losing the wider story",
+          "Markets",
+          "A plain-language guide to time horizons, volatility, comparison periods and source notes."
+        ],
+        [
+          "The new operating habits of resilient small teams",
+          "Business",
+          "A practical feature about documentation, automation and thoughtful decision-making."
+        ],
+        [
+          "What good product research can reveal before launch",
+          "Technology",
+          "An explainer on customer interviews, prototypes, usability evidence and prioritisation."
+        ],
+        [
+          "A guide to understanding digital privacy trade-offs",
+          "Technology",
+          "A balanced overview of permissions, data retention, identity and user choice."
+        ],
+        [
+          "Why local supply chains deserve better business reporting",
+          "Business",
+          "A sample analysis of supplier visibility, logistics risk and community impact."
+        ],
+        [
+          "How to read a company announcement critically",
+          "Markets",
+          "A newsroom guide to separating disclosed facts, forward-looking statements and interpretation."
+        ],
+        [
+          "The people building a more accessible web",
+          "Ideas",
+          "A profile-style story about inclusive design, assistive technology and practical standards."
+        ]
+      ],
+      "pageImages": {
+        "home": [
+          "assets/news-media/signal-desk/6950230.jpg",
+          "assets/news-media/signal-desk/36376224.jpg",
+          "assets/news-media/signal-desk/40670389.jpg",
+          "assets/news-media/signal-desk/4206796.jpg",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-home-01"
+        ],
+        "latest": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-latest-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-latest-02"
+        ],
+        "breaking": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-breaking-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-breaking-02"
+        ],
+        "local": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-local-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-local-02"
+        ],
+        "world": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-world-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-world-02"
+        ],
+        "politics": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-politics-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-politics-02"
+        ],
+        "business": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-business-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-business-02"
+        ],
+        "technology": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-technology-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-technology-02"
+        ],
+        "markets": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-markets-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-markets-02"
+        ],
+        "science": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-science-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-science-02"
+        ],
+        "climate": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-climate-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-climate-02"
+        ],
+        "health": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-health-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-health-02"
+        ],
+        "culture": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-culture-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-culture-02"
+        ],
+        "lifestyle": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-lifestyle-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-lifestyle-02"
+        ],
+        "sports": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-sports-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-sports-02"
+        ],
+        "opinion": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-opinion-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-opinion-02"
+        ],
+        "investigations": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-investigations-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-investigations-02"
+        ],
+        "explainers": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-explainers-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-explainers-02"
+        ],
+        "fact-check": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-fact-check-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-fact-check-02"
+        ],
+        "photo-essays": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-photo-essays-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-photo-essays-02"
+        ],
+        "video": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-video-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-video-02"
+        ],
+        "podcasts": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-podcasts-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-podcasts-02"
+        ],
+        "live": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-live-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-live-02"
+        ],
+        "newsletters": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-newsletters-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-newsletters-02"
+        ],
+        "article": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-article-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-article-02"
+        ],
+        "author": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-author-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-author-02"
+        ],
+        "topic": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-topic-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-topic-02"
+        ],
+        "series": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-series-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-series-02"
+        ],
+        "newsroom": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-newsroom-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-newsroom-02"
+        ],
+        "standards": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-standards-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-standards-02"
+        ],
+        "corrections": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-corrections-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-corrections-02"
+        ],
+        "submit-tip": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-submit-tip-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-submit-tip-02"
+        ],
+        "press": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-press-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-press-02"
+        ],
+        "about": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-about-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-about-02"
+        ],
+        "team": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-team-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-team-02"
+        ],
+        "advertise": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-advertise-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-advertise-02"
+        ],
+        "contact": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-contact-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-contact-02"
+        ],
+        "faq": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-faq-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-faq-02"
+        ],
+        "privacy": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-privacy-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-privacy-02"
+        ],
+        "terms": [
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-terms-01",
+          "assets/news-media/signal-desk/sprite.svg#signal-desk-terms-02"
+        ]
+      },
+      "licenseSources": [
+        "https://www.pexels.com/license/"
+      ]
+    },
+    {
+      "key": "fieldnotes-magazine",
+      "name": "Fieldnotes Magazine",
+      "short": "Culture, design & lifestyle magazine",
+      "model": "Independent long-form culture and lifestyle magazine",
+      "brand": "FIELDNOTES",
+      "eyebrow": "CULTURE · DESIGN · EVERYDAY LIFE",
+      "tag": "A MAGAZINE FOR THE CURIOUS",
+      "hero": "Stories with room to breathe.",
+      "copy": "Thoughtful perspectives on culture, design, places and the small details that make everyday life richer.",
+      "cta": "Read the magazine",
+      "accent": "#a85d45",
+      "ink": "#302c29",
+      "paper": "#f4eee4",
+      "surface": "#fffaf2",
+      "font": "Georgia",
+      "layout": "Art-directed magazine · generous whitespace · image-led long-form storytelling",
+      "audience": "Design-conscious readers interested in culture, travel, food, creativity and everyday living",
+      "conversion": "Magazine subscription, curated issue and editorial partnership enquiry",
+      "images": [
+        "8084481",
+        "2224750",
+        "38568366",
+        "31666144"
+      ],
+      "imageAlts": [
+        "Editorial magazine pages",
+        "Reader browsing a photography book",
+        "Magazines and flowers in a still life",
+        "Hand selecting magazines"
+      ],
+      "stories": [
+        [
+          "The quiet craft of making a place feel like home",
+          "Design",
+          "An illustrative feature about material choices, light, memory and the objects people keep."
+        ],
+        [
+          "A slower way to experience a familiar city",
+          "Places",
+          "A long-form city guide focused on independent spaces, walking routes and local voices."
+        ],
+        [
+          "Why independent magazines still make space for ideas",
+          "Culture",
+          "A feature on print culture, creative communities and the value of considered editing."
+        ],
+        [
+          "The visual language of a thoughtful table",
+          "Food & Living",
+          "An editorial exploration of seasonal ingredients, ceramics, texture and shared rituals."
+        ],
+        [
+          "Inside the studios shaping tomorrow's objects",
+          "Design",
+          "A profile-style sample about prototyping, repair, materials and responsible production."
+        ],
+        [
+          "How to build a personal reading ritual",
+          "Books & Ideas",
+          "A practical essay about attention, note-taking and making time for longer stories."
+        ],
+        [
+          "The case for keeping a neighbourhood notebook",
+          "Places",
+          "A photo-essay concept about observing streets, storefronts and everyday public life."
+        ],
+        [
+          "What makes a cultural story worth returning to",
+          "Culture",
+          "An editor's note on context, perspective, curiosity and respectful storytelling."
+        ]
+      ],
+      "pageImages": {
+        "home": [
+          "assets/news-media/fieldnotes-magazine/6950230.jpg",
+          "assets/news-media/fieldnotes-magazine/36376224.jpg",
+          "assets/news-media/fieldnotes-magazine/40670389.jpg",
+          "assets/news-media/fieldnotes-magazine/4206796.jpg",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-home-01"
+        ],
+        "latest": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-latest-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-latest-02"
+        ],
+        "breaking": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-breaking-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-breaking-02"
+        ],
+        "local": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-local-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-local-02"
+        ],
+        "world": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-world-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-world-02"
+        ],
+        "politics": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-politics-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-politics-02"
+        ],
+        "business": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-business-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-business-02"
+        ],
+        "technology": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-technology-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-technology-02"
+        ],
+        "markets": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-markets-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-markets-02"
+        ],
+        "science": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-science-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-science-02"
+        ],
+        "climate": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-climate-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-climate-02"
+        ],
+        "health": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-health-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-health-02"
+        ],
+        "culture": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-culture-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-culture-02"
+        ],
+        "lifestyle": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-lifestyle-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-lifestyle-02"
+        ],
+        "sports": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-sports-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-sports-02"
+        ],
+        "opinion": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-opinion-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-opinion-02"
+        ],
+        "investigations": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-investigations-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-investigations-02"
+        ],
+        "explainers": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-explainers-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-explainers-02"
+        ],
+        "fact-check": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-fact-check-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-fact-check-02"
+        ],
+        "photo-essays": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-photo-essays-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-photo-essays-02"
+        ],
+        "video": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-video-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-video-02"
+        ],
+        "podcasts": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-podcasts-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-podcasts-02"
+        ],
+        "live": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-live-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-live-02"
+        ],
+        "newsletters": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-newsletters-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-newsletters-02"
+        ],
+        "article": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-article-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-article-02"
+        ],
+        "author": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-author-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-author-02"
+        ],
+        "topic": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-topic-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-topic-02"
+        ],
+        "series": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-series-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-series-02"
+        ],
+        "newsroom": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-newsroom-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-newsroom-02"
+        ],
+        "standards": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-standards-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-standards-02"
+        ],
+        "corrections": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-corrections-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-corrections-02"
+        ],
+        "submit-tip": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-submit-tip-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-submit-tip-02"
+        ],
+        "press": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-press-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-press-02"
+        ],
+        "about": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-about-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-about-02"
+        ],
+        "team": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-team-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-team-02"
+        ],
+        "advertise": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-advertise-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-advertise-02"
+        ],
+        "contact": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-contact-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-contact-02"
+        ],
+        "faq": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-faq-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-faq-02"
+        ],
+        "privacy": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-privacy-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-privacy-02"
+        ],
+        "terms": [
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-terms-01",
+          "assets/news-media/fieldnotes-magazine/sprite.svg#fieldnotes-magazine-terms-02"
+        ]
+      },
+      "licenseSources": [
+        "https://www.pexels.com/license/"
+      ]
+    },
+    {
+      "key": "framelive-network",
+      "name": "FrameLive Network",
+      "short": "Broadcast, video & live news network",
+      "model": "Multimedia newsroom and live broadcast network",
+      "brand": "FRAMELIVE",
+      "eyebrow": "LIVE · VIDEO · AUDIO · REPORTING",
+      "tag": "SEE THE STORY. HEAR THE CONTEXT.",
+      "hero": "The story, beyond the screen.",
+      "copy": "Live coverage, visual reporting and on-demand programmes that bring context to the moments shaping our world.",
+      "cta": "Watch the latest",
+      "accent": "#d65343",
+      "ink": "#171c24",
+      "paper": "#eef0f2",
+      "surface": "#ffffff",
+      "font": "Arial",
+      "layout": "Broadcast control-room aesthetic · cinematic video panels · live programme schedule",
+      "audience": "Viewers and listeners who prefer video, live updates, interviews and explainers",
+      "conversion": "Programme alerts, channel membership and production partnership enquiry",
+      "images": [
+        "7865064",
+        "34872680",
+        "10003920",
+        "19126179"
+      ],
+      "imageAlts": [
+        "Television studio setup",
+        "Professional video cameras",
+        "Broadcast control room",
+        "Reporter with microphone"
+      ],
+      "stories": [
+        [
+          "Behind the scenes of a modern newsroom",
+          "Newsroom",
+          "A production explainer covering planning, editorial checks, studio operations and publishing workflows."
+        ],
+        [
+          "How a live bulletin moves from desk to screen",
+          "Broadcast",
+          "A visual guide to rundown planning, verification, graphics, audio and live direction."
+        ],
+        [
+          "The craft of asking better interview questions",
+          "Interviews",
+          "A practical feature on preparation, listening, follow-up and giving guests room to explain."
+        ],
+        [
+          "A field reporter's checklist for clear visual evidence",
+          "Reporting",
+          "A sample guide to context, consent, location details, timestamps and source verification."
+        ],
+        [
+          "What makes an explainer video genuinely useful",
+          "Video",
+          "An editorial breakdown of structure, pacing, captions and visual evidence."
+        ],
+        [
+          "Building an accessible audio-first news experience",
+          "Audio",
+          "A feature on transcripts, clear sound, chapter markers and inclusive listening."
+        ],
+        [
+          "Inside the control room: teamwork under pressure",
+          "Production",
+          "A newsroom feature about communication, roles and calm decision-making during live output."
+        ],
+        [
+          "How to follow a developing story responsibly",
+          "Live",
+          "A guide to timestamps, confirmed facts, corrections and separating updates from speculation."
+        ]
+      ],
+      "pageImages": {
+        "home": [
+          "assets/news-media/framelive-network/6950230.jpg",
+          "assets/news-media/framelive-network/36376224.jpg",
+          "assets/news-media/framelive-network/40670389.jpg",
+          "assets/news-media/framelive-network/4206796.jpg",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-home-01"
+        ],
+        "latest": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-latest-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-latest-02"
+        ],
+        "breaking": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-breaking-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-breaking-02"
+        ],
+        "local": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-local-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-local-02"
+        ],
+        "world": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-world-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-world-02"
+        ],
+        "politics": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-politics-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-politics-02"
+        ],
+        "business": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-business-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-business-02"
+        ],
+        "technology": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-technology-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-technology-02"
+        ],
+        "markets": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-markets-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-markets-02"
+        ],
+        "science": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-science-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-science-02"
+        ],
+        "climate": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-climate-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-climate-02"
+        ],
+        "health": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-health-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-health-02"
+        ],
+        "culture": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-culture-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-culture-02"
+        ],
+        "lifestyle": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-lifestyle-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-lifestyle-02"
+        ],
+        "sports": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-sports-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-sports-02"
+        ],
+        "opinion": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-opinion-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-opinion-02"
+        ],
+        "investigations": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-investigations-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-investigations-02"
+        ],
+        "explainers": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-explainers-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-explainers-02"
+        ],
+        "fact-check": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-fact-check-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-fact-check-02"
+        ],
+        "photo-essays": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-photo-essays-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-photo-essays-02"
+        ],
+        "video": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-video-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-video-02"
+        ],
+        "podcasts": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-podcasts-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-podcasts-02"
+        ],
+        "live": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-live-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-live-02"
+        ],
+        "newsletters": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-newsletters-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-newsletters-02"
+        ],
+        "article": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-article-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-article-02"
+        ],
+        "author": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-author-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-author-02"
+        ],
+        "topic": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-topic-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-topic-02"
+        ],
+        "series": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-series-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-series-02"
+        ],
+        "newsroom": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-newsroom-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-newsroom-02"
+        ],
+        "standards": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-standards-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-standards-02"
+        ],
+        "corrections": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-corrections-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-corrections-02"
+        ],
+        "submit-tip": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-submit-tip-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-submit-tip-02"
+        ],
+        "press": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-press-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-press-02"
+        ],
+        "about": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-about-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-about-02"
+        ],
+        "team": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-team-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-team-02"
+        ],
+        "advertise": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-advertise-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-advertise-02"
+        ],
+        "contact": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-contact-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-contact-02"
+        ],
+        "faq": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-faq-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-faq-02"
+        ],
+        "privacy": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-privacy-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-privacy-02"
+        ],
+        "terms": [
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-terms-01",
+          "assets/news-media/framelive-network/sprite.svg#framelive-network-terms-02"
+        ]
+      },
+      "licenseSources": [
+        "https://www.pexels.com/license/"
+      ]
+    }
+  ]
+}

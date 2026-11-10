@@ -1,5 +1,6 @@
 (() => {
 "use strict";
+if(new URLSearchParams(location.search).has("news-template")){if(window.NewsMediaStandalone?.start){window.NewsMediaStandalone.start();return;}throw new Error("News & Media preview runtime did not load.");}
 const params=new URLSearchParams(location.search),siteConfig=window.GROCERY_STOREFRONT_CONFIG||{},siteSlug=params.get("site")||siteConfig.siteSlug||"",preview=params.get("preview")==="1";
 const root=document.getElementById("storefrontRoot"),toastNode=document.getElementById("sfToast");
 const storefrontApi=()=>window.HFNeonBuilderApi||window.WPNeonBuilderApi;
