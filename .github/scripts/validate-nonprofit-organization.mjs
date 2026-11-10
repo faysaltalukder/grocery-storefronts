@@ -16,7 +16,7 @@ for (const key of keys) {
   const numbered = section.split("\n").filter(x => /^\d+\. `/.test(x));
   assert.equal(numbered.length, 40, key+" must document 40 page types");
 }
-for (const token of ["uniqueAssetsPerWebsite:83","homepageMaximum:5","innerPageMinimum:2","innerPageMaximum:4","showcasePreviewOnly:true"]) assert.ok(migration.includes(token), "Missing asset/release policy: "+token);
+for (const token of ['"uniqueAssetsPerWebsite":83','"homepageMaximum":5','"innerPageMinimum":2','"innerPageMaximum":4','"showcasePreviewOnly":true']) assert.ok(migration.includes(token), "Missing asset/release policy: "+token);
 const admin = read("admin/wordpress-templates.html");
 const storefront = read("storefront.html");
 const api = read("admin/neon-builder-api.js");
